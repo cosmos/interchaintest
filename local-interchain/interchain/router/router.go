@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
+<<<<<<< HEAD
 	ictypes "github.com/cosmos/interchaintest/local-interchain/interchain/types"
 	"github.com/cosmos/interchaintest/local-interchain/interchain/util"
 	"github.com/cosmos/interchaintest/v10"
@@ -15,6 +16,15 @@ import (
 	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/docker/docker/client"
 	"github.com/gorilla/mux"
+=======
+	"github.com/gorilla/mux"
+	"github.com/moby/moby/client"
+	ictypes "github.com/strangelove-ventures/interchaintest/local-interchain/interchain/types"
+	"github.com/strangelove-ventures/interchaintest/local-interchain/interchain/util"
+	"github.com/strangelove-ventures/interchaintest/v8"
+	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
+	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+>>>>>>> 34a13b0e (feat: moby docker v27.5.1 (#1344))
 	"go.uber.org/zap"
 
 	"github.com/cosmos/interchaintest/local-interchain/interchain/handlers"

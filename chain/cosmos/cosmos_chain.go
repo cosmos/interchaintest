@@ -6,7 +6,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	dockerimage "github.com/docker/docker/api/types/image"
 	"io"
 	"math"
 	"os"
@@ -14,8 +13,9 @@ import (
 	"strings"
 	"sync"
 
+	dockerimagetypes "github.com/docker/docker/api/types/image"
 	volumetypes "github.com/docker/docker/api/types/volume"
-	"github.com/docker/docker/client"
+	"github.com/moby/moby/client"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
@@ -628,7 +628,7 @@ func (c *CosmosChain) pullImages(ctx context.Context, cli *client.Client) {
 		rc, err := cli.ImagePull(
 			ctx,
 			image.Repository+":"+image.Version,
-			dockerimage.PullOptions{},
+			dockerimagetypes.PullOptions{},
 		)
 		if err != nil {
 			c.log.Error("Failed to pull image",

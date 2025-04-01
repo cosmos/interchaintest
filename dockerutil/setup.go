@@ -13,9 +13,9 @@ import (
 	"github.com/avast/retry-go/v4"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
-	dockernetwork "github.com/docker/docker/api/types/network"
-	"github.com/docker/docker/client"
-	"github.com/docker/docker/errdefs"
+	"github.com/docker/docker/api/types/network"
+	"github.com/moby/moby/client"
+	"github.com/moby/moby/errdefs"
 )
 
 // DockerSetupTestingT is a subset of testing.T required for DockerSetup.
@@ -88,10 +88,10 @@ func DockerSetup(t DockerSetupTestingT) (*client.Client, string) {
 	if err != nil {
 		panic(fmt.Errorf("failed to find an available subnet: %v", err))
 	}
-	network, err := cli.NetworkCreate(context.TODO(), name, dockernetwork.CreateOptions{
+	network, err := cli.NetworkCreate(context.TODO(), name, network.CreateOptions{
 		Driver: "bridge",
-		IPAM: &dockernetwork.IPAM{
-			Config: []dockernetwork.IPAMConfig{
+		IPAM: &network.IPAM{
+			Config: []network.IPAMConfig{
 				{
 					Subnet: subnet,
 				},
@@ -109,7 +109,7 @@ func DockerSetup(t DockerSetupTestingT) (*client.Client, string) {
 
 func getUsedSubnets(cli *client.Client) (map[string]bool, error) {
 	usedSubnets := make(map[string]bool)
-	networks, err := cli.NetworkList(context.TODO(), dockernetwork.ListOptions{})
+	networks, err := cli.NetworkList(context.TODO(), network.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
