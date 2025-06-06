@@ -100,7 +100,7 @@ After finishing the steps above, open a new cmd or shell, and you will be able t
 1. Start the docker daemon by running **Docker Desktop** on Win 10/11 or using [**Docker Quickstart Terminal**](https://github.com/microsoft/docker/blob/master/docs/installation/windows.md#using-the-docker-quickstart-terminal) if you have installed Docker Toolbox.
 2. Clone the Local Interchain Repo.
 ```bash
-git clone https://github.com/strangelove-ventures/interchaintest.git
+git clone https://github.com/cosmos/interchaintest.git
 cd interchaintest/local-interchain
 ```
 3. Run `make install`

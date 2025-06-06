@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/strangelove-ventures/interchaintest/v8/chain/penumbra"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/cosmos/interchaintest/v10/chain/penumbra"
+	"github.com/cosmos/interchaintest/v10/ibc"
 )
 
 // ErrPclientdInitialization is returned if the CreateClientNode call fails while initializing a new instance of

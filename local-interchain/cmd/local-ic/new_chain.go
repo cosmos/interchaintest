@@ -9,10 +9,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/cosmos/interchaintest/local-interchain/interchain/types"
+	ictypes "github.com/cosmos/interchaintest/local-interchain/interchain/types"
+	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/spf13/cobra"
-	"github.com/strangelove-ventures/interchaintest/local-interchain/interchain/types"
-	ictypes "github.com/strangelove-ventures/interchaintest/local-interchain/interchain/types"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
 )
 
 var reader = bufio.NewReader(os.Stdin)

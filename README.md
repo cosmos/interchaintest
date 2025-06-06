@@ -3,9 +3,9 @@
 
 Formerly known as `ibctest`.
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/strangelove-ventures/interchaintest@main.svg)](https://pkg.go.dev/github.com/strangelove-ventures/interchaintest@main)
-[![License: Apache-2.0](https://img.shields.io/github/license/strangelove-ventures/interchaintest.svg?style=flat-square)](https://github.com/strangelove-ventures/interchaintest/blob/main/LICENSE)
-[![Go Report Card](https://goreportcard.com/badge/github.com/strangelove-ventures/interchaintest)](https://goreportcard.com/report/github.com/strangelove-ventures/interchaintest)
+[![Go Reference](https://pkg.go.dev/badge/github.com/cosmos/interchaintest@main.svg)](https://pkg.go.dev/github.com/cosmos/interchaintest@main)
+[![License: Apache-2.0](https://img.shields.io/github/license/strangelove-ventures/interchaintest.svg?style=flat-square)](https://github.com/cosmos/interchaintest/blob/main/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/cosmos/interchaintest)](https://goreportcard.com/report/github.com/cosmos/interchaintest)
 </div>
 
 
@@ -67,8 +67,8 @@ There's also an option to [build and run `interchaintest` as a binary](./docs/bu
 
 |                                **Branch Name**                               | **IBC-Go** | **Cosmos-sdk** |
 |:----------------------------------------------------------------------------:|:----------:|:--------------:|
-|     [main](https://github.com/strangelove-ventures/interchaintest)           |     v8     |      v0.50     |
-|     [v7](https://github.com/strangelove-ventures/interchaintest/tree/v7)     |     v7     |      v0.47     |
+|     [main](https://github.com/cosmos/interchaintest)           |     v8     |      v0.50     |
+|     [v7](https://github.com/cosmos/interchaintest/tree/v7)     |     v7     |      v0.47     |
 
 ### Deprecated Branches
 
@@ -77,12 +77,12 @@ These are branches that we no longer actively update or maintain but may be of u
 
 |                               **Branch Name**                                | **IBC-Go** | **Cosmos-sdk** | **Deprecated Date** |
 |:----------------------------------------------------------------------------:|:----------:|:--------------:|:--------------------:|
-|     [v6](https://github.com/strangelove-ventures/interchaintest/tree/v6)     |     v6     |     v0.46      |     Sept 5 2023      |
-|     [v5](https://github.com/strangelove-ventures/interchaintest/tree/v5)     |     v5     |     v0.46      |     Aug 11 2023      |
-|     [v4](https://github.com/strangelove-ventures/interchaintest/tree/v4)     |     v4     |     v0.45      |     Aug 11 2023      |
-| [v4-ics](https://github.com/strangelove-ventures/interchaintest/tree/v4-ics) |     v4     |  v0.45.x-ics   |     Aug 11 2023      |
-|     [v3](https://github.com/strangelove-ventures/interchaintest/tree/v3)     |     v3     |     v0.45      |     June 25 2023     |
-| [v3-ics](https://github.com/strangelove-ventures/interchaintest/tree/v3-ics) |     v3     |  v0.45.11-ics  |    April 24 2023     |
+|     [v6](https://github.com/cosmos/interchaintest/tree/v6)     |     v6     |     v0.46      |     Sept 5 2023      |
+|     [v5](https://github.com/cosmos/interchaintest/tree/v5)     |     v5     |     v0.46      |     Aug 11 2023      |
+|     [v4](https://github.com/cosmos/interchaintest/tree/v4)     |     v4     |     v0.45      |     Aug 11 2023      |
+| [v4-ics](https://github.com/cosmos/interchaintest/tree/v4-ics) |     v4     |  v0.45.x-ics   |     Aug 11 2023      |
+|     [v3](https://github.com/cosmos/interchaintest/tree/v3)     |     v3     |     v0.45      |     June 25 2023     |
+| [v3-ics](https://github.com/cosmos/interchaintest/tree/v3-ics) |     v3     |  v0.45.11-ics  |    April 24 2023     |
 
 
 #### Backport Policy:
@@ -105,5 +105,5 @@ Please read the [logging style guide](./docs/logging.md).
 
 Significant bugs that were more easily fixed with `interchaintest`:
 
-- [Juno network halt reproduction](https://github.com/strangelove-ventures/interchaintest/pull/7)
-- [Juno network halt fix confirmation](https://github.com/strangelove-ventures/interchaintest/pull/8)
+- [Juno network halt reproduction](https://github.com/cosmos/interchaintest/pull/7)
+- [Juno network halt fix confirmation](https://github.com/cosmos/interchaintest/pull/8)

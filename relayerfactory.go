@@ -5,10 +5,10 @@ import (
 	"github.com/docker/docker/client"
 	"go.uber.org/zap"
 
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
-	"github.com/strangelove-ventures/interchaintest/v8/relayer"
-	"github.com/strangelove-ventures/interchaintest/v8/relayer/hermes"
-	"github.com/strangelove-ventures/interchaintest/v8/relayer/rly"
+	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v10/relayer"
+	"github.com/cosmos/interchaintest/v10/relayer/hermes"
+	"github.com/cosmos/interchaintest/v10/relayer/rly"
 )
 
 type TestName interface {

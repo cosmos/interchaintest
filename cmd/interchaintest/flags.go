@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	interchaintest "github.com/strangelove-ventures/interchaintest/v8"
+	interchaintest "github.com/cosmos/interchaintest/v10"
 )
 
 // The value of the extra flags this test supports.

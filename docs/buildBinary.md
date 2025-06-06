@@ -4,7 +4,7 @@ While it is not necessary to build the binary, sometimes it can be more convenie
 
 Building binary:
 ```shell
-git clone https://github.com/strangelove-ventures/interchaintest.git
+git clone https://github.com/cosmos/interchaintest.git
 cd interchaintest
 make interchaintest
 ```

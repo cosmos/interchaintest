@@ -20,7 +20,7 @@ cargo init --name e2e_testing
 
 # add required dependencies to Cargo.toml
 cargo add cosmwasm-std
-cargo add localic-std --git https://github.com/strangelove-ventures/interchaintest
+cargo add localic-std --git https://github.com/cosmos/interchaintest
 
 # create the 2 sub directories
 mkdir chains configs

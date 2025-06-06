@@ -8,7 +8,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/require"
 
-	"github.com/strangelove-ventures/interchaintest/v8/testreporter"
+	"github.com/cosmos/interchaintest/v10/testreporter"
 )
 
 func TestWrappedMessage_RoundTrip(t *testing.T) {

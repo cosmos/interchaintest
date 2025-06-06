@@ -1,4 +1,4 @@
-module github.com/strangelove-ventures/interchaintest/v8
+module github.com/cosmos/interchaintest/v10
 
 go 1.23.6
 

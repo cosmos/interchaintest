@@ -11,14 +11,14 @@ import (
 
 	_ "embed"
 
-	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/ethereum/foundry"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/ethereum/geth"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/namada"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/penumbra"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/thorchain"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/utxo"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/cosmos/interchaintest/v10/chain/cosmos"
+	"github.com/cosmos/interchaintest/v10/chain/ethereum/foundry"
+	"github.com/cosmos/interchaintest/v10/chain/ethereum/geth"
+	"github.com/cosmos/interchaintest/v10/chain/namada"
+	"github.com/cosmos/interchaintest/v10/chain/penumbra"
+	"github.com/cosmos/interchaintest/v10/chain/thorchain"
+	"github.com/cosmos/interchaintest/v10/chain/utxo"
+	"github.com/cosmos/interchaintest/v10/ibc"
 )
 
 // ChainFactory describes how to get chains for tests.
