@@ -9,7 +9,7 @@ import (
 
 	"github.com/docker/docker/api/types/mount"
 
-	"github.com/strangelove-ventures/interchaintest/v8/dockerutil"
+	"github.com/cosmos/interchaintest/v10/dockerutil"
 )
 
 // cli options for the `forge script` command

@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/cosmos/interchaintest/local-interchain/interchain/handlers"
 	"github.com/spf13/cobra"
-	"github.com/strangelove-ventures/interchaintest/local-interchain/interchain/handlers"
 )
 
 const (

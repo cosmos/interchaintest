@@ -9,8 +9,8 @@ import (
 	"github.com/docker/docker/errdefs"
 	"github.com/stretchr/testify/require"
 
-	"github.com/strangelove-ventures/interchaintest/v8/dockerutil"
-	"github.com/strangelove-ventures/interchaintest/v8/mocktesting"
+	"github.com/cosmos/interchaintest/v10/dockerutil"
+	"github.com/cosmos/interchaintest/v10/mocktesting"
 )
 
 func TestDockerSetup_KeepVolumes(t *testing.T) {

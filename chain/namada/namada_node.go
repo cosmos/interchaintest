@@ -3,13 +3,13 @@ package namada
 import (
 	"context"
 	"fmt"
+	dockernetwork "github.com/docker/docker/api/types/network"
 	"net"
 	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/avast/retry-go/v4"
-	"github.com/docker/docker/api/types"
 	volumetypes "github.com/docker/docker/api/types/volume"
 	dockerclient "github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
@@ -19,8 +19,8 @@ import (
 	libclient "github.com/tendermint/tendermint/rpc/jsonrpc/client"
 	"go.uber.org/zap"
 
-	"github.com/strangelove-ventures/interchaintest/v8/dockerutil"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/cosmos/interchaintest/v10/dockerutil"
+	"github.com/cosmos/interchaintest/v10/ibc"
 )
 
 type NamadaNode struct {
@@ -289,7 +289,7 @@ func (n *NamadaNode) netAddress(ctx context.Context) (string, error) {
 	} else {
 		index = n.Index + 192
 	}
-	networkResource, err := n.DockerClient.NetworkInspect(ctx, n.NetworkID, types.NetworkInspectOptions{})
+	networkResource, err := n.DockerClient.NetworkInspect(ctx, n.NetworkID, dockernetwork.InspectOptions{})
 	if err != nil {
 		return "", fmt.Errorf("failed to get the network resource: %v", err)
 	}

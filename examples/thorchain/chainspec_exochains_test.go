@@ -1,13 +1,13 @@
 package thorchain_test
 
 import (
-	"github.com/strangelove-ventures/interchaintest/v8"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/ethereum/foundry"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/ethereum/geth"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/thorchain/common"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/utxo"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/cosmos/interchaintest/v10"
+	"github.com/cosmos/interchaintest/v10/chain/cosmos"
+	"github.com/cosmos/interchaintest/v10/chain/ethereum/foundry"
+	"github.com/cosmos/interchaintest/v10/chain/ethereum/geth"
+	"github.com/cosmos/interchaintest/v10/chain/thorchain/common"
+	"github.com/cosmos/interchaintest/v10/chain/utxo"
+	"github.com/cosmos/interchaintest/v10/ibc"
 )
 
 type ExoChains map[string]*ExoChain

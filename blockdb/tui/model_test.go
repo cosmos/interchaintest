@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/strangelove-ventures/interchaintest/v8/blockdb"
+	"github.com/cosmos/interchaintest/v10/blockdb"
 )
 
 func TestModel_RootView(t *testing.T) {

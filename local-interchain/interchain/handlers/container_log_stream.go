@@ -9,9 +9,9 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	dockertypes "github.com/docker/docker/api/types"
 	dockerclient "github.com/docker/docker/client"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
 	"go.uber.org/zap"
 )
 

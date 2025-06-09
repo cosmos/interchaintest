@@ -8,16 +8,16 @@ import (
 	"os"
 	"path/filepath"
 
+	ictypes "github.com/cosmos/interchaintest/local-interchain/interchain/types"
+	"github.com/cosmos/interchaintest/local-interchain/interchain/util"
+	"github.com/cosmos/interchaintest/v10"
+	"github.com/cosmos/interchaintest/v10/chain/cosmos"
+	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/docker/docker/client"
 	"github.com/gorilla/mux"
-	ictypes "github.com/strangelove-ventures/interchaintest/local-interchain/interchain/types"
-	"github.com/strangelove-ventures/interchaintest/local-interchain/interchain/util"
-	"github.com/strangelove-ventures/interchaintest/v8"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
 	"go.uber.org/zap"
 
-	"github.com/strangelove-ventures/interchaintest/local-interchain/interchain/handlers"
+	"github.com/cosmos/interchaintest/local-interchain/interchain/handlers"
 )
 
 type Route struct {

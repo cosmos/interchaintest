@@ -3,6 +3,7 @@ package utxo
 import (
 	"context"
 	"fmt"
+	dockerimage "github.com/docker/docker/api/types/image"
 	"io"
 	"math"
 	"strconv"
@@ -10,7 +11,6 @@ import (
 	"sync"
 	"time"
 
-	dockertypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/api/types/volume"
 	dockerclient "github.com/docker/docker/client"
@@ -19,9 +19,9 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 
-	"github.com/strangelove-ventures/interchaintest/v8/dockerutil"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
-	"github.com/strangelove-ventures/interchaintest/v8/testutil"
+	"github.com/cosmos/interchaintest/v10/dockerutil"
+	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v10/testutil"
 )
 
 var _ ibc.Chain = &UtxoChain{}
@@ -160,7 +160,7 @@ func (c *UtxoChain) pullImages(ctx context.Context, cli *dockerclient.Client) {
 		rc, err := cli.ImagePull(
 			ctx,
 			image.Repository+":"+image.Version,
-			dockertypes.ImagePullOptions{},
+			dockerimage.PullOptions{},
 		)
 		if err != nil {
 			c.log.Error("Failed to pull image",

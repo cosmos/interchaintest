@@ -20,21 +20,20 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 
-	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	//nolint:staticcheck
-	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
+	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
 
-	asset "github.com/strangelove-ventures/interchaintest/v8/chain/penumbra/core/asset/v1"
-	ibcv1 "github.com/strangelove-ventures/interchaintest/v8/chain/penumbra/core/component/ibc/v1"
-	pool "github.com/strangelove-ventures/interchaintest/v8/chain/penumbra/core/component/shielded_pool/v1"
-	keys "github.com/strangelove-ventures/interchaintest/v8/chain/penumbra/core/keys/v1"
-	num "github.com/strangelove-ventures/interchaintest/v8/chain/penumbra/core/num/v1"
-	transactionv1 "github.com/strangelove-ventures/interchaintest/v8/chain/penumbra/core/transaction/v1"
-	custody "github.com/strangelove-ventures/interchaintest/v8/chain/penumbra/custody/v1"
-	view "github.com/strangelove-ventures/interchaintest/v8/chain/penumbra/view/v1"
-	"github.com/strangelove-ventures/interchaintest/v8/dockerutil"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
-	"github.com/strangelove-ventures/interchaintest/v8/testutil"
+	asset "github.com/cosmos/interchaintest/v10/chain/penumbra/core/asset/v1"
+	ibcv1 "github.com/cosmos/interchaintest/v10/chain/penumbra/core/component/ibc/v1"
+	pool "github.com/cosmos/interchaintest/v10/chain/penumbra/core/component/shielded_pool/v1"
+	keys "github.com/cosmos/interchaintest/v10/chain/penumbra/core/keys/v1"
+	num "github.com/cosmos/interchaintest/v10/chain/penumbra/core/num/v1"
+	transactionv1 "github.com/cosmos/interchaintest/v10/chain/penumbra/core/transaction/v1"
+	custody "github.com/cosmos/interchaintest/v10/chain/penumbra/custody/v1"
+	view "github.com/cosmos/interchaintest/v10/chain/penumbra/view/v1"
+	"github.com/cosmos/interchaintest/v10/dockerutil"
+	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v10/testutil"
 )
 
 // PenumbraClientNode represents an instance of pclientd.
@@ -647,9 +646,9 @@ func ibcTransferTimeouts(options ibc.TransferOptions) (clienttypes.Height, uint6
 // based timeouts.
 // see: https://github.com/cosmos/ibc-go/blob/0364aae96f0326651c411ed0f3486be570280e5c/modules/apps/transfer/types/packet.go#L22-L33
 func defaultTransferTimeouts() (clienttypes.Height, uint64) {
-	t, err := clienttypes.ParseHeight(transfertypes.DefaultRelativePacketTimeoutHeight)
+	t, err := clienttypes.ParseHeight("0-1000")
 	if err != nil {
 		panic(fmt.Errorf("cannot parse packet timeout height string when retrieving default value: %w", err))
 	}
-	return t, transfertypes.DefaultRelativePacketTimeoutTimestamp
+	return t, uint64((time.Duration(10) * time.Minute).Nanoseconds())
 }

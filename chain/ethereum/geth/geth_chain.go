@@ -14,9 +14,9 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 
-	"github.com/strangelove-ventures/interchaintest/v8/chain/ethereum"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
-	"github.com/strangelove-ventures/interchaintest/v8/testutil"
+	"github.com/cosmos/interchaintest/v10/chain/ethereum"
+	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v10/testutil"
 )
 
 var _ ibc.Chain = &GethChain{}

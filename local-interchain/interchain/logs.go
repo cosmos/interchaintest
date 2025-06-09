@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 	"time"
 
-	types "github.com/strangelove-ventures/interchaintest/local-interchain/interchain/types"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/ethereum/foundry"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	types "github.com/cosmos/interchaintest/local-interchain/interchain/types"
+	"github.com/cosmos/interchaintest/v10/chain/cosmos"
+	"github.com/cosmos/interchaintest/v10/chain/ethereum/foundry"
+	"github.com/cosmos/interchaintest/v10/ibc"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

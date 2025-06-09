@@ -7,13 +7,13 @@ import (
 	"testing"
 
 	"cosmossdk.io/math"
-	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
-	ibcconntypes "github.com/cosmos/ibc-go/v8/modules/core/03-connection/types"
-	interchaintest "github.com/strangelove-ventures/interchaintest/v8"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
-	"github.com/strangelove-ventures/interchaintest/v8/relayer"
-	"github.com/strangelove-ventures/interchaintest/v8/testreporter"
+	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
+	ibcconntypes "github.com/cosmos/ibc-go/v10/modules/core/03-connection/types"
+	interchaintest "github.com/cosmos/interchaintest/v10"
+	"github.com/cosmos/interchaintest/v10/chain/cosmos"
+	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v10/relayer"
+	"github.com/cosmos/interchaintest/v10/testreporter"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap/zaptest"
 )
@@ -24,7 +24,7 @@ var (
 )
 
 // This tests Cosmos Interchain Security, spinning up a provider and a single consumer chain.
-// go test -timeout 3000s -run ^TestICS$ github.com/strangelove-ventures/interchaintest/v8/examples/ibc -v  -test.short
+// go test -timeout 3000s -run ^TestICS$ github.com/cosmos/interchaintest/v10/examples/ibc -v  -test.short
 func TestICS(t *testing.T) {
 	if testing.Short() {
 		ver := icsVersions[0]
@@ -182,7 +182,7 @@ func icsTest(t *testing.T, version string, rly ibc.RelayerImplementation) {
 
 		require.NoError(t, r.Flush(ctx, eRep, ibcPath, channelID))
 
-		srcDenomTrace := transfertypes.ParseDenomTrace(transfertypes.GetPrefixedDenom("transfer", consumerChannelID, provider.Config().Denom))
+		srcDenomTrace := transfertypes.NewDenom(provider.Config().Denom, transfertypes.NewHop("transfer", consumerChannelID))
 		dstIbcDenom := srcDenomTrace.IBCDenom()
 
 		consumerBal, err := consumer.BankQueryBalance(ctx, consumerUser.FormattedAddress(), dstIbcDenom)

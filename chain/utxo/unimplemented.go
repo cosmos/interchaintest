@@ -4,7 +4,7 @@ import (
 	"context"
 	"runtime"
 
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/cosmos/interchaintest/v10/ibc"
 )
 
 func PanicFunctionName() {

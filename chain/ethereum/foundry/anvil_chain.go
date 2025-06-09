@@ -14,8 +14,8 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"go.uber.org/zap"
 
-	"github.com/strangelove-ventures/interchaintest/v8/chain/ethereum"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/cosmos/interchaintest/v10/chain/ethereum"
+	"github.com/cosmos/interchaintest/v10/ibc"
 )
 
 var _ ibc.Chain = &AnvilChain{}

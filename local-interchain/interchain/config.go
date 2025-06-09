@@ -12,14 +12,14 @@ import (
 	"strings"
 	"time"
 
-	types "github.com/strangelove-ventures/interchaintest/local-interchain/interchain/types"
-	"github.com/strangelove-ventures/interchaintest/local-interchain/interchain/util"
+	types "github.com/cosmos/interchaintest/local-interchain/interchain/types"
+	"github.com/cosmos/interchaintest/local-interchain/interchain/util"
 	"gopkg.in/yaml.v3"
 
-	"github.com/strangelove-ventures/interchaintest/v8"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
-	"github.com/strangelove-ventures/interchaintest/v8/testutil"
+	"github.com/cosmos/interchaintest/v10"
+	"github.com/cosmos/interchaintest/v10/chain/cosmos"
+	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v10/testutil"
 )
 
 const ChainDir = "chains"

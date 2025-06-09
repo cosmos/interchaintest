@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	dockerimage "github.com/docker/docker/api/types/image"
 	"io"
 	"path/filepath"
 	"strconv"
@@ -11,7 +12,6 @@ import (
 	"sync"
 
 	"github.com/BurntSushi/toml"
-	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
@@ -24,10 +24,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 
-	"github.com/strangelove-ventures/interchaintest/v8/chain/internal/tendermint"
-	"github.com/strangelove-ventures/interchaintest/v8/dockerutil"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
-	"github.com/strangelove-ventures/interchaintest/v8/testutil"
+	"github.com/cosmos/interchaintest/v10/chain/internal/tendermint"
+	"github.com/cosmos/interchaintest/v10/dockerutil"
+	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v10/testutil"
 )
 
 type PenumbraChain struct {
@@ -308,7 +308,7 @@ func (c *PenumbraChain) initializeChainNodes(
 		rc, err := cli.ImagePull(
 			ctx,
 			image.Repository+":"+image.Version,
-			types.ImagePullOptions{},
+			dockerimage.PullOptions{},
 		)
 		if err != nil {
 			c.log.Error("Failed to pull image",

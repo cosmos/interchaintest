@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	dockerimage "github.com/docker/docker/api/types/image"
 	"io"
 	stdmath "math"
 	"net/http"
@@ -18,7 +19,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
@@ -27,9 +27,9 @@ import (
 
 	cometbft "github.com/cometbft/cometbft/abci/types"
 
-	"github.com/strangelove-ventures/interchaintest/v8/chain/internal/tendermint"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
-	"github.com/strangelove-ventures/interchaintest/v8/testutil"
+	"github.com/cosmos/interchaintest/v10/chain/internal/tendermint"
+	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v10/testutil"
 )
 
 const (
@@ -74,7 +74,7 @@ func (c *NamadaChain) Initialize(ctx context.Context, testName string, cli *clie
 		rc, err := cli.ImagePull(
 			ctx,
 			image.Repository+":"+image.Version,
-			types.ImagePullOptions{
+			dockerimage.PullOptions{
 				Platform: "amd64",
 			})
 		if err != nil {

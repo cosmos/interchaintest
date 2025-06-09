@@ -60,7 +60,7 @@ linters-settings:
       - prefix(github.com/cosmos)
       - prefix(github.com/cosmos/cosmos-sdk)
       - prefix(github.com/cometbft/cometbft)
-      - prefix(github.com/strangelove-ventures/interchaintest)
+      - prefix(github.com/cosmos/interchaintest)
   gosec:
     excludes:
       - G404 # disables checks on insecure random number source

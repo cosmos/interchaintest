@@ -6,5 +6,5 @@ buf generate --template proto/buf.gen.penumbra.yaml buf.build/penumbra-zone/penu
 
 # move proto files to the right places
 # Note: Proto files are suffixed with the current binary version.
-cp -r github.com/strangelove-ventures/interchaintest/v*/* ./
+cp -r github.com/cosmos/interchaintest/v*/* ./
 rm -rf github.com

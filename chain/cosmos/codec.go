@@ -4,10 +4,10 @@ import (
 	"cosmossdk.io/x/upgrade"
 
 	"github.com/cosmos/ibc-go/modules/capability"
-	transfer "github.com/cosmos/ibc-go/v8/modules/apps/transfer"
-	ibccore "github.com/cosmos/ibc-go/v8/modules/core"
-	ibctm "github.com/cosmos/ibc-go/v8/modules/light-clients/07-tendermint"
-	ccvprovider "github.com/cosmos/interchain-security/v5/x/ccv/provider"
+	transfer "github.com/cosmos/ibc-go/v10/modules/apps/transfer"
+	ibccore "github.com/cosmos/ibc-go/v10/modules/core"
+	ibctm "github.com/cosmos/ibc-go/v10/modules/light-clients/07-tendermint"
+	ccvprovider "github.com/cosmos/interchain-security/v7/x/ccv/provider"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -28,7 +28,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 
-	ibcwasm "github.com/strangelove-ventures/interchaintest/v8/chain/cosmos/08-wasm-types"
+	ibcwasm "github.com/cosmos/interchaintest/v10/chain/cosmos/08-wasm-types"
 )
 
 func DefaultEncoding() testutil.TestEncodingConfig {

@@ -5,10 +5,10 @@ import (
 	"strings"
 
 	"cosmossdk.io/math"
-	"github.com/strangelove-ventures/interchaintest/v8"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/thorchain"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/thorchain/common"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/cosmos/interchaintest/v10"
+	"github.com/cosmos/interchaintest/v10/chain/thorchain"
+	"github.com/cosmos/interchaintest/v10/chain/thorchain/common"
+	"github.com/cosmos/interchaintest/v10/ibc"
 )
 
 var (

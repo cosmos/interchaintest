@@ -9,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	dockertypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/api/types/network"
@@ -18,7 +17,7 @@ import (
 	"github.com/docker/go-connections/nat"
 	"go.uber.org/zap"
 
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/cosmos/interchaintest/v10/ibc"
 )
 
 // Example Go/Cosmos-SDK panic format is `panic: bad Duration: time: invalid duration "bad"\n`.
@@ -154,7 +153,7 @@ func (c *ContainerLifecycle) StartContainer(ctx context.Context) error {
 // panic message after a wait period to allow the container to start.
 func (c *ContainerLifecycle) CheckForFailedStart(ctx context.Context, wait time.Duration) error {
 	time.Sleep(wait)
-	containerLogs, err := c.client.ContainerLogs(ctx, c.id, dockertypes.ContainerLogsOptions{
+	containerLogs, err := c.client.ContainerLogs(ctx, c.id, container.LogsOptions{
 		ShowStdout: true,
 		ShowStderr: true,
 	})
@@ -212,7 +211,7 @@ func (c *ContainerLifecycle) StopContainer(ctx context.Context) error {
 }
 
 func (c *ContainerLifecycle) RemoveContainer(ctx context.Context) error {
-	err := c.client.ContainerRemove(ctx, c.id, dockertypes.ContainerRemoveOptions{
+	err := c.client.ContainerRemove(ctx, c.id, container.RemoveOptions{
 		Force:         true,
 		RemoveVolumes: true,
 	})

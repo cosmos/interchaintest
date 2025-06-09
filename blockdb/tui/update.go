@@ -8,7 +8,7 @@ import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 
-	"github.com/strangelove-ventures/interchaintest/v8/blockdb/tui/presenter"
+	"github.com/cosmos/interchaintest/v10/blockdb/tui/presenter"
 )
 
 // Update should be the argument for *(tview.Application).SetInputCapture.

@@ -5,12 +5,12 @@ import (
 	_ "embed"
 	"testing"
 
-	"github.com/strangelove-ventures/interchaintest/v8"
-	tc "github.com/strangelove-ventures/interchaintest/v8/chain/thorchain"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/cosmos/interchaintest/v10"
+	tc "github.com/cosmos/interchaintest/v10/chain/thorchain"
+	"github.com/cosmos/interchaintest/v10/ibc"
 
-	//"github.com/strangelove-ventures/interchaintest/v8/ibc"
-	"github.com/strangelove-ventures/interchaintest/v8/testutil"
+	//"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v10/testutil"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap/zaptest"
 )

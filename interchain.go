@@ -12,11 +12,11 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 
-	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/namada"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
-	"github.com/strangelove-ventures/interchaintest/v8/relayer/hermes"
-	"github.com/strangelove-ventures/interchaintest/v8/testreporter"
+	"github.com/cosmos/interchaintest/v10/chain/cosmos"
+	"github.com/cosmos/interchaintest/v10/chain/namada"
+	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v10/relayer/hermes"
+	"github.com/cosmos/interchaintest/v10/testreporter"
 )
 
 // Interchain represents a full IBC network, encompassing a collection of

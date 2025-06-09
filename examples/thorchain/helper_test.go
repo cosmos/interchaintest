@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/cosmos/interchaintest/v10/ibc"
 )
 
 func GetEthAddressFromStdout(stdout string) (string, error) {
