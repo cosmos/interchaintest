@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/api/types/container"
+	containertypes "github.com/docker/docker/api/types/container"
+	imagetypes "github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/errdefs"
@@ -54,7 +54,7 @@ func compile(image string, optVersion string, repoPath string) (string, error) {
 	}
 	defer cli.Close()
 
-	reader, err := cli.ImagePull(ctx, imageFull, types.ImagePullOptions{})
+	reader, err := cli.ImagePull(ctx, imageFull, imagetypes.PullOptions{})
 	if err != nil {
 		return "", fmt.Errorf("pull image %s: %w", imageFull, err)
 	}
@@ -65,10 +65,10 @@ func compile(image string, optVersion string, repoPath string) (string, error) {
 		return "", fmt.Errorf("io copy %s: %w", imageFull, err)
 	}
 
-	resp, err := cli.ContainerCreate(ctx, &container.Config{
+	resp, err := cli.ContainerCreate(ctx, &containertypes.Config{
 		Image: imageFull,
 		Tty:   false,
-	}, &container.HostConfig{
+	}, &containertypes.HostConfig{
 		Mounts: []mount.Mount{
 			{
 				Type:   mount.TypeBind,
@@ -91,11 +91,11 @@ func compile(image string, optVersion string, repoPath string) (string, error) {
 		return "", fmt.Errorf("create container %s: %w", imageFull, err)
 	}
 
-	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
+	if err := cli.ContainerStart(ctx, resp.ID, containertypes.StartOptions{}); err != nil {
 		return "", fmt.Errorf("start container %s: %w", imageFull, err)
 	}
 
-	statusCh, errCh := cli.ContainerWait(ctx, resp.ID, container.WaitConditionNotRunning)
+	statusCh, errCh := cli.ContainerWait(ctx, resp.ID, containertypes.WaitConditionNotRunning)
 	select {
 	case err := <-errCh:
 		if err != nil {
@@ -104,7 +104,7 @@ func compile(image string, optVersion string, repoPath string) (string, error) {
 	case <-statusCh:
 	}
 
-	out, err := cli.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})
+	out, err := cli.ContainerLogs(ctx, resp.ID, containertypes.LogsOptions{ShowStdout: true})
 	if err != nil {
 		return "", fmt.Errorf("logs container %s: %w", imageFull, err)
 	}
@@ -114,7 +114,7 @@ func compile(image string, optVersion string, repoPath string) (string, error) {
 		return "", fmt.Errorf("std copy %s: %w", imageFull, err)
 	}
 
-	err = cli.ContainerStop(ctx, resp.ID, container.StopOptions{})
+	err = cli.ContainerStop(ctx, resp.ID, containertypes.StopOptions{})
 	if err != nil {
 		// Only return the error if it didn't match an already stopped, or a missing container.
 		if !(errdefs.IsNotModified(err) || errdefs.IsNotFound(err)) {
@@ -122,7 +122,7 @@ func compile(image string, optVersion string, repoPath string) (string, error) {
 		}
 	}
 
-	err = cli.ContainerRemove(ctx, resp.ID, types.ContainerRemoveOptions{
+	err = cli.ContainerRemove(ctx, resp.ID, containertypes.RemoveOptions{
 		Force:         true,
 		RemoveVolumes: true,
 	})

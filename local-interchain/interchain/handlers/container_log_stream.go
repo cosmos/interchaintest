@@ -10,7 +10,7 @@ import (
 	"unicode"
 
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
-	dockertypes "github.com/docker/docker/api/types"
+	containertypes "github.com/docker/docker/api/types/container"
 	dockerclient "github.com/docker/docker/client"
 	"go.uber.org/zap"
 )
@@ -75,7 +75,7 @@ func (cs *ContainerStream) StreamContainer(w http.ResponseWriter, r *http.Reques
 	isColored := strings.HasPrefix(strings.ToLower(r.URL.Query().Get("colored")), "t")
 	tailLines := tailLinesParam(r.URL.Query().Get("lines"))
 
-	rr, err := cs.cli.ContainerLogs(cs.ctx, containerID, dockertypes.ContainerLogsOptions{
+	rr, err := cs.cli.ContainerLogs(cs.ctx, containerID, containertypes.LogsOptions{
 		ShowStdout: true,
 		ShowStderr: true,
 		Follow:     true,
