@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"cosmossdk.io/x/feegrant"
+	"github.com/cosmos/cosmos-sdk/x/feegrant"
 )
 
 // FeeGrant grants a fee grant.

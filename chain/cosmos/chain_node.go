@@ -39,12 +39,12 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	tmjson "github.com/cometbft/cometbft/libs/json"
-	"github.com/cometbft/cometbft/p2p"
-	rpcclient "github.com/cometbft/cometbft/rpc/client"
-	rpchttp "github.com/cometbft/cometbft/rpc/client/http"
-	coretypes "github.com/cometbft/cometbft/rpc/core/types"
-	libclient "github.com/cometbft/cometbft/rpc/jsonrpc/client"
+	tmjson "github.com/cometbft/cometbft/v2/libs/json"
+	"github.com/cometbft/cometbft/v2/p2p"
+	rpcclient "github.com/cometbft/cometbft/v2/rpc/client"
+	rpchttp "github.com/cometbft/cometbft/v2/rpc/client/http"
+	coretypes "github.com/cometbft/cometbft/v2/rpc/core/types"
+	libclient "github.com/cometbft/cometbft/v2/rpc/jsonrpc/client"
 
 	"github.com/cosmos/interchaintest/v10/blockdb"
 	"github.com/cosmos/interchaintest/v10/dockerutil"
