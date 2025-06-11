@@ -9,15 +9,9 @@ import (
 	"strings"
 	"unicode"
 
-<<<<<<< HEAD
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
-	dockertypes "github.com/docker/docker/api/types"
-	dockerclient "github.com/docker/docker/client"
-=======
-	"github.com/docker/docker/api/types/container"
+	containertypes "github.com/docker/docker/api/types/container"
 	dockerclient "github.com/moby/moby/client"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
->>>>>>> 34a13b0e (feat: moby docker v27.5.1 (#1344))
 	"go.uber.org/zap"
 )
 
@@ -81,7 +75,7 @@ func (cs *ContainerStream) StreamContainer(w http.ResponseWriter, r *http.Reques
 	isColored := strings.HasPrefix(strings.ToLower(r.URL.Query().Get("colored")), "t")
 	tailLines := tailLinesParam(r.URL.Query().Get("lines"))
 
-	rr, err := cs.cli.ContainerLogs(cs.ctx, containerID, container.LogsOptions{
+	rr, err := cs.cli.ContainerLogs(cs.ctx, containerID, containertypes.LogsOptions{
 		ShowStdout: true,
 		ShowStderr: true,
 		Follow:     true,
