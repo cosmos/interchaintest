@@ -5,7 +5,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	dockerimage "github.com/docker/docker/api/types/image"
 	"io"
 	"strconv"
 	"strings"
@@ -13,11 +12,12 @@ import (
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
+	dockerimagetypes "github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/api/types/network"
-	"github.com/docker/docker/client"
-	"github.com/docker/docker/errdefs"
-	"github.com/docker/docker/pkg/stdcopy"
+	"github.com/moby/moby/client"
+	"github.com/moby/moby/errdefs"
+	"github.com/moby/moby/pkg/stdcopy"
 	"go.uber.org/zap"
 )
 
@@ -132,7 +132,7 @@ func (image *Image) EnsurePulled(ctx context.Context) error {
 	ref := image.imageRef()
 	_, _, err := image.client.ImageInspectWithRaw(ctx, ref)
 	if err != nil {
-		rc, err := image.client.ImagePull(ctx, ref, dockerimage.PullOptions{})
+		rc, err := image.client.ImagePull(ctx, ref, dockerimagetypes.PullOptions{})
 		if err != nil {
 			return fmt.Errorf("pull image %s: %w", ref, err)
 		}

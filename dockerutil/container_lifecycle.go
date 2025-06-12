@@ -12,9 +12,9 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/api/types/network"
-	dockerclient "github.com/docker/docker/client"
-	"github.com/docker/docker/errdefs"
 	"github.com/docker/go-connections/nat"
+	dockerclient "github.com/moby/moby/client"
+	"github.com/moby/moby/errdefs"
 	"go.uber.org/zap"
 
 	"github.com/cosmos/interchaintest/v10/ibc"

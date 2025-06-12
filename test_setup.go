@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/docker/docker/client"
+	"github.com/moby/moby/client"
 
 	"github.com/cosmos/interchaintest/v10/dockerutil"
 	"github.com/cosmos/interchaintest/v10/ibc"

@@ -4,16 +4,16 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/docker/docker/api/types/container"
-	dockerimage "github.com/docker/docker/api/types/image"
 	"io"
 	"path"
 	"strings"
 	"time"
 
+	"github.com/docker/docker/api/types/container"
+	dockerimagetypes "github.com/docker/docker/api/types/image"
 	volumetypes "github.com/docker/docker/api/types/volume"
-	"github.com/docker/docker/client"
-	"github.com/docker/docker/pkg/stdcopy"
+	"github.com/moby/moby/client"
+	"github.com/moby/moby/pkg/stdcopy"
 	"go.uber.org/zap"
 
 	"github.com/cosmos/interchaintest/v10/dockerutil"
@@ -482,7 +482,7 @@ func (r *DockerRelayer) pullContainerImageIfNecessary(containerImage ibc.DockerI
 		return nil
 	}
 
-	rc, err := r.client.ImagePull(context.TODO(), containerImage.Ref(), dockerimage.PullOptions{})
+	rc, err := r.client.ImagePull(context.TODO(), containerImage.Ref(), dockerimagetypes.PullOptions{})
 	if err != nil {
 		return err
 	}

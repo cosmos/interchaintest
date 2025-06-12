@@ -8,7 +8,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	dockerimage "github.com/docker/docker/api/types/image"
 	"io"
 	stdmath "math"
 	"net/http"
@@ -19,7 +18,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/docker/docker/client"
+	dockerimagetypes "github.com/docker/docker/api/types/image"
+	"github.com/moby/moby/client"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
@@ -74,7 +74,7 @@ func (c *NamadaChain) Initialize(ctx context.Context, testName string, cli *clie
 		rc, err := cli.ImagePull(
 			ctx,
 			image.Repository+":"+image.Version,
-			dockerimage.PullOptions{
+			dockerimagetypes.PullOptions{
 				Platform: "amd64",
 			})
 		if err != nil {

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	dockerclient "github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
+	dockerclient "github.com/moby/moby/client"
 	"go.uber.org/zap"
 
 	"github.com/cosmos/interchaintest/v10/dockerutil"

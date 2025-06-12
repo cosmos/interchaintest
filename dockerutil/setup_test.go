@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	volumetypes "github.com/docker/docker/api/types/volume"
-	"github.com/docker/docker/errdefs"
+	"github.com/moby/moby/errdefs"
 	"github.com/stretchr/testify/require"
 
 	"github.com/cosmos/interchaintest/v10/dockerutil"

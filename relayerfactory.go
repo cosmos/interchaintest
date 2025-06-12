@@ -2,7 +2,8 @@ package interchaintest
 
 import (
 	"fmt"
-	"github.com/docker/docker/client"
+
+	"github.com/moby/moby/client"
 	"go.uber.org/zap"
 
 	"github.com/cosmos/interchaintest/v10/ibc"
