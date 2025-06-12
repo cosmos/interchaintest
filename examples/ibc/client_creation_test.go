@@ -24,7 +24,7 @@ type relayerImp struct {
 
 func TestCreatClient(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping in short mode")
+		t.Skip("Skipping in short mode")
 	}
 
 	t.Parallel()
