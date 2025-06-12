@@ -1,7 +1,7 @@
 package thorchain
 
 import (
-	"cosmossdk.io/x/upgrade"
+	"github.com/cosmos/cosmos-sdk/x/upgrade"
 
 	transfer "github.com/cosmos/ibc-go/v10/modules/apps/transfer"
 	ibccore "github.com/cosmos/ibc-go/v10/modules/core"
