@@ -1,7 +1,6 @@
 package dockerutil
 
 import (
-	"math/rand"
 	"testing"
 
 	"github.com/docker/docker/api/types"
@@ -48,16 +47,6 @@ func TestGetHostPort(t *testing.T) {
 	} {
 		require.Equal(t, tt.Want, GetHostPort(tt.Container, tt.PortID), tt)
 	}
-}
-
-func TestRandLowerCaseLetterString(t *testing.T) {
-	require.Empty(t, RandLowerCaseLetterString(0))
-
-	rand.Seed(1) // nolint:staticcheck
-	require.Equal(t, "xvlbzgbaicmr", RandLowerCaseLetterString(12))
-
-	rand.Seed(1) // nolint:staticcheck
-	require.Equal(t, "xvlbzgbaicmrajwwhthctcuaxhxkqf", RandLowerCaseLetterString(30))
 }
 
 func TestCondenseHostName(t *testing.T) {
