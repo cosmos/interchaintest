@@ -8,13 +8,15 @@ import (
 	"testing"
 	"time"
 
+	"golang.org/x/sync/errgroup"
+
 	sdkmath "cosmossdk.io/math"
+
 	"github.com/cosmos/interchaintest/v10"
 	tc "github.com/cosmos/interchaintest/v10/chain/thorchain"
 	"github.com/cosmos/interchaintest/v10/chain/thorchain/common"
 	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/cosmos/interchaintest/v10/testutil"
-	"golang.org/x/sync/errgroup"
 )
 
 func GetAndFundTestUsers(
@@ -26,8 +28,7 @@ func GetAndFundTestUsers(
 	users := make([]ibc.Wallet, len(chains))
 	eg, egCtx := errgroup.WithContext(ctx)
 	for i, chain := range chains {
-		i := i
-		chain := chain
+
 		oneCoin := sdkmath.NewInt(int64(math.Pow10(int(*chain.Config().CoinDecimals))))
 		amount := oneCoin.MulRaw(1000) // thor, gaia
 		switch chain.Config().CoinType {
@@ -59,7 +60,7 @@ func GetAndFundTestUsers(
 	return users, err
 }
 
-// PollForPool polls until the pool is found and funded
+// PollForPool polls until the pool is found and funded.
 func PollForPool(ctx context.Context, thorchain *tc.Thorchain, deltaBlocks int64, asset common.Asset) error {
 	h, err := thorchain.Height(ctx)
 	if err != nil {
@@ -84,7 +85,7 @@ func PollForPool(ctx context.Context, thorchain *tc.Thorchain, deltaBlocks int64
 	return err
 }
 
-// PollForSaver polls until the saver is found
+// PollForSaver polls until the saver is found.
 func PollForSaver(ctx context.Context, thorchain *tc.Thorchain, deltaBlocks int64, asset common.Asset, exoUser ibc.Wallet) (tc.Saver, error) {
 	h, err := thorchain.Height(ctx)
 	if err != nil {
@@ -110,7 +111,7 @@ func PollForSaver(ctx context.Context, thorchain *tc.Thorchain, deltaBlocks int6
 	return saver, err
 }
 
-// PollForEjectedSaver polls until the saver no longer found
+// PollForEjectedSaver polls until the saver no longer found.
 func PollForEjectedSaver(ctx context.Context, thorchain *tc.Thorchain, deltaBlocks int64, asset common.Asset, exoUser ibc.Wallet) (tc.Saver, error) {
 	h, err := thorchain.Height(ctx)
 	if err != nil {
@@ -136,7 +137,7 @@ func PollForEjectedSaver(ctx context.Context, thorchain *tc.Thorchain, deltaBloc
 	return saver, err
 }
 
-// PollSwapCompleted polls until the swap is completed
+// PollSwapCompleted polls until the swap is completed.
 func PollSwapCompleted(ctx context.Context, thorchain *tc.Thorchain, deltaBlocks int64, txHash string) (any, error) {
 	h, err := thorchain.Height(ctx)
 	if err != nil {
@@ -160,7 +161,7 @@ func PollSwapCompleted(ctx context.Context, thorchain *tc.Thorchain, deltaBlocks
 	return saver, err
 }
 
-// PollOutboundSigned polls until the swap is completed and outbound has been signed
+// PollOutboundSigned polls until the swap is completed and outbound has been signed.
 func PollOutboundSigned(ctx context.Context, thorchain *tc.Thorchain, deltaBlocks int64, txHash string) (any, error) {
 	h, err := thorchain.Height(ctx)
 	if err != nil {
@@ -184,7 +185,7 @@ func PollOutboundSigned(ctx context.Context, thorchain *tc.Thorchain, deltaBlock
 	return saver, err
 }
 
-// PollForBalanceChaqnge polls until the balance changes
+// PollForBalanceChaqnge polls until the balance changes.
 func PollForBalanceChange(ctx context.Context, chain ibc.Chain, deltaBlocks int64, balance ibc.WalletAmount) error {
 	h, err := chain.Height(ctx)
 	if err != nil {
@@ -208,7 +209,7 @@ func PollForBalanceChange(ctx context.Context, chain ibc.Chain, deltaBlocks int6
 	return err
 }
 
-// PollForPoolSuspended polls until the pool is gone or suspended
+// PollForPoolSuspended polls until the pool is gone or suspended.
 func PollForPoolSuspended(ctx context.Context, thorchain *tc.Thorchain, deltaBlocks int64, exoAsset common.Asset) error {
 	h, err := thorchain.Height(ctx)
 	if err != nil {

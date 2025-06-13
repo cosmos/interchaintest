@@ -7,14 +7,15 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+	"golang.org/x/sync/errgroup"
+
 	sdkmath "cosmossdk.io/math"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/utxo"
 	"github.com/cosmos/interchaintest/v10/ibc"
-	"golang.org/x/sync/errgroup"
-
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 func TestUtxo(t *testing.T) {
@@ -67,7 +68,6 @@ func TestUtxo(t *testing.T) {
 	// Create and fund a user using GetAndFundTestUsers
 	eg, egCtx := errgroup.WithContext(ctx)
 	for _, chain := range chains {
-		chain := chain
 		eg.Go(func() error {
 			// Fund 2 coins to user1 and user2
 			fundAmount := sdkmath.NewInt(200_000_000)

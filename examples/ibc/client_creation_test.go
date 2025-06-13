@@ -4,12 +4,13 @@ import (
 	"context"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/cosmos/interchaintest/v10/testreporter"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 var (
@@ -41,7 +42,7 @@ func TestCreatClient(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
+
 		testname := tt.name
 		t.Run(testname, func(t *testing.T) {
 			t.Parallel()
@@ -134,8 +135,7 @@ func TestCreatClient(t *testing.T) {
 			require.Equal(t, len(srcClientInfoBefore), (len(srcClientInfoAfter) - 1), "there is not exactly 1 more client on the source chain after running createClient")
 
 			// createClients should only create a client on source, NOT destination chain
-			require.Equal(t, len(destClientInfoBefore), len(destClientInfoAfter), "a client was created on the destination chain")
+			require.Len(t, destClientInfoAfter, len(destClientInfoBefore), "a client was created on the destination chain")
 		})
-
 	}
 }

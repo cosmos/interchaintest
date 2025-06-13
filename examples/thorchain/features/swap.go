@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
+
 	tc "github.com/cosmos/interchaintest/v10/chain/thorchain"
 	"github.com/cosmos/interchaintest/v10/chain/thorchain/common"
 	"github.com/cosmos/interchaintest/v10/ibc"
@@ -51,7 +52,7 @@ func DualSwap(
 	return singleSwap(ctx, thorchain, destChain, destUser, srcChain, srcUser)
 }
 
-// swap 0.5% of pool depth
+// swap 0.5% of pool depth.
 func singleSwap(
 	ctx context.Context,
 	thorchain *tc.Thorchain,

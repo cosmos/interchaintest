@@ -6,16 +6,19 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+
 	"cosmossdk.io/math"
+
 	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/penumbra"
 	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/cosmos/interchaintest/v10/relayer"
 	"github.com/cosmos/interchaintest/v10/testreporter"
 	"github.com/cosmos/interchaintest/v10/testutil"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 // TestPenumbraToPenumbraIBC asserts that basic IBC functionality works between two Penumbra testnet networks.
@@ -121,7 +124,7 @@ func TestPenumbraToPenumbraIBC(t *testing.T) {
 	// Fund users and check init balances
 	initBalance := math.NewInt(1_000_000_000)
 	users := interchaintest.GetAndFundTestUsers(t, ctx, "user", initBalance, chainA)
-	require.Equal(t, 1, len(users))
+	require.Len(t, users, 1)
 
 	alice := users[0]
 
@@ -130,10 +133,10 @@ func TestPenumbraToPenumbraIBC(t *testing.T) {
 
 	aliceBal, err := chainA.GetBalance(ctx, alice.KeyName(), chainA.Config().Denom)
 	require.NoError(t, err)
-	require.True(t, aliceBal.Equal(initBalance), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", aliceBal, initBalance))
+	require.True(t, aliceBal.Equal(initBalance), "incorrect balance, got (%s) expected (%s)", aliceBal, initBalance)
 
 	users = interchaintest.GetAndFundTestUsers(t, ctx, "user", initBalance, chainB)
-	require.Equal(t, 1, len(users))
+	require.Len(t, users, 1)
 
 	bob := users[0]
 
@@ -142,7 +145,7 @@ func TestPenumbraToPenumbraIBC(t *testing.T) {
 
 	bobBal, err := chainB.GetBalance(ctx, bob.KeyName(), chainB.Config().Denom)
 	require.NoError(t, err)
-	require.True(t, bobBal.Equal(initBalance), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", bobBal, initBalance))
+	require.True(t, bobBal.Equal(initBalance), "incorrect balance, got (%s) expected (%s)", bobBal, initBalance)
 
 	// Compose ics-20 transfer details and initialize transfer
 	bobAddr, err := chainB.GetAddress(ctx, bob.KeyName())
@@ -176,14 +179,14 @@ func TestPenumbraToPenumbraIBC(t *testing.T) {
 	expectedBal := initBalance.Sub(transferAmount)
 	aliceBal, err = chainA.GetBalance(ctx, alice.KeyName(), chainA.Config().Denom)
 	require.NoError(t, err)
-	require.True(t, aliceBal.Equal(expectedBal), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", aliceBal, expectedBal))
+	require.True(t, aliceBal.Equal(expectedBal), "incorrect balance, got (%s) expected (%s)", aliceBal, expectedBal)
 
 	// Compose IBC token denom information for Chain A's native token denom represented on Chain B
 	ibcDenom := transfertypes.NewDenom(chainA.Config().Denom, transfertypes.NewHop(abChan.Counterparty.PortID, abChan.Counterparty.ChannelID))
 
 	bobBal, err = chainB.GetBalance(ctx, bob.KeyName(), ibcDenom.IBCDenom())
 	require.NoError(t, err)
-	require.True(t, bobBal.Equal(transferAmount), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", bobBal, transferAmount))
+	require.True(t, bobBal.Equal(transferAmount), "incorrect balance, got (%s) expected (%s)", bobBal, transferAmount)
 
 	// send ics-20 transfer from chainA -> chainB that will time out due to the timeout timestamp being reached
 	transfer = ibc.WalletAmount{
@@ -219,12 +222,12 @@ func TestPenumbraToPenumbraIBC(t *testing.T) {
 	bobBal, err = chainB.GetBalance(ctx, bob.KeyName(), ibcDenom.IBCDenom())
 	require.NoError(t, err)
 
-	require.True(t, bobBal.Equal(transferAmount), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", bobBal, transferAmount))
+	require.True(t, bobBal.Equal(transferAmount), "incorrect balance, got (%s) expected (%s)", bobBal, transferAmount)
 
 	aliceBal, err = chainA.GetBalance(ctx, alice.KeyName(), chainA.Config().Denom)
 	require.NoError(t, err)
 
-	require.True(t, aliceBal.Equal(expectedBal), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", aliceBal, expectedBal))
+	require.True(t, aliceBal.Equal(expectedBal), "incorrect balance, got (%s) expected (%s)", aliceBal, expectedBal)
 
 	// send ics-20 transfer from chainA -> chainB that will time out due to the timeout height being reached
 	h, err = chainB.Height(ctx)
@@ -255,12 +258,12 @@ func TestPenumbraToPenumbraIBC(t *testing.T) {
 	bobBal, err = chainB.GetBalance(ctx, bob.KeyName(), ibcDenom.IBCDenom())
 	require.NoError(t, err)
 
-	require.True(t, bobBal.Equal(transferAmount), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", bobBal, transferAmount))
+	require.True(t, bobBal.Equal(transferAmount), "incorrect balance, got (%s) expected (%s)", bobBal, transferAmount)
 
 	aliceBal, err = chainA.GetBalance(ctx, alice.KeyName(), chainA.Config().Denom)
 	require.NoError(t, err)
 
-	require.True(t, aliceBal.Equal(expectedBal), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", aliceBal, expectedBal))
+	require.True(t, aliceBal.Equal(expectedBal), "incorrect balance, got (%s) expected (%s)", aliceBal, expectedBal)
 }
 
 // TestPenumbraToPenumbraIBC asserts that basic IBC functionality works between Penumbra and Cosmos testnet networks.
@@ -381,7 +384,7 @@ func TestPenumbraToCosmosIBC(t *testing.T) {
 	// Fund users and check init balances
 	initBalance := math.NewInt(1_000_000_000)
 	pUsers := interchaintest.GetAndFundTestUsers(t, ctx, "user", initBalance, chainA)
-	require.Equal(t, 1, len(pUsers))
+	require.Len(t, pUsers, 1)
 
 	alice := pUsers[0]
 
@@ -390,10 +393,10 @@ func TestPenumbraToCosmosIBC(t *testing.T) {
 
 	aliceBal, err := chainA.GetBalance(ctx, alice.KeyName(), chainA.Config().Denom)
 	require.NoError(t, err)
-	require.True(t, aliceBal.Equal(initBalance), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", aliceBal, initBalance))
+	require.True(t, aliceBal.Equal(initBalance), "incorrect balance, got (%s) expected (%s)", aliceBal, initBalance)
 
 	cUsers := interchaintest.GetAndFundTestUsers(t, ctx, "user", initBalance, chainB)
-	require.Equal(t, 1, len(cUsers))
+	require.Len(t, cUsers, 1)
 
 	bob := cUsers[0]
 
@@ -402,7 +405,7 @@ func TestPenumbraToCosmosIBC(t *testing.T) {
 
 	bobBal, err := chainB.GetBalance(ctx, bob.FormattedAddress(), chainB.Config().Denom)
 	require.NoError(t, err)
-	require.True(t, bobBal.Equal(initBalance), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", bobBal, initBalance))
+	require.True(t, bobBal.Equal(initBalance), "incorrect balance, got (%s) expected (%s)", bobBal, initBalance)
 
 	// Compose ics-20 transfer details and initialize transfer
 	transferAmount := math.NewInt(1_000_000)
@@ -433,7 +436,7 @@ func TestPenumbraToCosmosIBC(t *testing.T) {
 	expectedBal := initBalance.Sub(transferAmount)
 	aliceBal, err = chainA.GetBalance(ctx, alice.KeyName(), chainA.Config().Denom)
 	require.NoError(t, err)
-	require.True(t, aliceBal.Equal(expectedBal), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", aliceBal, expectedBal))
+	require.True(t, aliceBal.Equal(expectedBal), "incorrect balance, got (%s) expected (%s)", aliceBal, expectedBal)
 
 	// Compose IBC token denom information for Chain A's native token denom represented on Chain B
 	ibcDenom := transfertypes.NewDenom(chainA.Config().Denom, transfertypes.NewHop(abChan.Counterparty.PortID, abChan.Counterparty.ChannelID))
@@ -441,7 +444,7 @@ func TestPenumbraToCosmosIBC(t *testing.T) {
 
 	bobBal, err = chainB.GetBalance(ctx, bob.FormattedAddress(), chainADenomOnChainB)
 	require.NoError(t, err)
-	require.True(t, bobBal.Equal(transferAmount), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", bobBal, transferAmount))
+	require.True(t, bobBal.Equal(transferAmount), "incorrect balance, got (%s) expected (%s)", bobBal, transferAmount)
 
 	aliceAddr, err := chainA.GetAddress(ctx, alice.KeyName())
 	require.NoError(t, err)
@@ -468,11 +471,11 @@ func TestPenumbraToCosmosIBC(t *testing.T) {
 
 	aliceBal, err = chainA.GetBalance(ctx, alice.KeyName(), chainA.Config().Denom)
 	require.NoError(t, err)
-	require.True(t, initBalance.Equal(aliceBal), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", aliceBal, initBalance))
+	require.True(t, initBalance.Equal(aliceBal), "incorrect balance, got (%s) expected (%s)", aliceBal, initBalance)
 
 	bobBal, err = chainB.GetBalance(ctx, bob.FormattedAddress(), chainADenomOnChainB)
 	require.NoError(t, err)
-	require.True(t, bobBal.Equal(math.ZeroInt()), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", bobBal, math.ZeroInt()))
+	require.True(t, bobBal.Equal(math.ZeroInt()), "incorrect balance, got (%s) expected (%s)", bobBal, math.ZeroInt())
 
 	transfer = ibc.WalletAmount{
 		Address: bob.FormattedAddress(),
@@ -510,11 +513,11 @@ func TestPenumbraToCosmosIBC(t *testing.T) {
 
 	aliceBal, err = chainA.GetBalance(ctx, alice.KeyName(), chainA.Config().Denom)
 	require.NoError(t, err)
-	require.True(t, initBalance.Equal(aliceBal), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", aliceBal, initBalance))
+	require.True(t, initBalance.Equal(aliceBal), "incorrect balance, got (%s) expected (%s)", aliceBal, initBalance)
 
 	bobBal, err = chainB.GetBalance(ctx, bob.FormattedAddress(), chainADenomOnChainB)
 	require.NoError(t, err)
-	require.True(t, bobBal.Equal(math.ZeroInt()), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", bobBal, math.ZeroInt()))
+	require.True(t, bobBal.Equal(math.ZeroInt()), "incorrect balance, got (%s) expected (%s)", bobBal, math.ZeroInt())
 
 	h, err = chainB.Height(ctx)
 	require.NoError(t, err)
@@ -543,11 +546,11 @@ func TestPenumbraToCosmosIBC(t *testing.T) {
 
 	aliceBal, err = chainA.GetBalance(ctx, alice.KeyName(), chainA.Config().Denom)
 	require.NoError(t, err)
-	require.True(t, initBalance.Equal(aliceBal), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", aliceBal, initBalance))
+	require.True(t, initBalance.Equal(aliceBal), "incorrect balance, got (%s) expected (%s)", aliceBal, initBalance)
 
 	bobBal, err = chainB.GetBalance(ctx, bob.FormattedAddress(), chainADenomOnChainB)
 	require.NoError(t, err)
-	require.True(t, bobBal.Equal(math.ZeroInt()), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", bobBal, math.ZeroInt()))
+	require.True(t, bobBal.Equal(math.ZeroInt()), "incorrect balance, got (%s) expected (%s)", bobBal, math.ZeroInt())
 
 	// Timeout test in the other direction
 	h, err = chainA.Height(ctx)
@@ -591,11 +594,11 @@ func TestPenumbraToCosmosIBC(t *testing.T) {
 
 	bobBal, err = chainB.GetBalance(ctx, bob.FormattedAddress(), chainB.Config().Denom)
 	require.NoError(t, err)
-	require.True(t, preTransferBobBal.Equal(bobBal), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", bobBal, preTransferBobBal))
+	require.True(t, preTransferBobBal.Equal(bobBal), "incorrect balance, got (%s) expected (%s)", bobBal, preTransferBobBal)
 
 	aliceBal, err = chainA.GetBalance(ctx, alice.KeyName(), chainBDenomOnChainA)
 	require.NoError(t, err)
-	require.True(t, aliceBal.Equal(math.ZeroInt()), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", aliceBal, math.ZeroInt()))
+	require.True(t, aliceBal.Equal(math.ZeroInt()), "incorrect balance, got (%s) expected (%s)", aliceBal, math.ZeroInt())
 
 	h, err = chainA.Height(ctx)
 	require.NoError(t, err)
@@ -629,14 +632,14 @@ func TestPenumbraToCosmosIBC(t *testing.T) {
 
 	bobBal, err = chainB.GetBalance(ctx, bob.FormattedAddress(), chainB.Config().Denom)
 	require.NoError(t, err)
-	require.True(t, preTransferBobBal.Equal(bobBal), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", bobBal, preTransferBobBal))
+	require.True(t, preTransferBobBal.Equal(bobBal), "incorrect balance, got (%s) expected (%s)", bobBal, preTransferBobBal)
 
 	aliceBal, err = chainA.GetBalance(ctx, alice.KeyName(), chainBDenomOnChainA)
 	require.NoError(t, err)
-	require.True(t, aliceBal.Equal(math.ZeroInt()), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", aliceBal, math.ZeroInt()))
+	require.True(t, aliceBal.Equal(math.ZeroInt()), "incorrect balance, got (%s) expected (%s)", aliceBal, math.ZeroInt())
 }
 
-// penumbra requires rounding up timeout timestamps to the next minute
+// penumbra requires rounding up timeout timestamps to the next minute.
 func MinuteRoundedTimeNanos(t time.Time) uint64 {
 	return uint64(t.Add(time.Minute - time.Nanosecond).Truncate(time.Minute).UnixNano())
 }

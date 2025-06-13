@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
+
 	tc "github.com/cosmos/interchaintest/v10/chain/thorchain"
 	"github.com/cosmos/interchaintest/v10/chain/thorchain/common"
 	"github.com/cosmos/interchaintest/v10/ibc"

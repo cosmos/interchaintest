@@ -8,16 +8,18 @@ import (
 	"testing"
 	"time"
 
-	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
 
 	"cosmossdk.io/math"
+
+	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
+
 	"github.com/cosmos/interchaintest/v10"
 	namadachain "github.com/cosmos/interchaintest/v10/chain/namada"
 	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/cosmos/interchaintest/v10/relayer"
 	"github.com/cosmos/interchaintest/v10/testreporter"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 func TestNamadaNetwork(t *testing.T) {

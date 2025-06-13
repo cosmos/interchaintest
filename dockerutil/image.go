@@ -5,7 +5,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	dockerimage "github.com/docker/docker/api/types/image"
 	"io"
 	"strconv"
 	"strings"
@@ -13,6 +12,7 @@ import (
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
+	dockerimage "github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
@@ -360,7 +360,7 @@ func (c *Container) Stop(timeout time.Duration) error {
 	err := c.image.client.ContainerStop(ctx, c.containerID, stopOptions)
 	if err != nil {
 		// Only return the error if it didn't match an already stopped, or a missing container.
-		if !(errdefs.IsNotModified(err) || errdefs.IsNotFound(err)) {
+		if !errdefs.IsNotModified(err) && !errdefs.IsNotFound(err) {
 			return c.image.WrapErr(fmt.Errorf("stop container %s: %w", c.Name, err))
 		}
 	}

@@ -2,21 +2,26 @@ package thorchain_test
 
 import (
 	"context"
-	_ "embed"
 	"fmt"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/docker/docker/client"
+	ethcommon "github.com/ethereum/go-ethereum/common"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+	"golang.org/x/sync/errgroup"
+
+	_ "embed"
+
 	sdkmath "cosmossdk.io/math"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-
-	"github.com/docker/docker/client"
-	ethcommon "github.com/ethereum/go-ethereum/common"
 
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
@@ -26,9 +31,6 @@ import (
 	tc "github.com/cosmos/interchaintest/v10/chain/thorchain"
 	"github.com/cosmos/interchaintest/v10/chain/utxo"
 	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
-	"golang.org/x/sync/errgroup"
 )
 
 func StartExoChains(t *testing.T, ctx context.Context, client *client.Client, network string) ExoChains {

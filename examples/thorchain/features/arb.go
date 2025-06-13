@@ -8,11 +8,13 @@ import (
 	"testing"
 	"time"
 
+	"golang.org/x/sync/errgroup"
+
 	sdkmath "cosmossdk.io/math"
+
 	tc "github.com/cosmos/interchaintest/v10/chain/thorchain"
 	"github.com/cosmos/interchaintest/v10/chain/thorchain/common"
 	"github.com/cosmos/interchaintest/v10/ibc"
-	"golang.org/x/sync/errgroup"
 )
 
 func Arb(

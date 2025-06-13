@@ -5,18 +5,19 @@ import (
 	"fmt"
 	"testing"
 
-	"cosmossdk.io/math"
-
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+
+	"cosmossdk.io/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	testutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 var (
@@ -105,31 +106,30 @@ func wasmEncoding() *testutil.TestEncodingConfig {
 func testBuildDependencies(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain) {
 	deps := chain.Validators[0].GetBuildInformation(ctx)
 
-	require.Equal(t, deps.Name, "juno")
-	require.Equal(t, deps.ServerName, "junod")
-	require.Equal(t, deps.BuildTags, "netgo muslc,")
+	require.Equal(t, "juno", deps.Name)
+	require.Equal(t, "junod", deps.ServerName)
+	require.Equal(t, "netgo muslc,", deps.BuildTags)
 
 	for _, dep := range deps.BuildDeps {
-		dep := dep
 
 		// Verify specific examples
-		if dep.Parent == "github.com/cosmos/cosmos-sdk" {
-			require.Equal(t, dep.IsReplacement, false)
-		} else if dep.Parent == "github.com/99designs/keyring" {
-			require.Equal(t, dep.Version, "v1.2.2")
-			require.Equal(t, dep.IsReplacement, true)
-			require.Equal(t, dep.Replacement, "github.com/cosmos/keyring")
-			require.Equal(t, dep.ReplacementVersion, "v1.2.0")
-
+		switch dep.Parent {
+		case "github.com/cosmos/cosmos-sdk":
+			require.False(t, dep.IsReplacement)
+		case "github.com/99designs/keyring":
+			require.Equal(t, "v1.2.2", dep.Version)
+			require.True(t, dep.IsReplacement)
+			require.Equal(t, "github.com/cosmos/keyring", dep.Replacement)
+			require.Equal(t, "v1.2.0", dep.ReplacementVersion)
 		}
 
 		// Verify all replacement logic
 		if dep.IsReplacement {
 			require.GreaterOrEqual(t, len(dep.ReplacementVersion), 6, "ReplacementVersion: %s must be >=6 length (ex: vA.B.C)", dep.ReplacementVersion)
-			require.Greater(t, len(dep.Replacement), 0, "Replacement: %s must be >0 length.", dep.Replacement)
+			require.NotEmpty(t, dep.Replacement, "Replacement: %s must be >0 length.", dep.Replacement)
 		} else {
-			require.Equal(t, len(dep.Replacement), 0, "Replacement: %s is not 0.", dep.Replacement)
-			require.Equal(t, len(dep.ReplacementVersion), 0, "ReplacementVersion: %s is not 0.", dep.ReplacementVersion)
+			require.Empty(t, dep.Replacement, "Replacement: %s is not 0.", dep.Replacement)
+			require.Empty(t, dep.ReplacementVersion, "ReplacementVersion: %s is not 0.", dep.ReplacementVersion)
 		}
 	}
 }
@@ -181,7 +181,7 @@ func testWalletKeys(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain
 	tn := chain.Validators[0]
 	a, err := tn.KeyBech32(ctx, "key-abc", "val")
 	require.NoError(t, err)
-	require.Equal(t, a, "junovaloper1hj5fveer5cjtn4wd6wstzugjfdxzl0xp0r8xsx")
+	require.Equal(t, "junovaloper1hj5fveer5cjtn4wd6wstzugjfdxzl0xp0r8xsx", a)
 
 	a, err = tn.KeyBech32(ctx, "key-abc", "acc")
 	require.NoError(t, err)
@@ -217,7 +217,7 @@ func testFindTxs(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, u
 	txs, err := chain.FindTxs(ctx, height+1)
 	require.NoError(t, err)
 	require.NotEmpty(t, txs)
-	require.Equal(t, txs[0].Events[0].Type, "coin_spent")
+	require.Equal(t, "coin_spent", txs[0].Events[0].Type)
 }
 
 func testPollForBalance(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, users []ibc.Wallet) {
@@ -265,7 +265,7 @@ func testAddingNode(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain
 	// This should be tested last or else Txs will fail on the new full node.
 	nodesAmt := len(chain.Nodes())
 	chain.AddFullNodes(ctx, nil, 1)
-	require.Equal(t, nodesAmt+1, len(chain.Nodes()))
+	require.Len(t, chain.Nodes(), nodesAmt+1)
 }
 
 func testBroadcaster(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, users []ibc.Wallet) {
@@ -372,9 +372,9 @@ func testTokenFactory(ctx context.Context, t *testing.T, chain *cosmos.CosmosCha
 	// verify metadata
 	md, err := chain.QueryBankMetadata(ctx, tfDenom)
 	require.NoError(t, err)
-	require.Equal(t, md.Metadata.Description, "description here")
-	require.Equal(t, md.Metadata.Symbol, "SYMBOL")
-	require.Equal(t, md.Metadata.DenomUnits[1].Exponent, 6)
+	require.Equal(t, "description here", md.Metadata.Description)
+	require.Equal(t, "SYMBOL", md.Metadata.Symbol)
+	require.Equal(t, 6, md.Metadata.DenomUnits[1].Exponent)
 
 	// mint tokens
 	_, err = node.TokenFactoryMintDenom(ctx, user.KeyName(), tfDenom, 1)
@@ -463,7 +463,7 @@ func testTXEncodeDecode(ctx context.Context, t *testing.T, chain *cosmos.CosmosC
 	require.NoError(t, err)
 }
 
-// helpers
+// helpers.
 func sendTokens(ctx context.Context, chain *cosmos.CosmosChain, from, to ibc.Wallet, token string, amount int64) (ibc.WalletAmount, error) {
 	if token == "" {
 		token = chain.Config().Denom

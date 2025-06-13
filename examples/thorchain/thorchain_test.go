@@ -7,14 +7,14 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/cosmos/interchaintest/v10"
-	"github.com/cosmos/interchaintest/v10/examples/thorchain/features"
-
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
+
+	"github.com/cosmos/interchaintest/v10"
+	"github.com/cosmos/interchaintest/v10/examples/thorchain/features"
 )
 
-// go test -timeout 20m -v -run TestThorchain examples/thorchain/*.go -count 1
+// go test -timeout 20m -v -run TestThorchain examples/thorchain/*.go -count 1.
 func TestThorchainSim(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping in short mode")
@@ -39,7 +39,6 @@ func TestThorchainSim(t *testing.T) {
 	// --------------------------------------------------------
 	eg, egCtx := errgroup.WithContext(ctx)
 	for _, exoChain := range exoChains {
-		exoChain := exoChain
 		eg.Go(func() error {
 			_, lper, err := features.DualLp(t, egCtx, thorchain, exoChain.chain)
 			if err != nil {
@@ -56,7 +55,6 @@ func TestThorchainSim(t *testing.T) {
 	// --------------------------------------------------------
 	eg, egCtx = errgroup.WithContext(ctx)
 	for _, exoChain := range exoChains {
-		exoChain := exoChain
 		eg.Go(func() error {
 			saver, err := features.Saver(t, egCtx, thorchain, exoChain.chain)
 			if err != nil {
@@ -80,7 +78,7 @@ func TestThorchainSim(t *testing.T) {
 	eg, egCtx = errgroup.WithContext(ctx)
 	exoChainList := exoChains.GetChains()
 	for i := range exoChainList {
-		i := i
+
 		fmt.Println("Chain:", i, "Name:", exoChainList[i].Config().Name)
 		randomChain := rand.Intn(len(exoChainList))
 		if i == randomChain && i == 0 {
@@ -100,7 +98,6 @@ func TestThorchainSim(t *testing.T) {
 	mimirLock := sync.Mutex{}
 	eg, egCtx = errgroup.WithContext(ctx)
 	for _, exoChain := range exoChains {
-		exoChain := exoChain
 		eg.Go(func() error {
 			_, err = features.SaverEject(t, egCtx, &mimirLock, thorchain, exoChain.chain, exoChain.savers...)
 			if err != nil {
@@ -116,7 +113,6 @@ func TestThorchainSim(t *testing.T) {
 	// --------------------------------------------------------
 	eg, egCtx = errgroup.WithContext(ctx)
 	for _, exoChain := range exoChains {
-		exoChain := exoChain
 		eg.Go(func() error {
 			refundWallets := append(exoChain.lpers, exoChain.savers...)
 			return features.Ragnarok(t, egCtx, thorchain, exoChain.chain, refundWallets...)

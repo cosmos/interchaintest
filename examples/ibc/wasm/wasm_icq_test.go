@@ -10,7 +10,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zaptest"
+
 	"cosmossdk.io/math"
+
 	"github.com/cosmos/interchaintest/v10"
 	cosmosChain "github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos/wasm"
@@ -19,9 +24,6 @@ import (
 	"github.com/cosmos/interchaintest/v10/relayer"
 	"github.com/cosmos/interchaintest/v10/testreporter"
 	"github.com/cosmos/interchaintest/v10/testutil"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zaptest"
 )
 
 // TestInterchainQueriesWASM is a test case that performs a round trip query from an ICQ wasm contract <> ICQ module.
@@ -319,7 +321,7 @@ func TestInterchainQueriesWASM(t *testing.T) {
 			}
 		}
 	}
-	require.Equal(t, hasIcqQuery, true)
+	require.True(t, hasIcqQuery)
 }
 
 func FirstWithPort(channels []ibc.ChannelOutput, port string) *ibc.ChannelOutput {

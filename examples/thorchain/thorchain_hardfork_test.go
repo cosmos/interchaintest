@@ -2,20 +2,21 @@ package thorchain_test
 
 import (
 	"context"
-	_ "embed"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+
+	_ "embed"
 
 	"github.com/cosmos/interchaintest/v10"
 	tc "github.com/cosmos/interchaintest/v10/chain/thorchain"
 	"github.com/cosmos/interchaintest/v10/ibc"
-
-	//"github.com/cosmos/interchaintest/v10/ibc"
+	//"github.com/cosmos/interchaintest/v10/ibc".
 	"github.com/cosmos/interchaintest/v10/testutil"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
-// //go:embed mainnet-genesis.json
+// //go:embed mainnet-genesis.json.
 var genesisBz []byte
 
 func TestThorchainHardFork(t *testing.T) {

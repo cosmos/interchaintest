@@ -6,20 +6,22 @@ import (
 	"testing"
 	"time"
 
-	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
 
 	"cosmossdk.io/math"
+
+	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/cosmos/interchaintest/v10/testreporter"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 // This test is meant to be used as a basic interchaintest tutorial.
-// Code snippets are broken down in ./docs/upAndRunning.md
+// Code snippets are broken down in ./docs/upAndRunning.md.
 func TestLearn(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping in short mode")

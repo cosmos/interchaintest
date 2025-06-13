@@ -6,14 +6,16 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+
 	"cosmossdk.io/math"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/penumbra"
 	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/cosmos/interchaintest/v10/testreporter"
 	"github.com/cosmos/interchaintest/v10/testutil"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 // TestPenumbraNetworkIntegration exercises various facilities of pclientd and is used as a basic integration test
@@ -70,7 +72,7 @@ func TestPenumbraNetworkIntegration(t *testing.T) {
 
 	initBalance := math.NewInt(1_000_000)
 	users := interchaintest.GetAndFundTestUsers(t, ctx, "user", initBalance, chain)
-	require.Equal(t, 1, len(users))
+	require.Len(t, users, 1)
 
 	alice := users[0]
 
@@ -79,10 +81,10 @@ func TestPenumbraNetworkIntegration(t *testing.T) {
 
 	aliceBal, err := chain.GetBalance(ctx, alice.KeyName(), chain.Config().Denom)
 	require.NoError(t, err)
-	require.True(t, aliceBal.Equal(initBalance), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", aliceBal, initBalance))
+	require.True(t, aliceBal.Equal(initBalance), "incorrect balance, got (%s) expected (%s)", aliceBal, initBalance)
 
 	users = interchaintest.GetAndFundTestUsers(t, ctx, "user", initBalance, chain)
-	require.Equal(t, 1, len(users))
+	require.Len(t, users, 1)
 
 	bob := users[0]
 
@@ -91,7 +93,7 @@ func TestPenumbraNetworkIntegration(t *testing.T) {
 
 	bobBal, err := chain.GetBalance(ctx, bob.KeyName(), chain.Config().Denom)
 	require.NoError(t, err)
-	require.True(t, bobBal.Equal(initBalance), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", bobBal, initBalance))
+	require.True(t, bobBal.Equal(initBalance), "incorrect balance, got (%s) expected (%s)", bobBal, initBalance)
 
 	bobAddr, err := chain.GetAddress(ctx, bob.KeyName())
 	require.NoError(t, err)
@@ -123,6 +125,6 @@ func TestPenumbraNetworkIntegration(t *testing.T) {
 	aliceExpected := aliceBal.Sub(transfer.Amount)
 	bobExpected := bobBal.Add(transfer.Amount)
 
-	require.True(t, aliceNewBal.Equal(aliceExpected), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", aliceNewBal, aliceExpected))
-	require.True(t, bobNewBal.Equal(bobExpected), fmt.Sprintf("incorrect balance, got (%s) expected (%s)", bobNewBal, bobExpected))
+	require.True(t, aliceNewBal.Equal(aliceExpected), "incorrect balance, got (%s) expected (%s)", aliceNewBal, aliceExpected)
+	require.True(t, bobNewBal.Equal(bobExpected), "incorrect balance, got (%s) expected (%s)", bobNewBal, bobExpected)
 }
