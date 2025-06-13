@@ -29,6 +29,8 @@ var (
 // This tests Cosmos Interchain Security, spinning up a provider and a single consumer chain.
 // go test -timeout 3000s -run ^TestICS$ github.com/cosmos/interchaintest/v10/examples/ibc -v  -test.short.
 func TestICS(t *testing.T) {
+	t.Parallel()
+
 	if testing.Short() {
 		ver := icsVersions[0]
 		t.Logf("Running in short mode, only testing the latest ICS version: %s", ver)

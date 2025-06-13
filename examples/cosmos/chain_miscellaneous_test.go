@@ -311,7 +311,7 @@ func testBroadcaster(ctx context.Context, t *testing.T, chain *cosmos.CosmosChai
 	require.NoError(t, err)
 	require.Equal(t, math.NewInt(2), updatedBal2)
 
-	txResp, err = cosmos.BroadcastTx(
+	_, err = cosmos.BroadcastTx(
 		ctx,
 		b,
 		users[0],
@@ -465,7 +465,7 @@ func testTXEncodeDecode(ctx context.Context, t *testing.T, chain *cosmos.CosmosC
 
 // helpers.
 func sendTokens(ctx context.Context, chain *cosmos.CosmosChain, from, to ibc.Wallet, token string, amount int64) (ibc.WalletAmount, error) {
-	if token == "" {
+	if token == "" { // nolint:unparam
 		token = chain.Config().Denom
 	}
 

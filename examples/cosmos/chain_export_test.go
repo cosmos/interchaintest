@@ -73,5 +73,5 @@ func HaltChainAndExportGenesis(ctx context.Context, t *testing.T, chain *cosmos.
 	height, err := chain.Height(ctx)
 	require.NoError(t, err, "error getting height after halt")
 
-	require.Greater(t, int64(height), haltHeight, "height did not increment after halt")
+	require.Greater(t, height, haltHeight, "height did not increment after halt")
 }

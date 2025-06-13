@@ -29,7 +29,7 @@ func (node *ChainNode) ListConsumerChains(ctx context.Context) (ListConsumerChai
 	}
 
 	var queryResponse ListConsumerChainsResponse
-	err = json.Unmarshal([]byte(queryRes), &queryResponse)
+	err = json.Unmarshal(queryRes, &queryResponse)
 	if err != nil {
 		return ListConsumerChainsResponse{}, err
 	}
