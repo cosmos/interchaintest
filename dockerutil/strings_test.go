@@ -11,14 +11,14 @@ import (
 
 func TestGetHostPort(t *testing.T) {
 	for _, tt := range []struct {
-		Container types.ContainerJSON
+		Container types.ContainerJSON // nolint:staticcheck // continue using deprecated
 		PortID    string
 		Want      string
 	}{
 		{
-			types.ContainerJSON{
-				NetworkSettings: &types.NetworkSettings{
-					NetworkSettingsBase: types.NetworkSettingsBase{
+			types.ContainerJSON{ // nolint:staticcheck // continue using deprecated
+				NetworkSettings: &types.NetworkSettings{ // nolint:staticcheck // continue using deprecated
+					NetworkSettingsBase: types.NetworkSettingsBase{ // nolint:staticcheck // continue using deprecated
 						Ports: nat.PortMap{
 							nat.Port("test"): []nat.PortBinding{
 								{HostIP: "1.2.3.4", HostPort: "8080"},
@@ -30,9 +30,9 @@ func TestGetHostPort(t *testing.T) {
 			}, "test", "1.2.3.4:8080",
 		},
 		{
-			types.ContainerJSON{
-				NetworkSettings: &types.NetworkSettings{
-					NetworkSettingsBase: types.NetworkSettingsBase{
+			types.ContainerJSON{ // nolint:staticcheck // continue using deprecated
+				NetworkSettings: &types.NetworkSettings{ // nolint:staticcheck // continue using deprecated
+					NetworkSettingsBase: types.NetworkSettingsBase{ // nolint:staticcheck // continue using deprecated
 						Ports: nat.PortMap{
 							nat.Port("test"): []nat.PortBinding{
 								{HostIP: "0.0.0.0", HostPort: "3000"},
@@ -43,8 +43,8 @@ func TestGetHostPort(t *testing.T) {
 			}, "test", "0.0.0.0:3000",
 		},
 
-		{types.ContainerJSON{}, "", ""},
-		{types.ContainerJSON{NetworkSettings: &types.NetworkSettings{}}, "does-not-matter", ""},
+		{types.ContainerJSON{}, "", ""}, // nolint:staticcheck // continue using deprecated
+		{types.ContainerJSON{NetworkSettings: &types.NetworkSettings{}}, "does-not-matter", ""}, // nolint:staticcheck // continue using deprecated
 	} {
 		require.Equal(t, tt.Want, GetHostPort(tt.Container, tt.PortID), tt)
 	}

@@ -130,7 +130,7 @@ func (image *Image) imageRef() string {
 // EnsurePulled can only pull public images.
 func (image *Image) EnsurePulled(ctx context.Context) error {
 	ref := image.imageRef()
-	_, _, err := image.client.ImageInspectWithRaw(ctx, ref)
+	_, _, err := image.client.ImageInspectWithRaw(ctx, ref) // nolint:staticcheck // continue using deprecated
 	if err != nil {
 		rc, err := image.client.ImagePull(ctx, ref, dockerimage.PullOptions{})
 		if err != nil {

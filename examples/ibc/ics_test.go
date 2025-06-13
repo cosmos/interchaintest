@@ -44,7 +44,6 @@ func TestICS(t *testing.T) {
 	relayers := []relayerTypes{{rly: ibc.CosmosRly, name: "rly"}}
 
 	for _, version := range icsVersions {
-
 		testName := "ics_" + strings.ReplaceAll(version, ".", "_")
 
 		for _, rly := range relayers {
@@ -57,6 +56,8 @@ func TestICS(t *testing.T) {
 }
 
 func icsTest(t *testing.T, version string, rly ibc.RelayerImplementation) {
+	t.Helper()
+
 	ctx := context.Background()
 
 	consumerBechPrefix := "cosmos"

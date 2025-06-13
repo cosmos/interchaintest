@@ -28,7 +28,9 @@ func TestJunoStateExport(t *testing.T) {
 	HaltChainAndExportGenesis(ctx, t, chain, nil, 3)
 }
 
-func HaltChainAndExportGenesis(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, relayer ibc.Relayer, haltHeight int64) {
+func HaltChainAndExportGenesis(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, _ ibc.Relayer, haltHeight int64) {
+	t.Helper()
+
 	timeoutCtx, timeoutCtxCancel := context.WithTimeout(ctx, time.Minute*2)
 	defer timeoutCtxCancel()
 
@@ -38,7 +40,7 @@ func HaltChainAndExportGenesis(ctx context.Context, t *testing.T, chain *cosmos.
 	err = chain.StopAllNodes(ctx)
 	require.NoError(t, err, "error stopping node(s)")
 
-	state, err := chain.ExportState(ctx, int64(haltHeight))
+	state, err := chain.ExportState(ctx, haltHeight)
 	require.NoError(t, err, "error exporting state")
 
 	appToml := make(testutil.Toml)

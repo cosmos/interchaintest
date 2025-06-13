@@ -1,7 +1,6 @@
 package interchaintest_test
 
 import (
-	"regexp"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"

@@ -22,6 +22,8 @@ func TestJunoParamChange(t *testing.T) {
 }
 
 func CosmosChainParamChangeTest(t *testing.T, name, version string) {
+	t.Helper()
+
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}

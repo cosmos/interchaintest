@@ -68,7 +68,7 @@ func TestFoundry(t *testing.T) {
 		// BlockDatabaseFile: interchaintest.DefaultBlockDatabaseFilepath(),
 		SkipPathCreation: true, // Skip path creation, so we can have granular control over the process
 	}))
-	fmt.Println("Interchain built")
+	t.Log("Interchain built")
 
 	// Check faucet balance on start
 	faucetAddr := "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"

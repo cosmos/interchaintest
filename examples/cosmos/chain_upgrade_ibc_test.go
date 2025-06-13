@@ -38,6 +38,8 @@ func TestGaiaUpgradeIBC(t *testing.T) {
 }
 
 func CosmosChainUpgradeIBCTest(t *testing.T, chainName, initialVersion, upgradeContainerRepo, upgradeVersion string, upgradeName string) {
+	t.Helper()
+
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}

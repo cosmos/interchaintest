@@ -18,7 +18,7 @@ const (
 
 // GetHostPort returns a resource's published port with an address.
 // cont is the type returned by the Docker client's ContainerInspect method.
-func GetHostPort(cont types.ContainerJSON, portID string) string {
+func GetHostPort(cont types.ContainerJSON, portID string) string { // nolint:staticcheck // continue using deprecated
 	if cont.NetworkSettings == nil {
 		return ""
 	}

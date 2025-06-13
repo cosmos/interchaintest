@@ -56,7 +56,8 @@ func TestGeth(t *testing.T) {
 		NetworkID:        network,
 		SkipPathCreation: true, // Skip path creation, so we can have granular control over the process
 	}))
-	fmt.Println("Interchain built")
+
+	t.Log("Interchain built")
 
 	// Create and fund a user using GetAndFundTestUsers
 	ethUserInitialAmount := ethereum.ETHER.MulRaw(1000)

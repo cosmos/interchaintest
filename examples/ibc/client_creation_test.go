@@ -24,6 +24,8 @@ type relayerImp struct {
 }
 
 func TestCreatClient(t *testing.T) {
+	t.Parallel()
+
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}
@@ -42,7 +44,6 @@ func TestCreatClient(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		testname := tt.name
 		t.Run(testname, func(t *testing.T) {
 			t.Parallel()
