@@ -9,13 +9,9 @@ import (
 )
 
 func TestCreateTestCase(t *testing.T) {
-	t.Parallel()
-
 	ctx := context.Background()
 
 	t.Run("happy path", func(t *testing.T) {
-		t.Parallel()
-
 		db := migratedDB()
 		defer db.Close()
 
@@ -41,8 +37,6 @@ func TestCreateTestCase(t *testing.T) {
 	})
 
 	t.Run("errors", func(t *testing.T) {
-		t.Parallel()
-
 		db := emptyDB()
 		_, err := CreateTestCase(ctx, db, "fail", "")
 		require.Error(t, err)
@@ -50,13 +44,9 @@ func TestCreateTestCase(t *testing.T) {
 }
 
 func TestTestCase_AddChain(t *testing.T) {
-	t.Parallel()
-
 	ctx := context.Background()
 
 	t.Run("happy path", func(t *testing.T) {
-		t.Parallel()
-
 		db := migratedDB()
 		defer db.Close()
 
@@ -86,8 +76,6 @@ func TestTestCase_AddChain(t *testing.T) {
 	})
 
 	t.Run("errors", func(t *testing.T) {
-		t.Parallel()
-
 		db := migratedDB()
 		defer db.Close()
 

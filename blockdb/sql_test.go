@@ -44,8 +44,6 @@ func TestDB_Concurrency(t *testing.T) {
 		t.Skip("skipping due to short mode")
 	}
 
-	t.Parallel()
-
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 

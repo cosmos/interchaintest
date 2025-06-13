@@ -59,13 +59,9 @@ var (
 )
 
 func TestCoreSDKCommands(t *testing.T) {
-	t.Parallel()
-
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}
-	t.Parallel()
-
 	cosmos.SetSDKConfig(baseBech32)
 
 	sdk47Genesis := []cosmos.GenesisKV{
@@ -719,8 +715,6 @@ func testStaking(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, u
 
 func testVesting(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, admin ibc.Wallet) {
 	t.Helper()
-	t.Parallel()
-
 	var err error
 	var acc string
 	node := chain.GetNode()

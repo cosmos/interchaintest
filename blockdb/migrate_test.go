@@ -7,8 +7,6 @@ import (
 )
 
 func TestMigrate(t *testing.T) {
-	t.Parallel()
-
 	db := emptyDB()
 	defer db.Close()
 

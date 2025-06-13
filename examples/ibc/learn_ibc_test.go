@@ -27,8 +27,6 @@ func TestLearn(t *testing.T) {
 		t.Skip("skipping in short mode")
 	}
 
-	t.Parallel()
-
 	ctx := context.Background()
 
 	// Chain Factory

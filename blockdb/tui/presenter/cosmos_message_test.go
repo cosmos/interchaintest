@@ -10,11 +10,7 @@ import (
 )
 
 func TestCosmosMessage(t *testing.T) {
-	t.Parallel()
-
 	t.Run("non-variable fields", func(t *testing.T) {
-		t.Parallel()
-
 		res := blockdb.CosmosMessageResult{
 			Height:        55,
 			Index:         13,
@@ -33,8 +29,6 @@ func TestCosmosMessage(t *testing.T) {
 	})
 
 	t.Run("ibc details", func(t *testing.T) {
-		t.Parallel()
-
 		for _, tt := range []struct {
 			Result          blockdb.CosmosMessageResult
 			WantClients     string

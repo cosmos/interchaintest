@@ -30,8 +30,6 @@ func TestCreatClient(t *testing.T) {
 		t.Skip("skipping in short mode")
 	}
 
-	t.Parallel()
-
 	tests := []relayerImp{
 		{
 			name:       "Cosmos Relayer",

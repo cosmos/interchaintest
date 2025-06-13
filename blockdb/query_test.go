@@ -16,8 +16,6 @@ import (
 var txsFixture []byte
 
 func TestQuery_CurrentSchemaVersion(t *testing.T) {
-	t.Parallel()
-
 	db := emptyDB()
 	defer db.Close()
 

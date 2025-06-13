@@ -44,8 +44,6 @@ func CosmosChainUpgradeIBCTest(t *testing.T, chainName, initialVersion, upgradeC
 		t.Skip("skipping in short mode")
 	}
 
-	t.Parallel()
-
 	var shortVoteGenesis []cosmos.GenesisKV
 	if chainName == "juno" {
 		// SDK v45 params for Juno genesis
