@@ -50,8 +50,6 @@ func duplicateChainTest(t *testing.T, relayerImpl ibc.RelayerImplementation) {
 		t.Skip("skipping in short mode")
 	}
 
-	t.Parallel()
-
 	client, network := interchaintest.DockerSetup(t)
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
@@ -186,8 +184,6 @@ func TestInterchain_CreateUser(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}
-
-	t.Parallel()
 
 	client, network := interchaintest.DockerSetup(t)
 

@@ -335,5 +335,5 @@ func IsLoggableStopError(err error) bool {
 	if err == nil {
 		return false
 	}
-	return !(errdefs.IsNotModified(err) || errdefs.IsNotFound(err))
+	return !errdefs.IsNotModified(err) && !errdefs.IsNotFound(err)
 }

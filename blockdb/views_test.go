@@ -9,8 +9,6 @@ import (
 )
 
 func TestTxFlattenedView(t *testing.T) {
-	t.Parallel()
-
 	db := migratedDB()
 	defer db.Close()
 

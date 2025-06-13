@@ -122,7 +122,7 @@ func TestModel_Update(t *testing.T) {
 		txDetail := model.txDetailView()
 
 		// Search and text view
-		require.Equal(t, 2, txDetail.Flex.GetItemCount())
+		require.Equal(t, 2, txDetail.GetItemCount())
 
 		require.Equal(t, 3, txDetail.Pages.GetPageCount())
 

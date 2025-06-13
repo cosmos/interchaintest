@@ -63,7 +63,7 @@ func (c *CosmosChain) AuthQueryModuleAddress(ctx context.Context, moduleName str
 	if err != nil {
 		return "", err
 	}
-	return queryRes.BaseAccount.Address, nil
+	return queryRes.Address, nil
 }
 
 // Deprecated: use AuthQueryModuleAddress instead.

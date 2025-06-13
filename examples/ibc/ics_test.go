@@ -6,16 +6,19 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+
 	"cosmossdk.io/math"
+
 	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 	ibcconntypes "github.com/cosmos/ibc-go/v10/modules/core/03-connection/types"
+
 	interchaintest "github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/cosmos/interchaintest/v10/relayer"
 	"github.com/cosmos/interchaintest/v10/testreporter"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 var (
@@ -24,8 +27,10 @@ var (
 )
 
 // This tests Cosmos Interchain Security, spinning up a provider and a single consumer chain.
-// go test -timeout 3000s -run ^TestICS$ github.com/cosmos/interchaintest/v10/examples/ibc -v  -test.short
+// go test -timeout 3000s -run ^TestICS$ github.com/cosmos/interchaintest/v10/examples/ibc -v  -test.short.
 func TestICS(t *testing.T) {
+	t.Parallel()
+
 	if testing.Short() {
 		ver := icsVersions[0]
 		t.Logf("Running in short mode, only testing the latest ICS version: %s", ver)
@@ -39,7 +44,6 @@ func TestICS(t *testing.T) {
 	relayers := []relayerTypes{{rly: ibc.CosmosRly, name: "rly"}}
 
 	for _, version := range icsVersions {
-		version := version
 		testName := "ics_" + strings.ReplaceAll(version, ".", "_")
 
 		for _, rly := range relayers {
@@ -52,6 +56,8 @@ func TestICS(t *testing.T) {
 }
 
 func icsTest(t *testing.T, version string, rly ibc.RelayerImplementation) {
+	t.Helper()
+
 	ctx := context.Background()
 
 	consumerBechPrefix := "cosmos"
@@ -138,7 +144,7 @@ func icsTest(t *testing.T, version string, rly ibc.RelayerImplementation) {
 	t.Run("validate consumer action executed", func(t *testing.T) {
 		bal, err := consumer.BankQueryBalance(ctx, consumerUser.FormattedAddress(), consumer.Config().Denom)
 		require.NoError(t, err)
-		require.EqualValues(t, amt, bal)
+		require.Equal(t, amt, bal)
 	})
 
 	t.Run("validate consumer keys copied", func(t *testing.T) {
@@ -187,7 +193,7 @@ func icsTest(t *testing.T, version string, rly ibc.RelayerImplementation) {
 
 		consumerBal, err := consumer.BankQueryBalance(ctx, consumerUser.FormattedAddress(), dstIbcDenom)
 		require.NoError(t, err)
-		require.EqualValues(t, sendAmt, consumerBal)
+		require.Equal(t, sendAmt, consumerBal)
 	})
 }
 

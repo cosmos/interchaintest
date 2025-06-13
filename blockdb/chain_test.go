@@ -21,8 +21,6 @@ func validChain(t *testing.T, db *sql.DB) *Chain {
 }
 
 func TestChain_SaveBlock(t *testing.T) {
-	t.Parallel()
-
 	var (
 		ctx = context.Background()
 		tx1 = Tx{Data: []byte(`{"test":0}`)}
@@ -47,8 +45,6 @@ func TestChain_SaveBlock(t *testing.T) {
 	)
 
 	t.Run("happy path", func(t *testing.T) {
-		t.Parallel()
-
 		db := migratedDB()
 		defer db.Close()
 
@@ -121,8 +117,6 @@ ORDER BY tendermint_event_attr.id`)
 	})
 
 	t.Run("idempotent", func(t *testing.T) {
-		t.Parallel()
-
 		db := migratedDB()
 		defer db.Close()
 
@@ -156,8 +150,6 @@ ORDER BY tendermint_event_attr.id`)
 	})
 
 	t.Run("zero state", func(t *testing.T) {
-		t.Parallel()
-
 		db := migratedDB()
 		defer db.Close()
 

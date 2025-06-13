@@ -64,7 +64,7 @@ func newHelpView() *helpView {
 
 // Replace serves as a hook to clear all keys and update the help table view with new keys.
 func (view *helpView) Replace(keys []keyBinding) *helpView {
-	view.Table.Clear()
+	view.Clear()
 	keyCell := func(s string) *tview.TableCell {
 		return tview.NewTableCell("<" + s + ">").
 			SetTextColor(tcell.ColorBlue)
@@ -83,8 +83,8 @@ func (view *helpView) Replace(keys []keyBinding) *helpView {
 			row = 0
 			col += 2
 		}
-		view.Table.SetCell(row, col, keyCell(binding.Key))
-		view.Table.SetCell(row, col+1, textCell(binding.Help))
+		view.SetCell(row, col, keyCell(binding.Key))
+		view.SetCell(row, col+1, textCell(binding.Help))
 		row++
 	}
 	return view

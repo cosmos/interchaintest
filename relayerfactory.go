@@ -2,6 +2,7 @@ package interchaintest
 
 import (
 	"fmt"
+
 	"github.com/docker/docker/client"
 	"go.uber.org/zap"
 
@@ -67,6 +68,8 @@ func (f *builtinRelayerFactory) Build(
 		r := hermes.NewHermesRelayer(f.log, t.Name(), cli, networkID, f.options...)
 		f.setRelayerVersion(r.ContainerImage())
 		return r
+	case ibc.Hyperspace:
+		panic("not implemented")
 	default:
 		panic(fmt.Errorf("RelayerImplementation %v unknown", f.impl))
 	}
@@ -88,6 +91,8 @@ func (f *builtinRelayerFactory) Name() string {
 			return "hermes@" + f.version
 		}
 		return "hermes@" + hermes.DefaultContainerVersion
+	case ibc.Hyperspace:
+		panic("not implemented")
 	default:
 		panic(fmt.Errorf("RelayerImplementation %v unknown", f.impl))
 	}

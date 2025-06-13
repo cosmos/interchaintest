@@ -4,12 +4,14 @@ import (
 	"context"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+
 	"cosmossdk.io/math"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 var (
@@ -97,5 +99,5 @@ func TestCometMock(t *testing.T) {
 
 	endBal, err := chain.GetBalance(ctx, user.FormattedAddress(), "ujuno")
 	require.NoError(t, err)
-	require.EqualValues(t, initBal, endBal)
+	require.Equal(t, initBal, endBal)
 }

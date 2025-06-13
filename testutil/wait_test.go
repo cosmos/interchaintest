@@ -126,11 +126,7 @@ func TestWaitForBlocksUtil(t *testing.T) {
 }
 
 func TestWaitForInSync(t *testing.T) {
-	t.Parallel()
-
 	t.Run("happy path", func(t *testing.T) {
-		t.Parallel()
-
 		var (
 			startHeightChain int64 = 10
 			chain                  = mockChainHeighterFixed{CurHeight: startHeightChain}
@@ -148,8 +144,6 @@ func TestWaitForInSync(t *testing.T) {
 	})
 
 	t.Run("no nodes", func(t *testing.T) {
-		t.Parallel()
-
 		var (
 			startHeightChain int64 = 10
 			chain                  = mockChainHeighterFixed{CurHeight: startHeightChain}
@@ -160,8 +154,6 @@ func TestWaitForInSync(t *testing.T) {
 	})
 
 	t.Run("timeout", func(t *testing.T) {
-		t.Parallel()
-
 		var (
 			startHeightChain int64 = 10
 			chain                  = mockChainHeighterFixed{CurHeight: startHeightChain}

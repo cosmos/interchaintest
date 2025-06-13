@@ -117,7 +117,7 @@ func compile(image string, optVersion string, repoPath string) (string, error) {
 	err = cli.ContainerStop(ctx, resp.ID, containertypes.StopOptions{})
 	if err != nil {
 		// Only return the error if it didn't match an already stopped, or a missing container.
-		if !(errdefs.IsNotModified(err) || errdefs.IsNotFound(err)) {
+		if !errdefs.IsNotModified(err) && !errdefs.IsNotFound(err) {
 			return "", fmt.Errorf("stop container %s: %w", imageFull, err)
 		}
 	}
