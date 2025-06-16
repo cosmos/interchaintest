@@ -7,8 +7,8 @@ import (
 	"sync"
 
 	"github.com/docker/docker/api/types/filters"
-	"github.com/docker/docker/api/types/image"
-	"github.com/docker/docker/client"
+	dockerimagetypes "github.com/docker/docker/api/types/image"
+	"github.com/moby/moby/client"
 )
 
 // Allow multiple goroutines to check for busybox
@@ -31,7 +31,7 @@ func EnsureBusybox(ctx context.Context, cli *client.Client) error {
 		return nil
 	}
 
-	images, err := cli.ImageList(ctx, image.ListOptions{
+	images, err := cli.ImageList(ctx, dockerimagetypes.ListOptions{
 		Filters: filters.NewArgs(filters.Arg("reference", busyboxRef)),
 	})
 	if err != nil {
@@ -43,7 +43,7 @@ func EnsureBusybox(ctx context.Context, cli *client.Client) error {
 		return nil
 	}
 
-	rc, err := cli.ImagePull(ctx, busyboxRef, image.PullOptions{})
+	rc, err := cli.ImagePull(ctx, busyboxRef, dockerimagetypes.PullOptions{})
 	if err != nil {
 		return err
 	}

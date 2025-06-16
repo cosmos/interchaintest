@@ -3,17 +3,17 @@ package ethereum
 import (
 	"context"
 	"fmt"
-	dockerimage "github.com/docker/docker/api/types/image"
 	"io"
 	"time"
 
+	dockerimagetypes "github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/api/types/volume"
-	dockerclient "github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/ethclient"
+	dockerclient "github.com/moby/moby/client"
 	"go.uber.org/zap"
 
 	sdkmath "cosmossdk.io/math"
@@ -118,7 +118,7 @@ func (c *EthereumChain) pullImages(ctx context.Context, cli *dockerclient.Client
 		rc, err := cli.ImagePull(
 			ctx,
 			image.Repository+":"+image.Version,
-			dockerimage.PullOptions{},
+			dockerimagetypes.PullOptions{},
 		)
 		if err != nil {
 			c.log.Error("Failed to pull image",
