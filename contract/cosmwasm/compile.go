@@ -11,10 +11,10 @@ import (
 	containertypes "github.com/docker/docker/api/types/container"
 	imagetypes "github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/mount"
-	"github.com/docker/docker/client"
-	"github.com/docker/docker/errdefs"
-	"github.com/docker/docker/pkg/stdcopy"
 	"github.com/hashicorp/go-version"
+	"github.com/moby/moby/client"
+	"github.com/moby/moby/errdefs"
+	"github.com/moby/moby/pkg/stdcopy"
 )
 
 // compile will compile the specified repo using the specified docker image and version.

@@ -13,8 +13,8 @@ import (
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/docker/docker/client"
 	"github.com/gorilla/mux"
+	"github.com/moby/moby/client"
 	"go.uber.org/zap"
 
 	"github.com/cosmos/interchaintest/local-interchain/interchain/handlers"

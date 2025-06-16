@@ -15,8 +15,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 
-	"github.com/docker/docker/client"
 	ethcommon "github.com/ethereum/go-ethereum/common"
+	"github.com/moby/moby/client"
 
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"

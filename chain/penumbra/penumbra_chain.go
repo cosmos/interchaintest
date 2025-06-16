@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	dockerimage "github.com/docker/docker/api/types/image"
 	"io"
 	"path/filepath"
 	"strconv"
@@ -12,7 +11,8 @@ import (
 	"sync"
 
 	"github.com/BurntSushi/toml"
-	"github.com/docker/docker/client"
+	dockerimagetypes "github.com/docker/docker/api/types/image"
+	"github.com/moby/moby/client"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
@@ -308,7 +308,7 @@ func (c *PenumbraChain) initializeChainNodes(
 		rc, err := cli.ImagePull(
 			ctx,
 			image.Repository+":"+image.Version,
-			dockerimage.PullOptions{},
+			dockerimagetypes.PullOptions{},
 		)
 		if err != nil {
 			c.log.Error("Failed to pull image",
