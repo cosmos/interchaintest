@@ -4,9 +4,6 @@ go 1.24.3
 
 toolchain go1.24.4
 
-// github.com/vedhavyas/go-subkey => github.com/strangelove-ventures/go-subkey v1.0.7
-replace github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
-
 require (
 	cosmossdk.io/math v1.5.4-0.20250604174653-810d15dd6d16
 	cosmossdk.io/store v1.10.0-rc.1.0.20250609200650-1521447c77da
@@ -285,6 +282,16 @@ require (
 	github.com/dgraph-io/ristretto/v2 v2.1.0 // indirect
 	github.com/lmittmann/tint v1.0.7 // indirect
 	github.com/moby/sys/atomicwriter v0.1.0 // indirect
+)
+
+replace (
+	github.com/ChainSafe/go-schnorrkel => github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d
+	github.com/ChainSafe/go-schnorrkel/1 => github.com/ChainSafe/go-schnorrkel v1.0.0
+	// cometbft API breaking change fix
+	github.com/btcsuite/btcd/btcec/v2 => github.com/btcsuite/btcd/btcec/v2 v2.3.3
+	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
+	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
+	github.com/vedhavyas/go-subkey => github.com/strangelove-ventures/go-subkey v1.0.7
 )
 
 replace github.com/cometbft/cometbft/v2 => github.com/cometbft/cometbft/v2 v2.0.0-alpha.1
