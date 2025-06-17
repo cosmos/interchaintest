@@ -16,7 +16,7 @@ require (
 	github.com/cosmos/ibc-go/v10 v10.0.0-beta.0.0.20250611193252-a9170dcac535
 	github.com/cosmos/interchain-security/v7 v7.0.0-20250611213438-69983c82a4ff
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
-	github.com/docker/docker v28.2.2+incompatible
+	github.com/docker/docker v27.5.1+incompatible
 	github.com/docker/go-connections v0.5.0
 	github.com/ethereum/go-ethereum v1.15.11
 	github.com/gdamore/tcell/v2 v2.7.4
@@ -25,7 +25,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/hashicorp/go-version v1.7.0
 	github.com/icza/dyno v0.0.0-20220812133438-f0b6f8a18845
-	github.com/moby/moby v28.2.2+incompatible
+	github.com/moby/moby v27.5.1+incompatible
 	github.com/pelletier/go-toml v1.9.5
 	github.com/rivo/tview v0.0.0-20220307222120-9994674d60a8
 	github.com/spf13/cobra v1.9.1
@@ -277,11 +277,8 @@ require (
 
 require (
 	github.com/cometbft/cometbft v0.38.17 // indirect
-	github.com/containerd/errdefs v1.0.0 // indirect
-	github.com/containerd/errdefs/pkg v0.3.0 // indirect
 	github.com/dgraph-io/ristretto/v2 v2.1.0 // indirect
 	github.com/lmittmann/tint v1.0.7 // indirect
-	github.com/moby/sys/atomicwriter v0.1.0 // indirect
 )
 
 replace (
