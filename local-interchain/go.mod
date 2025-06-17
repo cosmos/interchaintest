@@ -20,12 +20,12 @@ require (
 	github.com/cosmos/cosmos-sdk v0.54.0-alpha.0.0.20250610171936-b482ce4a740c
 	github.com/cosmos/go-bip39 v1.0.0
 	github.com/cosmos/interchaintest/v10 v10.0.0-00010101000000-000000000000
-	github.com/docker/docker v28.2.2+incompatible
+	github.com/docker/docker v27.5.1+incompatible
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/handlers v1.5.2
 	github.com/gorilla/mux v1.8.1
-	github.com/moby/moby v28.2.2+incompatible
+	github.com/moby/moby v27.5.1+incompatible
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
 	go.uber.org/zap v1.27.0
@@ -93,8 +93,6 @@ require (
 	github.com/cometbft/cometbft/v2 v2.0.0-main // indirect
 	github.com/consensys/bavard v0.1.27 // indirect
 	github.com/consensys/gnark-crypto v0.16.0 // indirect
-	github.com/containerd/errdefs v1.0.0 // indirect
-	github.com/containerd/errdefs/pkg v0.3.0 // indirect
 	github.com/cosmos/btcutil v1.0.5 // indirect
 	github.com/cosmos/cosmos-db v1.1.3 // indirect
 	github.com/cosmos/cosmos-proto v1.0.0-beta.5 // indirect
@@ -193,7 +191,6 @@ require (
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/mmcloughlin/addchain v0.4.0 // indirect
 	github.com/moby/docker-image-spec v1.3.1 // indirect
-	github.com/moby/sys/sequential v0.6.0 // indirect
 	github.com/mtibben/percent v0.2.1 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/ncruces/go-strftime v0.1.9 // indirect
