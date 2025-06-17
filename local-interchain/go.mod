@@ -55,7 +55,6 @@ require (
 	cosmossdk.io/schema v1.1.0 // indirect
 	cosmossdk.io/store v1.10.0-rc.1.0.20250609200650-1521447c77da // indirect
 	cosmossdk.io/x/tx v1.2.0-alpha.0.0.20250604174653-810d15dd6d16 // indirect
-	cosmossdk.io/x/upgrade v0.2.0 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4 // indirect
 	github.com/99designs/keyring v1.2.2 // indirect
@@ -87,7 +86,6 @@ require (
 	github.com/cockroachdb/pebble v1.1.5 // indirect
 	github.com/cockroachdb/redact v1.1.6 // indirect
 	github.com/cockroachdb/tokenbucket v0.0.0-20250429170803-42689b6311bb // indirect
-	github.com/cometbft/cometbft v0.38.17 // indirect
 	github.com/cometbft/cometbft-db v1.0.4 // indirect
 	github.com/cometbft/cometbft/api v1.1.0-alpha.1 // indirect
 	github.com/cometbft/cometbft/v2 v2.0.0-main // indirect
@@ -111,6 +109,7 @@ require (
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.0 // indirect
 	github.com/desertbit/timer v1.0.1 // indirect
 	github.com/dgraph-io/badger/v4 v4.6.0 // indirect
+	github.com/dgraph-io/ristretto v0.1.1 // indirect
 	github.com/distribution/reference v0.5.0 // indirect
 	github.com/docker/go-connections v0.5.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
@@ -292,3 +291,5 @@ replace github.com/cometbft/cometbft/v2 => github.com/cometbft/cometbft/v2 v2.0.
 replace github.com/cometbft/cometbft/api => github.com/cometbft/cometbft/api v1.1.0-alpha.1
 
 replace github.com/cosmos/interchain-security/v7 => github.com/cosmos/interchain-security/v7 v7.0.0-20250612185456-7fa104a52f0c
+
+replace github.com/cosmos/ibc-go/v10 => github.com/cosmos/ibc-go/v10 v10.0.0-beta.0.0.20250611233349-11dfe65dd5c8
