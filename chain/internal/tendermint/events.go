@@ -3,7 +3,7 @@ package tendermint
 import (
 	"encoding/base64"
 
-	abcitypes "github.com/cometbft/cometbft/abci/types"
+	abcitypes "github.com/cometbft/cometbft/v2/abci/types"
 )
 
 // AttributeValue returns an event attribute value given the eventType and attribute key tuple.
