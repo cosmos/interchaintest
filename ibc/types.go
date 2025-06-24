@@ -458,6 +458,7 @@ type ICSConfig struct {
 	ProviderVerOverride     string         `yaml:"provider,omitempty" json:"provider,omitempty"`
 	ConsumerVerOverride     string         `yaml:"consumer,omitempty" json:"consumer,omitempty"`
 	ConsumerCopyProviderKey func(int) bool `yaml:"-" json:"-"`
+	TopN                    int            `yaml:"top-n,omitempty" json:"top-n,omitempty"`
 	ICSImageRepo            string         `yaml:"ics-image-repo,omitempty" json:"ics-image-repo,omitempty"`
 }
 

@@ -11,6 +11,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/avast/retry-go/v4"
+	providertypes "github.com/cosmos/interchain-security/v7/x/ccv/provider/types"
 	"github.com/icza/dyno"
 	"github.com/tidwall/gjson"
 	"go.uber.org/zap"
@@ -45,7 +47,7 @@ const (
 //
 // 2. Get the first provider validator, and delegate 1,000,000denom to it. This triggers a CometBFT power increase of 1.
 // 3. Flush the pending ICS packets to the consumer chain.
-func (c *CosmosChain) FinishICSProviderSetup(ctx context.Context, r ibc.Relayer, eRep *testreporter.RelayerExecReporter, ibcPath string) error {
+func (c *CosmosChain) FinishICSProviderSetup(ctx context.Context, consumer *CosmosChain, r ibc.Relayer, eRep *testreporter.RelayerExecReporter, ibcPath string) error {
 	// Restart the relayer to finish IBC transfer connection w/ ics20-1 link
 	if err := r.StopRelayer(ctx, eRep); err != nil {
 		return fmt.Errorf("failed to stop relayer: %w", err)
@@ -55,25 +57,47 @@ func (c *CosmosChain) FinishICSProviderSetup(ctx context.Context, r ibc.Relayer,
 	}
 
 	// perform provider delegation to complete provider<>consumer channel connection
-	stakingVals, err := c.StakingQueryValidators(ctx, stakingttypes.BondStatusBonded)
+	// stakingVals, err := c.StakingQueryValidators(ctx, stakingttypes.BondStatusBonded)
+	// if err != nil {
+	// 	return fmt.Errorf("failed to query validators: %w", err)
+	// }
+
+	// providerVal := stakingVals[0]
+	providerVal, err := c.Validators[0].KeyBech32(ctx, "validator", "val")
 	if err != nil {
-		return fmt.Errorf("failed to query validators: %w", err)
+		return fmt.Errorf("failed to get validator address: %w", err)
+	}
+	valBefore, err := c.StakingQueryValidator(ctx, providerVal)
+	if err != nil {
+		return fmt.Errorf("failed to query validator: %w", err)
 	}
 
-	providerVal := stakingVals[0]
+	consumerValCons, err := c.Validators[0].GetKeyInConsumerChain(ctx, consumer)
+	if err != nil {
+		return fmt.Errorf("failed to get consumer validator address: %w", err)
+	}
+	valset, _, err := consumer.GetNode().ExecQuery(ctx, "tendermint-validator-set")
+	if err != nil {
+		return fmt.Errorf("failed to query validator set: %w", err)
+	}
+	consumerPowerBeforeStr := gjson.GetBytes(valset, fmt.Sprintf("validators.#(address=\"%s\").voting_power", consumerValCons)).String()
+	if consumerPowerBeforeStr == "" {
+		return fmt.Errorf("failed to find consumer validator")
+	}
+	consumerPowerBefore, _ := sdkmath.NewIntFromString(consumerPowerBeforeStr)
 
-	err = c.GetNode().StakingDelegate(ctx, "validator", providerVal.OperatorAddress, fmt.Sprintf("1000000%s", c.Config().Denom))
+	err = c.GetNode().StakingDelegate(ctx, "validator", providerVal, fmt.Sprintf("1000000%s", c.Config().Denom))
 	if err != nil {
 		return fmt.Errorf("failed to delegate to validator: %w", err)
 	}
 
-	stakingVals, err = c.StakingQueryValidators(ctx, stakingttypes.BondStatusBonded)
+	stakingVals, err := c.StakingQueryValidators(ctx, stakingttypes.BondStatusBonded)
 	if err != nil {
 		return fmt.Errorf("failed to query validators: %w", err)
 	}
 	var providerAfter *stakingttypes.Validator
 	for _, val := range stakingVals {
-		if val.OperatorAddress == providerVal.OperatorAddress {
+		if val.OperatorAddress == providerVal {
 			providerAfter = &val
 			break
 		}
@@ -81,11 +105,26 @@ func (c *CosmosChain) FinishICSProviderSetup(ctx context.Context, r ibc.Relayer,
 	if providerAfter == nil {
 		return fmt.Errorf("failed to find provider validator after delegation")
 	}
-	if providerAfter.Tokens.LT(providerVal.Tokens) {
-		return fmt.Errorf("delegation failed; before: %v, after: %v", providerVal.Tokens, providerAfter.Tokens)
+	if providerAfter.Tokens.LTE(valBefore.Tokens) {
+		return fmt.Errorf("delegation failed; before: %v, after: %v", valBefore.Tokens, providerAfter.Tokens)
 	}
 
-	return c.FlushPendingICSPackets(ctx, r, eRep, ibcPath)
+	if err := c.FlushPendingICSPackets(ctx, r, eRep, ibcPath); err != nil {
+		return fmt.Errorf("failed to flush ICS packets: %w", err)
+	}
+
+	return retry.Do(func() error {
+		valset, _, err := consumer.GetNode().ExecQuery(ctx, "tendermint-validator-set")
+		if err != nil {
+			return fmt.Errorf("failed to query validator set: %w", err)
+		}
+		consumerPowerAfterStr := gjson.GetBytes(valset, fmt.Sprintf("validators.#(address=\"%s\").voting_power", consumerValCons)).String()
+		consumerPowerAfter, _ := sdkmath.NewIntFromString(consumerPowerAfterStr)
+		if consumerPowerAfter.LTE(consumerPowerBefore) {
+			return fmt.Errorf("consumer validator power did not increase; before: %v, after: %v", consumerPowerBefore, consumerPowerAfter)
+		}
+		return nil
+	}, retry.Delay(time.Second*10), retry.Attempts(10), retry.DelayType(retry.FixedDelay), retry.LastErrorOnly(true))
 }
 
 // FlushPendingICSPackets flushes the pending ICS packets to the consumer chain from the "provider" port.
@@ -163,47 +202,8 @@ func (c *CosmosChain) StartProvider(testName string, ctx context.Context, additi
 		return fmt.Errorf("invalid ICS_SPAWN_TIME_WAIT %s: %w", spawnTimeWait, err)
 	}
 	for _, consumer := range c.Consumers {
-		prop := ccvclient.ConsumerAdditionProposalJSON{
-			Title:         fmt.Sprintf("Addition of %s consumer chain", consumer.cfg.Name),
-			Summary:       "Proposal to add new consumer chain",
-			ChainId:       consumer.cfg.ChainID,
-			InitialHeight: clienttypes.Height{RevisionNumber: clienttypes.ParseChainID(consumer.cfg.ChainID), RevisionHeight: 1},
-			GenesisHash:   []byte("gen_hash"),
-			BinaryHash:    []byte("bin_hash"),
-			SpawnTime:     time.Now().Add(spawnTimeWaitDuration),
-
-			// TODO fetch or default variables
-			BlocksPerDistributionTransmission: 1000,
-			CcvTimeoutPeriod:                  trustingPeriod * 2,
-			TransferTimeoutPeriod:             trustingPeriod,
-			ConsumerRedistributionFraction:    "0.75",
-			HistoricalEntries:                 10000,
-			UnbondingPeriod:                   trustingPeriod,
-			Deposit:                           "100000000" + c.cfg.Denom,
-		}
-
-		height, err := c.Height(ctx)
-		if err != nil {
-			return fmt.Errorf("failed to query provider height before consumer addition proposal: %w", err)
-		}
-
-		propTx, err := c.ConsumerAdditionProposal(ctx, proposerKeyName, prop)
-		if err != nil {
+		if err := c.createConsumerChain(ctx, consumer, proposerKeyName, spawnTimeWaitDuration, trustingPeriod); err != nil {
 			return err
-		}
-
-		propID, err := strconv.ParseUint(propTx.ProposalID, 10, 64)
-		if err != nil {
-			return fmt.Errorf("failed to parse proposal id: %w", err)
-		}
-
-		if err := c.VoteOnProposalAllValidators(ctx, propID, ProposalVoteYes); err != nil {
-			return err
-		}
-
-		_, err = PollForProposalStatus(ctx, c, height, height+10, propID, govv1beta1.StatusPassed)
-		if err != nil {
-			return fmt.Errorf("proposal status did not change to passed in expected number of blocks: %w", err)
 		}
 	}
 
@@ -291,11 +291,10 @@ func (c *CosmosChain) StartConsumer(testName string, ctx context.Context, additi
 	}
 
 	// Wait for spawn time
-	proposals, _, err := c.Provider.GetNode().ExecQuery(ctx, "gov", "proposals")
+	spawnTime, err := c.Provider.GetNode().GetConsumerChainSpawnTime(ctx, c.cfg.ChainID)
 	if err != nil {
-		return fmt.Errorf("failed to query proposed chains: %w", err)
+		return err
 	}
-	spawnTime := gjson.GetBytes(proposals, fmt.Sprintf("proposals.#(messages.0.content.chain_id==%q).messages.0.content.spawn_time", c.cfg.ChainID)).Time()
 	c.log.Info("Waiting for chain to spawn", zap.Time("spawn_time", spawnTime), zap.String("chain_id", c.cfg.ChainID))
 	time.Sleep(time.Until(spawnTime))
 	if err := testutil.WaitForBlocks(ctx, 2, c.Provider); err != nil {
@@ -492,4 +491,181 @@ func (c *CosmosChain) transformCCVState(ctx context.Context, ccvState []byte, co
 		return nil, fmt.Errorf("failed to transform ccv state: %w", res.Err)
 	}
 	return res.Stdout, nil
+}
+
+// createConsumerChain creates a consumer chain on the provider via proposal or permissionless method
+func (c *CosmosChain) createConsumerChain(ctx context.Context, consumer *CosmosChain, proposerKeyName string, spawnTimeWaitDuration time.Duration, trustingPeriod time.Duration) error {
+	if c.GetNode().HasCommand(ctx, "tx", "provider", "create-consumer") {
+		initParams := &providertypes.ConsumerInitializationParameters{
+			InitialHeight:                     clienttypes.Height{RevisionNumber: clienttypes.ParseChainID(consumer.cfg.ChainID), RevisionHeight: 1},
+			SpawnTime:                         time.Now().Add(spawnTimeWaitDuration),
+			BlocksPerDistributionTransmission: 1000,
+			CcvTimeoutPeriod:                  trustingPeriod * 2,
+			TransferTimeoutPeriod:             trustingPeriod,
+			UnbondingPeriod:                   trustingPeriod,
+			ConsumerRedistributionFraction:    "0.75",
+			HistoricalEntries:                 10000,
+			GenesisHash:                       []byte("gen_hash"),
+			BinaryHash:                        []byte("gen_hash"),
+		}
+		powerShapingParams := &providertypes.PowerShapingParameters{
+			Top_N: 0,
+		}
+		params := providertypes.MsgCreateConsumer{
+			ChainId: consumer.cfg.ChainID,
+			Metadata: providertypes.ConsumerMetadata{
+				Name:        consumer.cfg.Name,
+				Description: "Consumer chain",
+				Metadata:    "ipfs://",
+			},
+			InitializationParameters: initParams,
+			PowerShapingParameters:   powerShapingParams,
+		}
+		paramsBz, err := json.Marshal(params)
+		if err != nil {
+			return err
+		}
+		err = c.GetNode().WriteFile(ctx, paramsBz, "consumer-addition.json")
+		if err != nil {
+			return err
+		}
+		_, err = c.GetNode().ExecTx(ctx, proposerKeyName, "provider", "create-consumer", path.Join(c.GetNode().HomeDir(), "consumer-addition.json"))
+		if err != nil {
+			return err
+		}
+		if consumer.cfg.InterchainSecurityConfig.TopN > 0 {
+			err = c.switchConsumerToTopN(ctx, consumer, consumer.cfg.InterchainSecurityConfig.TopN, initParams)
+			if err != nil {
+				return err
+			}
+		}
+	} else {
+		prop := ccvclient.ConsumerAdditionProposalJSON{
+			Title:         fmt.Sprintf("Addition of %s consumer chain", consumer.cfg.Name),
+			Summary:       "Proposal to add new consumer chain",
+			ChainId:       consumer.cfg.ChainID,
+			InitialHeight: clienttypes.Height{RevisionNumber: clienttypes.ParseChainID(consumer.cfg.ChainID), RevisionHeight: 1},
+			GenesisHash:   []byte("gen_hash"),
+			BinaryHash:    []byte("bin_hash"),
+			SpawnTime:     time.Now().Add(spawnTimeWaitDuration),
+
+			// TODO fetch or default variables
+			BlocksPerDistributionTransmission: 1000,
+			CcvTimeoutPeriod:                  trustingPeriod * 2,
+			TransferTimeoutPeriod:             trustingPeriod,
+			ConsumerRedistributionFraction:    "0.75",
+			HistoricalEntries:                 10000,
+			UnbondingPeriod:                   trustingPeriod,
+			Deposit:                           "100000000" + c.cfg.Denom,
+		}
+
+		height, err := c.Height(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to query provider height before consumer addition proposal: %w", err)
+		}
+
+		propTx, err := c.ConsumerAdditionProposal(ctx, proposerKeyName, prop)
+		if err != nil {
+			return err
+		}
+
+		propID, err := strconv.ParseUint(propTx.ProposalID, 10, 64)
+		if err != nil {
+			return fmt.Errorf("failed to parse proposal id: %w", err)
+		}
+
+		if err := c.VoteOnProposalAllValidators(ctx, propID, ProposalVoteYes); err != nil {
+			return err
+		}
+
+		_, err = PollForProposalStatus(ctx, c, height, height+10, propID, govv1beta1.StatusPassed)
+		if err != nil {
+			return fmt.Errorf("proposal status did not change to passed in expected number of blocks: %w", err)
+		}
+	}
+	return nil
+}
+
+// switchConsumerToTopN transfers ownership to governance and sets TopN for permissionless consumer chains
+func (c *CosmosChain) switchConsumerToTopN(ctx context.Context, consumer *CosmosChain, topN int, initParams *providertypes.ConsumerInitializationParameters) error {
+	govAddress, err := c.GetGovernanceAddress(ctx)
+	if err != nil {
+		return err
+	}
+
+	consumerId, err := c.GetNode().GetConsumerChainByChainId(ctx, consumer.cfg.ChainID)
+	if err != nil {
+		return err
+	}
+
+	powerShapingParams := &providertypes.PowerShapingParameters{
+		Top_N: 0,
+	}
+
+	update := &providertypes.MsgUpdateConsumer{
+		ConsumerId:      consumerId,
+		NewOwnerAddress: govAddress,
+		Metadata: &providertypes.ConsumerMetadata{
+			Name:        consumer.cfg.Name,
+			Description: "Consumer chain",
+			Metadata:    "ipfs://",
+		},
+		InitializationParameters: initParams,
+		PowerShapingParameters:   powerShapingParams,
+	}
+	updateBz, err := json.Marshal(update)
+	if err != nil {
+		return err
+	}
+	err = c.GetNode().WriteFile(ctx, updateBz, "consumer-update.json")
+	if err != nil {
+		return err
+	}
+	_, err = c.GetNode().ExecTx(ctx, "proposer", "provider", "update-consumer", path.Join(c.GetNode().HomeDir(), "consumer-update.json"))
+	if err != nil {
+		return err
+	}
+
+	powerShapingParams.Top_N = uint32(topN)
+	update = &providertypes.MsgUpdateConsumer{
+		Owner:      govAddress,
+		ConsumerId: consumerId,
+		Metadata: &providertypes.ConsumerMetadata{
+			Name:        consumer.cfg.Name,
+			Description: "Consumer chain",
+			Metadata:    "ipfs://",
+		},
+		InitializationParameters: initParams,
+		PowerShapingParameters:   powerShapingParams,
+	}
+
+	prop, err := c.BuildProposal([]ProtoMessage{update}, "update consumer", "update consumer", "", "10000000"+c.Config().Denom, "", false)
+	if err != nil {
+		return err
+	}
+
+	height, err := c.Height(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to query provider height before consumer update proposal: %w", err)
+	}
+
+	propTx, err := c.SubmitProposal(ctx, "proposer", prop)
+	if err != nil {
+		return err
+	}
+
+	propID, err := strconv.ParseUint(propTx.ProposalID, 10, 64)
+	if err != nil {
+		return fmt.Errorf("failed to parse proposal id: %w", err)
+	}
+
+	if err := c.VoteOnProposalAllValidators(ctx, propID, ProposalVoteYes); err != nil {
+		return err
+	}
+
+	_, err = PollForProposalStatus(ctx, c, height, height+10, propID, govv1beta1.StatusPassed)
+	if err != nil {
+		return fmt.Errorf("proposal status did not change to passed in expected number of blocks: %w", err)
+	}
+	return nil
 }

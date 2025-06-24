@@ -4,19 +4,59 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
+	"time"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/bech32"
+	"github.com/tidwall/gjson"
 )
 
-func (node *ChainNode) GetConsumerChainByChainId(ctx context.Context, chainId string) (string, error) {
-	chains, err := node.ListConsumerChains(ctx)
+func (node *ChainNode) GetKeyInConsumerChain(ctx context.Context, consumer *CosmosChain) (string, error) {
+	valConsBz, _, err := node.ExecBin(ctx, "tendermint", "show-address")
 	if err != nil {
 		return "", err
 	}
-	for _, chain := range chains.Chains {
-		if chain.ChainID == chainId {
-			return chain.ConsumerID, nil
+	valCons := strings.TrimSpace(string(valConsBz))
+	consumerId, err := node.GetConsumerChainByChainId(ctx, consumer.Config().ChainID)
+	if err != nil {
+		return "", err
+	}
+
+	stdout, _, err := node.ExecQuery(ctx, "provider", "validator-consumer-key", consumerId, valCons)
+	if err != nil {
+		return "", err
+	}
+	key := gjson.GetBytes(stdout, "consumer_address").String()
+	if key == "" {
+		parsed, err := sdk.ConsAddressFromBech32(valCons)
+		if err != nil {
+			return "", err
+		}
+		key, err = bech32.ConvertAndEncode(consumer.Config().Bech32Prefix+"valcons", parsed)
+		if err != nil {
+			return "", err
 		}
 	}
-	return "", fmt.Errorf("chain not found")
+
+	return key, nil
+}
+
+func (node *ChainNode) GetConsumerChainByChainId(ctx context.Context, chainId string) (string, error) {
+	if node.HasCommand(ctx, "tx", "provider", "create-consumer") {
+		chains, err := node.ListConsumerChains(ctx)
+		if err != nil {
+			return "", err
+		}
+		for _, chain := range chains.Chains {
+			if chain.ChainID == chainId {
+				return chain.ConsumerID, nil
+			}
+		}
+		return "", fmt.Errorf("chain %s not found", chainId)
+	} else {
+		return chainId, nil
+	}
 }
 
 func (node *ChainNode) ListConsumerChains(ctx context.Context) (ListConsumerChainsResponse, error) {
@@ -35,6 +75,28 @@ func (node *ChainNode) ListConsumerChains(ctx context.Context) (ListConsumerChai
 	}
 
 	return queryResponse, nil
+}
+
+func (node *ChainNode) GetConsumerChainSpawnTime(ctx context.Context, chainID string) (time.Time, error) {
+	if node.HasCommand(ctx, "tx", "provider", "create-consumer") {
+		consumerID, err := node.GetConsumerChainByChainId(ctx, chainID)
+		if err != nil {
+			return time.Time{}, err
+		}
+		consumerChain, _, err := node.ExecQuery(ctx, "provider", "consumer-chain", consumerID)
+		if err != nil {
+			return time.Time{}, err
+		}
+		spawnTime := gjson.GetBytes(consumerChain, "init_params.spawn_time").Time()
+		return spawnTime, nil
+	} else {
+		proposals, _, err := node.ExecQuery(ctx, "gov", "proposals")
+		if err != nil {
+			return time.Time{}, fmt.Errorf("failed to query proposed chains: %w", err)
+		}
+		spawnTime := gjson.GetBytes(proposals, fmt.Sprintf("proposals.#(messages.0.content.chain_id==%q).messages.0.content.spawn_time", chainID)).Time()
+		return spawnTime, nil
+	}
 }
 
 type ListConsumerChainsResponse struct {

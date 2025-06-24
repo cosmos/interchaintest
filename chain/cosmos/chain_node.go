@@ -932,12 +932,12 @@ func (tn *ChainNode) HasCommand(ctx context.Context, command ...string) bool {
 		return true
 	}
 
-	if strings.Contains(err.Error(), "Error: unknown command") {
+	if strings.Contains(err.Error(), "unknown command") {
 		return false
 	}
 
 	// cmd just needed more arguments, but it is a valid command (ex: appd tx bank send)
-	if strings.Contains(err.Error(), "Error: accepts") {
+	if strings.Contains(err.Error(), "accepts") {
 		return true
 	}
 

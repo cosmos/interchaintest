@@ -5,9 +5,11 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
+	"github.com/avast/retry-go/v4"
 	"github.com/moby/moby/client"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
@@ -175,7 +177,14 @@ func (cs chainSet) TrackBlocks(ctx context.Context, testName, dbPath, gitSha str
 		gitSha = "unknown"
 	}
 
-	if err := blockdb.Migrate(db, gitSha); err != nil {
+	if err := retry.Do(
+		func() error {
+			return blockdb.Migrate(db, gitSha)
+		},
+		retry.MaxDelay(4*time.Second), retry.Attempts(5), retry.RetryIf(func(err error) bool {
+			return strings.Contains(err.Error(), "database is locked")
+		}),
+	); err != nil {
 		return fmt.Errorf("migrate sqlite database %s; deleting file recommended: %w", dbPath, err)
 	}
 

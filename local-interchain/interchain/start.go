@@ -159,7 +159,10 @@ func StartChain(installDir, chainCfgFile string, ac *types.AppStartConfig) {
 	}
 
 	// Add Interchain Security chain pairs together
-	icsProviderPaths := make(map[string]ibc.Chain)
+	icsProviderPaths := make(map[string]struct {
+		Provider ibc.Chain
+		Consumer ibc.Chain
+	})
 	if len(icsPair) > 0 {
 		for provider, consumers := range icsPair {
 			var p ibc.Chain
@@ -189,7 +192,13 @@ func StartChain(installDir, chainCfgFile string, ac *types.AppStartConfig) {
 					logger.Fatal("pathName already exists in icsProviderPaths. Update the consumers ChainID to be unique", zap.String("pathName", pathName))
 				}
 
-				icsProviderPaths[pathName] = p
+				icsProviderPaths[pathName] = struct {
+					Provider ibc.Chain
+					Consumer ibc.Chain
+				}{
+					Provider: p,
+					Consumer: c,
+				}
 
 				ic = ic.AddProviderConsumerLink(interchaintest.ProviderConsumerLink{
 					Provider: p,
@@ -240,10 +249,12 @@ func StartChain(installDir, chainCfgFile string, ac *types.AppStartConfig) {
 	if len(icsProviderPaths) > 0 {
 		logger.Info("ICS provider setup", zap.Any("icsProviderPaths", icsProviderPaths))
 
-		for ibcPath, chain := range icsProviderPaths {
-			if provider, ok := chain.(*cosmos.CosmosChain); ok {
-				if err := provider.FinishICSProviderSetup(ctx, relayer, eRep, ibcPath); err != nil {
-					logger.Error("FinishICSProviderSetup", zap.Error(err))
+		for ibcPath, chains := range icsProviderPaths {
+			if provider, ok := chains.Provider.(*cosmos.CosmosChain); ok {
+				if consumer, ok := chains.Consumer.(*cosmos.CosmosChain); ok {
+					if err := provider.FinishICSProviderSetup(ctx, consumer, relayer, eRep, ibcPath); err != nil {
+						logger.Error("FinishICSProviderSetup", zap.Error(err))
+					}
 				}
 			}
 		}
