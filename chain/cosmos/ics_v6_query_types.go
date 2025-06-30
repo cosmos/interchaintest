@@ -7,23 +7,24 @@ import (
 	"strings"
 	"time"
 
+	"github.com/tidwall/gjson"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
-	"github.com/tidwall/gjson"
 )
 
-func (node *ChainNode) GetKeyInConsumerChain(ctx context.Context, consumer *CosmosChain) (string, error) {
-	valConsBz, _, err := node.ExecBin(ctx, "tendermint", "show-address")
+func (tn *ChainNode) GetKeyInConsumerChain(ctx context.Context, consumer *CosmosChain) (string, error) {
+	valConsBz, _, err := tn.ExecBin(ctx, "tendermint", "show-address")
 	if err != nil {
 		return "", err
 	}
 	valCons := strings.TrimSpace(string(valConsBz))
-	consumerId, err := node.GetConsumerChainByChainId(ctx, consumer.Config().ChainID)
+	consumerID, err := tn.GetConsumerChainByChainID(ctx, consumer.Config().ChainID)
 	if err != nil {
 		return "", err
 	}
 
-	stdout, _, err := node.ExecQuery(ctx, "provider", "validator-consumer-key", consumerId, valCons)
+	stdout, _, err := tn.ExecQuery(ctx, "provider", "validator-consumer-key", consumerID, valCons)
 	if err != nil {
 		return "", err
 	}
@@ -42,25 +43,25 @@ func (node *ChainNode) GetKeyInConsumerChain(ctx context.Context, consumer *Cosm
 	return key, nil
 }
 
-func (node *ChainNode) GetConsumerChainByChainId(ctx context.Context, chainId string) (string, error) {
-	if node.HasCommand(ctx, "tx", "provider", "create-consumer") {
-		chains, err := node.ListConsumerChains(ctx)
+func (tn *ChainNode) GetConsumerChainByChainID(ctx context.Context, chainID string) (string, error) {
+	if tn.HasCommand(ctx, "tx", "provider", "create-consumer") {
+		chains, err := tn.ListConsumerChains(ctx)
 		if err != nil {
 			return "", err
 		}
 		for _, chain := range chains.Chains {
-			if chain.ChainID == chainId {
+			if chain.ChainID == chainID {
 				return chain.ConsumerID, nil
 			}
 		}
-		return "", fmt.Errorf("chain %s not found", chainId)
+		return "", fmt.Errorf("chain %s not found", chainID)
 	} else {
-		return chainId, nil
+		return chainID, nil
 	}
 }
 
-func (node *ChainNode) ListConsumerChains(ctx context.Context) (ListConsumerChainsResponse, error) {
-	queryRes, _, err := node.ExecQuery(
+func (tn *ChainNode) ListConsumerChains(ctx context.Context) (ListConsumerChainsResponse, error) {
+	queryRes, _, err := tn.ExecQuery(
 		ctx,
 		"provider", "list-consumer-chains",
 	)
@@ -69,7 +70,7 @@ func (node *ChainNode) ListConsumerChains(ctx context.Context) (ListConsumerChai
 	}
 
 	var queryResponse ListConsumerChainsResponse
-	err = json.Unmarshal([]byte(queryRes), &queryResponse)
+	err = json.Unmarshal(queryRes, &queryResponse)
 	if err != nil {
 		return ListConsumerChainsResponse{}, err
 	}
@@ -77,20 +78,20 @@ func (node *ChainNode) ListConsumerChains(ctx context.Context) (ListConsumerChai
 	return queryResponse, nil
 }
 
-func (node *ChainNode) GetConsumerChainSpawnTime(ctx context.Context, chainID string) (time.Time, error) {
-	if node.HasCommand(ctx, "tx", "provider", "create-consumer") {
-		consumerID, err := node.GetConsumerChainByChainId(ctx, chainID)
+func (tn *ChainNode) GetConsumerChainSpawnTime(ctx context.Context, chainID string) (time.Time, error) {
+	if tn.HasCommand(ctx, "tx", "provider", "create-consumer") {
+		consumerID, err := tn.GetConsumerChainByChainID(ctx, chainID)
 		if err != nil {
 			return time.Time{}, err
 		}
-		consumerChain, _, err := node.ExecQuery(ctx, "provider", "consumer-chain", consumerID)
+		consumerChain, _, err := tn.ExecQuery(ctx, "provider", "consumer-chain", consumerID)
 		if err != nil {
 			return time.Time{}, err
 		}
 		spawnTime := gjson.GetBytes(consumerChain, "init_params.spawn_time").Time()
 		return spawnTime, nil
 	} else {
-		proposals, _, err := node.ExecQuery(ctx, "gov", "proposals")
+		proposals, _, err := tn.ExecQuery(ctx, "gov", "proposals")
 		if err != nil {
 			return time.Time{}, fmt.Errorf("failed to query proposed chains: %w", err)
 		}

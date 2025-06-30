@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/avast/retry-go/v4"
-	providertypes "github.com/cosmos/interchain-security/v7/x/ccv/provider/types"
 	"github.com/icza/dyno"
 	"github.com/tidwall/gjson"
 	"go.uber.org/zap"
@@ -23,6 +22,7 @@ import (
 
 	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types" // nolint:staticcheck
 	ccvclient "github.com/cosmos/interchain-security/v7/x/ccv/provider/client"
+	providertypes "github.com/cosmos/interchain-security/v7/x/ccv/provider/types"
 
 	"github.com/cosmos/cosmos-sdk/types"
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
@@ -248,7 +248,7 @@ func (c *CosmosChain) StartConsumer(testName string, ctx context.Context, additi
 	if err := eg.Wait(); err != nil {
 		return err
 	}
-	consumerId, err := c.Provider.GetNode().GetConsumerChainByChainId(ctx, c.cfg.ChainID)
+	consumerID, err := c.Provider.GetNode().GetConsumerChainByChainID(ctx, c.cfg.ChainID)
 	if err != nil {
 		return err
 	}
@@ -271,7 +271,7 @@ func (c *CosmosChain) StartConsumer(testName string, ctx context.Context, additi
 					return fmt.Errorf("failed to get consumer validator pubkey: %w", err)
 				}
 				keyStr := strings.TrimSpace(string(key))
-				_, err = c.Provider.Validators[i].ExecTx(ctx, valKey, "provider", "assign-consensus-key", consumerId, keyStr)
+				_, err = c.Provider.Validators[i].ExecTx(ctx, valKey, "provider", "assign-consensus-key", consumerID, keyStr)
 				if err != nil {
 					return fmt.Errorf("failed to assign consumer validator pubkey: %w", err)
 				}
@@ -314,7 +314,7 @@ func (c *CosmosChain) StartConsumer(testName string, ctx context.Context, additi
 		return err
 	}
 
-	ccvStateMarshaled, _, err := c.Provider.GetNode().ExecQuery(ctx, "provider", "consumer-genesis", consumerId)
+	ccvStateMarshaled, _, err := c.Provider.GetNode().ExecQuery(ctx, "provider", "consumer-genesis", consumerID)
 	if err != nil {
 		return fmt.Errorf("failed to query provider for ccv state: %w", err)
 	}
@@ -493,7 +493,7 @@ func (c *CosmosChain) transformCCVState(ctx context.Context, ccvState []byte, co
 	return res.Stdout, nil
 }
 
-// createConsumerChain creates a consumer chain on the provider via proposal or permissionless method
+// createConsumerChain creates a consumer chain on the provider via proposal or permissionless method.
 func (c *CosmosChain) createConsumerChain(ctx context.Context, consumer *CosmosChain, proposerKeyName string, spawnTimeWaitDuration time.Duration, trustingPeriod time.Duration) error {
 	if c.GetNode().HasCommand(ctx, "tx", "provider", "create-consumer") {
 		initParams := &providertypes.ConsumerInitializationParameters{
@@ -586,14 +586,14 @@ func (c *CosmosChain) createConsumerChain(ctx context.Context, consumer *CosmosC
 	return nil
 }
 
-// switchConsumerToTopN transfers ownership to governance and sets TopN for permissionless consumer chains
+// switchConsumerToTopN transfers ownership to governance and sets TopN for permissionless consumer chains.
 func (c *CosmosChain) switchConsumerToTopN(ctx context.Context, consumer *CosmosChain, topN int, initParams *providertypes.ConsumerInitializationParameters) error {
 	govAddress, err := c.GetGovernanceAddress(ctx)
 	if err != nil {
 		return err
 	}
 
-	consumerId, err := c.GetNode().GetConsumerChainByChainId(ctx, consumer.cfg.ChainID)
+	consumerID, err := c.GetNode().GetConsumerChainByChainID(ctx, consumer.cfg.ChainID)
 	if err != nil {
 		return err
 	}
@@ -603,7 +603,7 @@ func (c *CosmosChain) switchConsumerToTopN(ctx context.Context, consumer *Cosmos
 	}
 
 	update := &providertypes.MsgUpdateConsumer{
-		ConsumerId:      consumerId,
+		ConsumerId:      consumerID,
 		NewOwnerAddress: govAddress,
 		Metadata: &providertypes.ConsumerMetadata{
 			Name:        consumer.cfg.Name,
@@ -629,7 +629,7 @@ func (c *CosmosChain) switchConsumerToTopN(ctx context.Context, consumer *Cosmos
 	powerShapingParams.Top_N = uint32(topN)
 	update = &providertypes.MsgUpdateConsumer{
 		Owner:      govAddress,
-		ConsumerId: consumerId,
+		ConsumerId: consumerID,
 		Metadata: &providertypes.ConsumerMetadata{
 			Name:        consumer.cfg.Name,
 			Description: "Consumer chain",

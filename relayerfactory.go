@@ -2,6 +2,7 @@ package interchaintest
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/moby/moby/client"
 	"go.uber.org/zap"
@@ -41,6 +42,7 @@ type builtinRelayerFactory struct {
 	log     *zap.Logger
 	options []relayer.RelayerOpt
 	version string
+	mu      sync.RWMutex
 }
 
 func NewBuiltinRelayerFactory(impl ibc.RelayerImplementation, logger *zap.Logger, options ...relayer.RelayerOpt) RelayerFactory {
@@ -52,7 +54,12 @@ func (f *builtinRelayerFactory) Build(
 	t TestName,
 	cli *client.Client,
 	networkID string,
-) ibc.Relayer {
+) (r ibc.Relayer) {
+	f.mu.RLock()
+	defer func() {
+		f.mu.RUnlock()
+		f.setRelayerVersion(r.ContainerImage())
+	}()
 	switch f.impl {
 	case ibc.CosmosRly:
 		r := rly.NewCosmosRelayer(
@@ -62,11 +69,9 @@ func (f *builtinRelayerFactory) Build(
 			networkID,
 			f.options...,
 		)
-		f.setRelayerVersion(r.ContainerImage())
 		return r
 	case ibc.Hermes:
 		r := hermes.NewHermesRelayer(f.log, t.Name(), cli, networkID, f.options...)
-		f.setRelayerVersion(r.ContainerImage())
 		return r
 	default:
 		panic(fmt.Errorf("RelayerImplementation %v unknown", f.impl))
@@ -74,10 +79,14 @@ func (f *builtinRelayerFactory) Build(
 }
 
 func (f *builtinRelayerFactory) setRelayerVersion(di ibc.DockerImage) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
 	f.version = di.Version
 }
 
 func (f *builtinRelayerFactory) Name() string {
+	f.mu.RLock()
+	defer f.mu.RUnlock()
 	switch f.impl {
 	case ibc.CosmosRly:
 		if f.version == "" {
@@ -96,15 +105,13 @@ func (f *builtinRelayerFactory) Name() string {
 
 // Capabilities returns the set of capabilities for the
 // relayer implementation backing this factory.
-func (f builtinRelayerFactory) Capabilities() map[relayer.Capability]bool {
+func (f *builtinRelayerFactory) Capabilities() map[relayer.Capability]bool {
 	switch f.impl {
 	case ibc.CosmosRly:
 		return rly.Capabilities()
 	case ibc.Hermes:
 		// TODO: specify capability for hermes.
 		return rly.Capabilities()
-	case ibc.Hyperspace:
-		panic("capabilities are not defined for Hyperspace relayer.")
 	default:
 		panic(fmt.Errorf("RelayerImplementation %v unknown", f.impl))
 	}

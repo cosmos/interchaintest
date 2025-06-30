@@ -108,6 +108,9 @@ type Relayer interface {
 	// Set the wasm client contract hash in the chain's config if the counterparty chain in a path used 08-wasm
 	// to instantiate the client.
 	SetClientContractHash(ctx context.Context, rep RelayerExecReporter, cfg ChainConfig, hash string) error
+
+	// ContainerImage returns the ibc.DockerImage in use by the relayer.
+	ContainerImage() DockerImage
 }
 
 // GetTransferChannel will return the transfer channel assuming only one client,
