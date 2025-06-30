@@ -16,10 +16,11 @@ import (
 	"github.com/cosmos/interchaintest/v10/testreporter"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap/zaptest"
+	"golang.org/x/mod/semver"
 )
 
 var (
-	icsVersions     = []string{"v3.1.0", "v3.3.0", "v4.0.0"}
+	icsVersions     = []string{"v7.0.1", "v6.4.0", "v3.3.0", "v4.0.0"}
 	providerChainID = "provider-1"
 )
 
@@ -55,26 +56,42 @@ func icsTest(t *testing.T, version string, rly ibc.RelayerImplementation) {
 	ctx := context.Background()
 
 	consumerBechPrefix := "cosmos"
-	if version == "v4.0.0" {
+	if semver.Compare(version, "v4.0.0") >= 0 {
 		consumerBechPrefix = "consumer"
 	}
 
 	validators := 2
+	var genesis []cosmos.GenesisKV
+	if semver.Compare(version, "v6.0.0") >= 0 || semver.Compare(version, "v4.5.0") >= 0 {
+		genesis = []cosmos.GenesisKV{
+			cosmos.NewGenesisKV("app_state.provider.params.blocks_per_epoch", "1"),
+		}
+	}
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
 			Name: "ics-provider", Version: version,
 			NumValidators: &validators, NumFullNodes: &numFullNodes,
-			ChainConfig: ibc.ChainConfig{GasAdjustment: 1.5, ChainID: providerChainID, TrustingPeriod: "336h"},
+			ChainConfig: ibc.ChainConfig{
+				GasAdjustment:  1.5,
+				ChainID:        providerChainID,
+				TrustingPeriod: "336h",
+				ModifyGenesis:  cosmos.ModifyGenesis(genesis),
+			},
 		},
 		{
 			Name: "ics-consumer", Version: version,
 			NumValidators: &validators, NumFullNodes: &numFullNodes,
-			ChainConfig: ibc.ChainConfig{GasAdjustment: 1.5, ChainID: "consumer-1", Bech32Prefix: consumerBechPrefix, InterchainSecurityConfig: ibc.ICSConfig{
-				ConsumerCopyProviderKey: func(i int) bool {
-					return i == 0
-				},
-			}},
+			ChainConfig: ibc.ChainConfig{
+				GasAdjustment: 1.5,
+				ChainID:       "consumer-1",
+				Bech32Prefix:  consumerBechPrefix,
+				InterchainSecurityConfig: ibc.ICSConfig{
+					TopN: 100,
+					ConsumerCopyProviderKey: func(i int) bool {
+						return i == 0
+					},
+				}},
 		},
 	})
 
@@ -124,7 +141,7 @@ func icsTest(t *testing.T, version string, rly ibc.RelayerImplementation) {
 	// - Restarts the relayer to connect ics20-1 transfer channel
 	// - Delegates tokens to the provider to update consensus value
 	// - Flushes the IBC state to the consumer
-	err = provider.FinishICSProviderSetup(ctx, r, eRep, ibcPath)
+	err = provider.FinishICSProviderSetup(ctx, consumer, r, eRep, ibcPath)
 	require.NoError(t, err)
 
 	// ------------------ Test Begins ------------------

@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/docker/docker/api/types/container"
-
 	"github.com/docker/docker/api/types/filters"
 	"github.com/moby/moby/client"
 )
