@@ -1,7 +1,9 @@
 <div align="center">
 <h1><code>interchaintest</code></h1>
 
-Formerly known as `ibctest`.
+Formerly known as `ibctest`, `interchaintest` was built and initially maintained by [Strangelove Ventures](https://strange.love/).
+
+This fork is maintained by the Interchain Operations team at [Hypha Worker Co-operative](https://hypha.coop/).
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/cosmos/interchaintest@main.svg)](https://pkg.go.dev/github.com/cosmos/interchaintest@main)
 [![License: Apache-2.0](https://img.shields.io/github/license/strangelove-ventures/interchaintest.svg?style=flat-square)](https://github.com/cosmos/interchaintest/blob/main/LICENSE)
