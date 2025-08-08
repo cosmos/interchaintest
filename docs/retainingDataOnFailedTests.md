@@ -10,7 +10,7 @@ Any tests that fail and skip cleanup will log a message like
 `Not removing temporary directory for test at: /tmp/...`.
 
 Test authors must use
-[`interchaintest.TempDir`](https://pkg.go.dev/github.com/cosmos/interchaintest#TempDir)
+[`interchaintest.TempDir`](https://github.com/cosmos/interchaintest/blob/main/tempdir.go)
 instead of `(*testing.T).Cleanup` to opt in to this behavior.
 
 By default, Docker volumes associated with tests are cleaned up at the end of each test run.
