@@ -306,4 +306,4 @@ With that, you should be set up for streamlined E2E testing!
 - Noble Chain - <https://github.com/strangelove-ventures/noble>
 - Juno Chain <https://github.com/CosmosContracts/juno>
 - Go Relayer - <https://github.com/cosmos/relayer/blob/main/.github/workflows/interchaintest.yml>
-- IBC-Go e2e tests - <https://github.com/cosmos/ibc-go/blob/main/.github/workflows/e2e-test-workflow-call.yml>
+- IBC-Go e2e tests - <https://github.com/cosmos/ibc-go/blob/main/e2e/README.md#test-design>
