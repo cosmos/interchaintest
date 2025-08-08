@@ -26,7 +26,9 @@ pub fn send(
 
 pub fn get_balance(req_builder: &ChainRequestBuilder, address: &str) -> Vec<Coin> {
     let res = req_builder.query(&format!("q bank balances {address}"), false);
-    let Some(balances) = res["balances"].as_array() else { return vec![] };
+    let Some(balances) = res["balances"].as_array() else {
+        return vec![];
+    };
 
     let coins: Vec<Coin> = balances.iter().map(get_coin_from_json).collect();
     coins
@@ -34,7 +36,9 @@ pub fn get_balance(req_builder: &ChainRequestBuilder, address: &str) -> Vec<Coin
 
 pub fn get_total_supply(req_builder: &ChainRequestBuilder) -> Vec<Coin> {
     let res = req_builder.query("q bank total", false);
-    let Some(supplies) = res["supply"].as_array() else { return vec![] };
+    let Some(supplies) = res["supply"].as_array() else {
+        return vec![];
+    };
 
     let coins: Vec<Coin> = supplies.iter().map(get_coin_from_json).collect();
     coins

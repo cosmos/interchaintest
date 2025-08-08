@@ -11,7 +11,7 @@ pub fn get_files(rb: &ChainRequestBuilder, absolute_path: &str) -> Result<Vec<St
         return Err(LocalError::GetFilesError {
             error: err.to_string(),
         });
-    };
+    }
 
     let text = res["text"].as_str();
 

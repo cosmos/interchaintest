@@ -15,7 +15,7 @@ pub struct Chain<'a> {
 
 impl Chain<'_> {
     #[must_use]
-    pub fn new(rb: &ChainRequestBuilder) -> Chain {
+    pub fn new(rb: &ChainRequestBuilder) -> Chain<'_> {
         Chain { rb }
     }
 
