@@ -76,7 +76,7 @@ GCC is the GNU compiler collection and it is necessary for compiling [cgo](https
 
 GCC does not come with Windows, and the best compatible setup I've found was using [this guide](https://www.guru99.com/c-gcc-install.html) which works on both Windows Server and Windows Desktop including Win 11.
 
-1. Go to [codeblocks](http://www.codeblocks.org/downloads/binaries/) and select the Windows option, then download the `mingw-setup.exe` binary.
+1. Go to the Downloads page in codeblocks.org and select the Windows option, then download the `mingw-setup.exe` binary.
 2. Start installation.
 3. Keep default component selection.
 
