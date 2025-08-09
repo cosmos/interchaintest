@@ -26,7 +26,7 @@ pub struct Counterparty {
 
 impl Relayer<'_> {
     #[must_use]
-    pub fn new(rb: &ChainRequestBuilder) -> Relayer {
+    pub fn new(rb: &ChainRequestBuilder) -> Relayer<'_> {
         Relayer { rb }
     }
 
@@ -125,7 +125,7 @@ impl Relayer<'_> {
         let Some(c) = channel_json.as_array() else {
             return Err(LocalError::Custom {
                 msg: "channel_json is not an array".to_string(),
-            })
+            });
         };
 
         for channel in c {

@@ -1,5 +1,6 @@
 [workspace]
 members = ["main", "localic-std"]
+resolver = "2"
 
 [workspace.dependencies]
 reqwest = { version = "0.11.20", features = ["blocking", "json"]}

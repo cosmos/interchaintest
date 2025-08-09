@@ -20,7 +20,7 @@ pub struct CosmWasm<'a> {
 
 impl CosmWasm<'_> {
     #[must_use]
-    pub fn new(rb: &ChainRequestBuilder) -> CosmWasm {
+    pub fn new(rb: &ChainRequestBuilder) -> CosmWasm<'_> {
         CosmWasm {
             rb,
             file_path: None,
@@ -35,7 +35,7 @@ impl CosmWasm<'_> {
         file_path: Option<PathBuf>,
         code_id: Option<u64>,
         contract_addr: Option<String>,
-    ) -> CosmWasm {
+    ) -> CosmWasm<'_> {
         CosmWasm {
             rb,
             file_path,
@@ -304,10 +304,10 @@ fn get_contract(rb: &ChainRequestBuilder, tx_hash: &str) -> Result<String, Local
         .and_then(|logs| logs.first_mut())
         .map_or_else(|| res["events"].take(), |log| log["events"].take());
 
-    for event in events.as_array().into_iter() {
-        for attr in event.iter() {
-            for attr_values in attr["attributes"].as_array().iter() {
-                for attr in attr_values.iter() {
+    if let Some(event) = events.as_array() {
+        for attr in event {
+            if let Some(attr_values) = attr["attributes"].as_array() {
+                for attr in attr_values {
                     if let Some(key) = attr["key"].as_str() {
                         if key.contains("contract_address") {
                             let contract_address = attr["value"].as_str().unwrap_or_default();

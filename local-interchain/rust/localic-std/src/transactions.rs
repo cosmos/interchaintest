@@ -95,7 +95,9 @@ impl ChainRequestBuilder {
             return Ok(res);
         }
 
-        let Some(tx_hash) = self.get_tx_hash(&res) else { return Err(LocalError::TxHashNotFound {}) };
+        let Some(tx_hash) = self.get_tx_hash(&res) else {
+            return Err(LocalError::TxHashNotFound {});
+        };
 
         for _ in 0..5 {
             let data = self.query_tx_hash(&tx_hash);
@@ -273,11 +275,11 @@ impl ChainRequestBuilder {
 
                 // get code_id from json
                 let Some(code_id) = json["code_id"].as_u64() else {
-                                            return Err(LocalError::UploadFailed {
-                                                path: file.to_string(),
-                                                reason: "code_id not found".to_string(),
-                                            });
-                                        };
+                    return Err(LocalError::UploadFailed {
+                        path: file.to_string(),
+                        reason: "code_id not found".to_string(),
+                    });
+                };
 
                 // return code_id
                 Ok(code_id)
@@ -303,7 +305,7 @@ impl ChainRequestBuilder {
             } else if cmd.to_lowercase().starts_with("q ") {
                 cmd = cmd[2..].to_string();
             }
-        };
+        }
 
         // return JSON if we we did not override that.
         if !return_text && (request_type == RequestType::Query || request_type == RequestType::Bin)
