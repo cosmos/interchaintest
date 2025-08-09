@@ -25,7 +25,7 @@ import (
 
 	"cosmossdk.io/math"
 
-	cometbft "github.com/cometbft/cometbft/abci/types"
+	cometbft "github.com/cometbft/cometbft/v2/abci/types"
 
 	"github.com/cosmos/interchaintest/v10/chain/internal/tendermint"
 	"github.com/cosmos/interchaintest/v10/ibc"

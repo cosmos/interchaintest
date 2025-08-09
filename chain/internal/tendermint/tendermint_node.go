@@ -15,11 +15,11 @@ import (
 	dockerclient "github.com/moby/moby/client"
 	"go.uber.org/zap"
 
-	tmjson "github.com/cometbft/cometbft/libs/json"
-	"github.com/cometbft/cometbft/p2p"
-	rpcclient "github.com/cometbft/cometbft/rpc/client"
-	rpchttp "github.com/cometbft/cometbft/rpc/client/http"
-	libclient "github.com/cometbft/cometbft/rpc/jsonrpc/client"
+	tmjson "github.com/cometbft/cometbft/v2/libs/json"
+	"github.com/cometbft/cometbft/v2/p2p"
+	rpcclient "github.com/cometbft/cometbft/v2/rpc/client"
+	rpchttp "github.com/cometbft/cometbft/v2/rpc/client/http"
+	libclient "github.com/cometbft/cometbft/v2/rpc/jsonrpc/client"
 
 	"github.com/cosmos/interchaintest/v10/dockerutil"
 	"github.com/cosmos/interchaintest/v10/ibc"
@@ -115,7 +115,7 @@ func (tn *TendermintNode) NewClient(addr string) error {
 	}
 
 	httpClient.Timeout = 10 * time.Second
-	rpcClient, err := rpchttp.NewWithClient(addr, "/websocket", httpClient)
+	rpcClient, err := rpchttp.NewWithClient(addr, httpClient)
 	if err != nil {
 		return err
 	}
