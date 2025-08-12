@@ -114,7 +114,7 @@ concurrency:
     cancel-in-progress: true
 
 env:
-    GO_VERSION: 1.21
+    GO_VERSION: 1.23
 
 jobs:
   # Builds local-interchain binary
