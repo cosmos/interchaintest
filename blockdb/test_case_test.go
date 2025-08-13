@@ -63,7 +63,7 @@ func TestTestCase_AddChain(t *testing.T) {
 		tc, err := CreateTestCase(ctx, db, "SomeTest", "abc")
 		require.NoError(t, err)
 
-		chain, err := tc.AddChain(ctx, "my-chain1", "penumbra")
+		chain, err := tc.AddChain(ctx, "my-chain1", "cosmos")
 		require.NoError(t, err)
 		require.NotNil(t, chain)
 
@@ -77,7 +77,7 @@ func TestTestCase_AddChain(t *testing.T) {
 		err = row.Scan(&gotChainID, &gotChainType, &gotTestID, &gotPrimaryKey)
 		require.NoError(t, err)
 		require.Equal(t, "my-chain1", gotChainID)
-		require.Equal(t, "penumbra", gotChainType)
+		require.Equal(t, "cosmos", gotChainType)
 		require.Equal(t, 1, gotTestID)
 		require.EqualValues(t, 1, gotPrimaryKey)
 

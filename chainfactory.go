@@ -14,10 +14,6 @@ import (
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/chain/ethereum/foundry"
 	"github.com/cosmos/interchaintest/v10/chain/ethereum/geth"
-	"github.com/cosmos/interchaintest/v10/chain/namada"
-	"github.com/cosmos/interchaintest/v10/chain/penumbra"
-	"github.com/cosmos/interchaintest/v10/chain/thorchain"
-	"github.com/cosmos/interchaintest/v10/chain/utxo"
 	"github.com/cosmos/interchaintest/v10/ibc"
 )
 
@@ -137,8 +133,6 @@ func buildChain(log *zap.Logger, testName string, cfg ibc.ChainConfig, numValida
 	switch cfg.Type {
 	case ibc.Cosmos:
 		return cosmos.NewCosmosChain(testName, cfg, nv, nf, log), nil
-	case ibc.Penumbra:
-		return penumbra.NewPenumbraChain(log, testName, cfg, nv, nf), nil
 	case ibc.Ethereum:
 		switch cfg.Bin {
 		case "anvil":
@@ -148,12 +142,6 @@ func buildChain(log *zap.Logger, testName string, cfg ibc.ChainConfig, numValida
 		default:
 			return nil, fmt.Errorf("unknown binary: %s for ethereum chain type, must be anvil or geth", cfg.Bin)
 		}
-	case ibc.Thorchain:
-		return thorchain.NewThorchain(testName, cfg, nv, nf, log), nil
-	case ibc.UTXO:
-		return utxo.NewUtxoChain(testName, cfg, log), nil
-	case ibc.Namada:
-		return namada.NewNamadaChain(testName, cfg, nv, nf, log), nil
 	default:
 		return nil, fmt.Errorf("unexpected error, unknown chain type: %s for chain: %s", cfg.Type, cfg.Name)
 	}

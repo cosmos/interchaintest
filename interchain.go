@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"math"
-	"path/filepath"
 
 	"github.com/moby/moby/client"
 	"go.uber.org/zap"
@@ -13,9 +12,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
-	"github.com/cosmos/interchaintest/v10/chain/namada"
 	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/relayer/hermes"
 	"github.com/cosmos/interchaintest/v10/testreporter"
 )
 
@@ -348,15 +345,6 @@ func (ic *Interchain) Build(ctx context.Context, rep *testreporter.RelayerExecRe
 		return fmt.Errorf("failed to track blocks: %w", err)
 	}
 
-	// If any configured chain is an instance of Penumbra we need to initialize new pclientd instances for the
-	// newly created faucet account.
-	for c := range ic.chains {
-		err = CreatePenumbraClient(ctx, c, FaucetAccountKeyName)
-		if err != nil {
-			return err
-		}
-	}
-
 	if err := ic.configureRelayerKeys(ctx, rep); err != nil {
 		// Error already wrapped with appropriate detail.
 		return err
@@ -645,19 +633,6 @@ func (ic *Interchain) configureRelayerKeys(ctx context.Context, rep *testreporte
 				rpcAddr, grpcAddr,
 			); err != nil {
 				return fmt.Errorf("failed to configure relayer %s for chain %s: %w", ic.relayers[r], chainName, err)
-			}
-
-			if c.Config().Type == "namada" {
-				// Copy Namada wallet to the relayer container
-				walletPath := filepath.Join("pre-genesis", "wallet.toml")
-				wallet, err := c.(*namada.NamadaChain).Validators[0].ReadFile(ctx, walletPath)
-				if err != nil {
-					return err
-				}
-				relativeWalletFilePath := fmt.Sprintf("%s/wallet.toml", c.Config().ChainID)
-				if err := r.(*hermes.Relayer).WriteFileToHomeDir(ctx, relativeWalletFilePath, wallet); err != nil {
-					return fmt.Errorf("failed to copy Namada wallet file: %w", err)
-				}
 			}
 
 			if err := r.RestoreKey(ctx,
