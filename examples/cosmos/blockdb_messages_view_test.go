@@ -79,11 +79,11 @@ func TestBlockDBMessagesView(t *testing.T) {
 
 	// Copy the busy timeout from the migration.
 	// The journal_mode pragma should be persisted on disk, so we should not need to set that here.
-	_, err = db.Exec(`PRAGMA busy_timeout = 3000`)
+	_, err = db.ExecContext(ctx, `PRAGMA busy_timeout = 3000`)
 	require.NoError(t, err)
 
 	var count int
-	row := db.QueryRow(`SELECT COUNT(*) FROM v_cosmos_messages`)
+	row := db.QueryRowContext(ctx, `SELECT COUNT(*) FROM v_cosmos_messages`)
 	require.NoError(t, row.Scan(&count))
 	require.Equal(t, 0, count)
 
@@ -102,10 +102,10 @@ client_chain_id
 FROM v_cosmos_messages
 WHERE type = "/ibc.core.client.v1.MsgCreateClient" AND chain_id = ?;`
 		var clientChainID string
-		require.NoError(t, db.QueryRow(qCreateClient, chainID0).Scan(&clientChainID))
+		require.NoError(t, db.QueryRowContext(ctx, qCreateClient, chainID0).Scan(&clientChainID))
 		require.Equal(t, chainID1, clientChainID)
 
-		require.NoError(t, db.QueryRow(qCreateClient, chainID1).Scan(&clientChainID))
+		require.NoError(t, db.QueryRowContext(ctx, qCreateClient, chainID1).Scan(&clientChainID))
 		require.Equal(t, chainID0, clientChainID)
 	})
 	if t.Failed() {
@@ -139,7 +139,7 @@ FROM v_cosmos_messages
 WHERE type = "/ibc.core.connection.v1.MsgConnectionOpenInit" AND chain_id = ?
 `
 		var clientID, counterpartyClientID string
-		require.NoError(t, db.QueryRow(qConnectionOpenInit, chainID0).Scan(&clientID, &counterpartyClientID))
+		require.NoError(t, db.QueryRowContext(ctx, qConnectionOpenInit, chainID0).Scan(&clientID, &counterpartyClientID))
 		require.Equal(t, clientID, gaia0ClientID)
 		require.Equal(t, counterpartyClientID, gaia1ClientID)
 
@@ -150,7 +150,7 @@ FROM v_cosmos_messages
 WHERE type = "/ibc.core.connection.v1.MsgConnectionOpenTry" AND chain_id = ?
 `
 		var counterpartyConnID string
-		require.NoError(t, db.QueryRow(qConnectionOpenTry, chainID1).Scan(&counterpartyClientID, &counterpartyConnID))
+		require.NoError(t, db.QueryRowContext(ctx, qConnectionOpenTry, chainID1).Scan(&counterpartyClientID, &counterpartyConnID))
 		require.Equal(t, counterpartyClientID, gaia0ClientID)
 		require.Equal(t, counterpartyConnID, gaia0ConnID)
 
@@ -161,7 +161,7 @@ FROM v_cosmos_messages
 WHERE type = "/ibc.core.connection.v1.MsgConnectionOpenAck" AND chain_id = ?
 `
 		var connID string
-		require.NoError(t, db.QueryRow(qConnectionOpenAck, chainID0).Scan(&connID, &counterpartyConnID))
+		require.NoError(t, db.QueryRowContext(ctx, qConnectionOpenAck, chainID0).Scan(&connID, &counterpartyConnID))
 		require.Equal(t, connID, gaia0ConnID)
 		require.Equal(t, counterpartyConnID, gaia1ConnID)
 
@@ -171,7 +171,7 @@ conn_id
 FROM v_cosmos_messages
 WHERE type = "/ibc.core.connection.v1.MsgConnectionOpenConfirm" AND chain_id = ?
 `
-		require.NoError(t, db.QueryRow(qConnectionOpenConfirm, chainID1).Scan(&connID))
+		require.NoError(t, db.QueryRowContext(ctx, qConnectionOpenConfirm, chainID1).Scan(&connID))
 		require.Equal(t, connID, gaia0ConnID) // Not sure if this should be connection 0 or 1, as they are typically equal during this test.
 	})
 	if t.Failed() {
@@ -205,7 +205,7 @@ FROM v_cosmos_messages
 WHERE type = "/ibc.core.channel.v1.MsgChannelOpenInit" AND chain_id = ?
 `
 		var portID, counterpartyPortID string
-		require.NoError(t, db.QueryRow(qChannelOpenInit, chainID0).Scan(&portID, &counterpartyPortID))
+		require.NoError(t, db.QueryRowContext(ctx, qChannelOpenInit, chainID0).Scan(&portID, &counterpartyPortID))
 		require.Equal(t, gaia0Port, portID)
 		require.Equal(t, gaia1Port, counterpartyPortID)
 
@@ -216,7 +216,7 @@ FROM v_cosmos_messages
 WHERE type = "/ibc.core.channel.v1.MsgChannelOpenTry" AND chain_id = ?
 `
 		var counterpartyChannelID string
-		require.NoError(t, db.QueryRow(qChannelOpenTry, chainID1).Scan(&portID, &counterpartyPortID, &counterpartyChannelID))
+		require.NoError(t, db.QueryRowContext(ctx, qChannelOpenTry, chainID1).Scan(&portID, &counterpartyPortID, &counterpartyChannelID))
 		require.Equal(t, gaia1Port, portID)
 		require.Equal(t, gaia0Port, counterpartyPortID)
 		require.Equal(t, counterpartyChannelID, gaia0ChannelID)
@@ -228,7 +228,7 @@ FROM v_cosmos_messages
 WHERE type = "/ibc.core.channel.v1.MsgChannelOpenAck" AND chain_id = ?
 `
 		var channelID string
-		require.NoError(t, db.QueryRow(qChannelOpenAck, chainID0).Scan(&portID, &channelID, &counterpartyChannelID))
+		require.NoError(t, db.QueryRowContext(ctx, qChannelOpenAck, chainID0).Scan(&portID, &channelID, &counterpartyChannelID))
 		require.Equal(t, gaia0Port, portID)
 		require.Equal(t, channelID, gaia0ChannelID)
 		require.Equal(t, counterpartyChannelID, gaia1ChannelID)
@@ -239,7 +239,7 @@ port_id, channel_id
 FROM v_cosmos_messages
 WHERE type = "/ibc.core.channel.v1.MsgChannelOpenConfirm" AND chain_id = ?
 `
-		require.NoError(t, db.QueryRow(qChannelOpenConfirm, chainID1).Scan(&portID, &channelID))
+		require.NoError(t, db.QueryRowContext(ctx, qChannelOpenConfirm, chainID1).Scan(&portID, &channelID))
 		require.Equal(t, gaia1Port, portID)
 		require.Equal(t, channelID, gaia1ChannelID)
 	})
@@ -271,7 +271,7 @@ FROM v_cosmos_messages
 WHERE type = "/ibc.applications.transfer.v1.MsgTransfer" AND chain_id = ?
 `
 		var portID, channelID string
-		require.NoError(t, db.QueryRow(qMsgTransfer, chainID0).Scan(&portID, &channelID))
+		require.NoError(t, db.QueryRowContext(ctx, qMsgTransfer, chainID0).Scan(&portID, &channelID))
 		require.Equal(t, gaia0Port, portID)
 		require.Equal(t, channelID, gaia0ChannelID)
 	})
@@ -295,7 +295,7 @@ WHERE type = "/ibc.core.channel.v1.MsgRecvPacket" AND chain_id = ?
 
 		var portID, channelID, counterpartyPortID, counterpartyChannelID string
 
-		require.NoError(t, db.QueryRow(qMsgRecvPacket, chainID1).Scan(&portID, &channelID, &counterpartyPortID, &counterpartyChannelID))
+		require.NoError(t, db.QueryRowContext(ctx, qMsgRecvPacket, chainID1).Scan(&portID, &channelID, &counterpartyPortID, &counterpartyChannelID))
 
 		require.Equal(t, gaia0Port, portID)
 		require.Equal(t, channelID, gaia0ChannelID)
@@ -307,7 +307,7 @@ port_id, channel_id, counterparty_port_id, counterparty_channel_id
 FROM v_cosmos_messages
 WHERE type = "/ibc.core.channel.v1.MsgAcknowledgement" AND chain_id = ?
 `
-		require.NoError(t, db.QueryRow(qMsgAck, chainID0).Scan(&portID, &channelID, &counterpartyPortID, &counterpartyChannelID))
+		require.NoError(t, db.QueryRowContext(ctx, qMsgAck, chainID0).Scan(&portID, &channelID, &counterpartyPortID, &counterpartyChannelID))
 
 		require.Equal(t, gaia0Port, portID)
 		require.Equal(t, channelID, gaia0ChannelID)

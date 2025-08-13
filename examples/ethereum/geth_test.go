@@ -7,14 +7,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/ethereum"
 	"github.com/cosmos/interchaintest/v10/chain/ethereum/geth"
 	"github.com/cosmos/interchaintest/v10/ibc"
-
 	"github.com/cosmos/interchaintest/v10/testreporter"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 func TestGeth(t *testing.T) {
@@ -56,7 +56,7 @@ func TestGeth(t *testing.T) {
 		NetworkID:        network,
 		SkipPathCreation: true, // Skip path creation, so we can have granular control over the process
 	}))
-	fmt.Println("Interchain built")
+	t.Logf("Interchain built")
 
 	// Create and fund a user using GetAndFundTestUsers
 	ethUserInitialAmount := ethereum.ETHER.MulRaw(1000)

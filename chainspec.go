@@ -8,8 +8,9 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/cosmos/interchaintest/v10/ibc"
 	"go.uber.org/zap"
+
+	"github.com/cosmos/interchaintest/v10/ibc"
 )
 
 // ChainSpec is a wrapper around an ibc.ChainConfig
@@ -49,13 +50,13 @@ type ChainSpec struct {
 func (s *ChainSpec) Config(log *zap.Logger) (*ibc.ChainConfig, error) {
 	if s.Version == "" {
 		// Version must be set at top-level if not set in inlined config.
-		if len(s.ChainConfig.Images) == 0 || s.ChainConfig.Images[0].Version == "" {
+		if len(s.Images) == 0 || s.ChainConfig.Images[0].Version == "" {
 			return nil, errors.New("ChainSpec.Version must not be empty")
 		}
 	}
 
-	if len(s.ChainConfig.Images) > 0 {
-		for i, image := range s.ChainConfig.Images {
+	if len(s.Images) > 0 {
+		for i, image := range s.Images {
 			if err := image.Validate(); err != nil {
 				return nil, fmt.Errorf("ChainConfig.Images[%d] is invalid: %s", i, err)
 			}
@@ -63,7 +64,7 @@ func (s *ChainSpec) Config(log *zap.Logger) (*ibc.ChainConfig, error) {
 	}
 
 	if len(s.ExposeAdditionalPorts) > 0 {
-		s.ChainConfig.ExposeAdditionalPorts = append(s.ChainConfig.ExposeAdditionalPorts, s.ExposeAdditionalPorts...)
+		s.ExposeAdditionalPorts = append(s.ExposeAdditionalPorts, s.ExposeAdditionalPorts...)
 	}
 
 	// s.Name and chainConfig.Name are interchangeable
@@ -79,7 +80,7 @@ func (s *ChainSpec) Config(log *zap.Logger) (*ibc.ChainConfig, error) {
 		if s.ChainConfig.Name == "" && s.ChainName != "" {
 			s.ChainConfig.Name = s.ChainName
 		}
-		if !s.ChainConfig.IsFullyConfigured() {
+		if !s.IsFullyConfigured() {
 			return nil, errors.New("ChainSpec.Name required when not all config fields are set")
 		}
 
@@ -95,7 +96,7 @@ func (s *ChainSpec) Config(log *zap.Logger) (*ibc.ChainConfig, error) {
 	// If chain doesn't have built in config, but is fully configured, register chain label.
 	cfg, ok := builtinChainConfigs[s.Name]
 	if !ok {
-		if !s.ChainConfig.IsFullyConfigured() {
+		if !s.IsFullyConfigured() {
 			availableChains := make([]string, 0, len(builtinChainConfigs))
 			for k := range builtinChainConfigs {
 				availableChains = append(availableChains, k)
@@ -223,7 +224,7 @@ func (s *ChainSpec) applyConfigOverrides(cfg ibc.ChainConfig) (*ibc.ChainConfig,
 			default:
 				return nil, fmt.Errorf("unexpected parachain: %s", s.Name)
 			}
-		} else if len(s.ChainConfig.Images) < 2 || s.ChainConfig.Images[1].Version == "" {
+		} else if len(s.Images) < 2 || s.ChainConfig.Images[1].Version == "" {
 			// Ensure there are at least two images and check the 2nd version is populated
 			return nil, fmt.Errorf("ChainCongfig.Images must be >1 and ChainConfig.Images[1].Version must not be empty")
 		}

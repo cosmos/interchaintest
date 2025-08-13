@@ -21,6 +21,9 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 
+	"github.com/cosmos/evm/crypto/ethsecp256k1"
+	ethhd "github.com/cosmos/evm/crypto/hd"
+	ethkeyring "github.com/cosmos/evm/crypto/keyring"
 	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types" // nolint:staticcheck
 	chanTypes "github.com/cosmos/ibc-go/v10/modules/core/04-channel/types"
 	ccvclient "github.com/cosmos/interchain-security/v7/x/ccv/provider/client"
@@ -40,10 +43,6 @@ import (
 	"github.com/cosmos/interchaintest/v10/dockerutil"
 	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/cosmos/interchaintest/v10/testutil"
-
-	"github.com/cosmos/evm/crypto/ethsecp256k1"
-	ethhd "github.com/cosmos/evm/crypto/hd"
-	ethkeyring "github.com/cosmos/evm/crypto/keyring"
 )
 
 // CosmosChain is a local docker testnet for a Cosmos SDK chain.

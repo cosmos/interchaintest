@@ -4,6 +4,9 @@ import (
 	"context"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/conformance"
@@ -11,8 +14,6 @@ import (
 	"github.com/cosmos/interchaintest/v10/relayer"
 	"github.com/cosmos/interchaintest/v10/relayer/rly"
 	"github.com/cosmos/interchaintest/v10/testreporter"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 type boundarySpecs struct {
@@ -22,18 +23,17 @@ type boundarySpecs struct {
 }
 
 func TestSDKBoundaries(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}
-
-	t.Parallel()
 
 	tests := []boundarySpecs{
 		{
 			name: "sdk 45 <-> 50",
 			chainSpecs: []*interchaintest.ChainSpec{
 				{
-					Name: "gaia", ChainName: "gaia", Version: "v7.0.3", //sdk 0.45.6
+					Name: "gaia", ChainName: "gaia", Version: "v7.0.3", // sdk 0.45.6
 					NumValidators: &numValsOne, NumFullNodes: &numFullNodesZero,
 				},
 				{
@@ -47,7 +47,7 @@ func TestSDKBoundaries(t *testing.T) {
 			name: "sdk 47 <-> 50",
 			chainSpecs: []*interchaintest.ChainSpec{
 				{
-					Name: "ibc-go-simd", ChainName: "simd-47", Version: "v7.2.0", //sdk 0.47.3
+					Name: "ibc-go-simd", ChainName: "simd-47", Version: "v7.2.0", // sdk 0.47.3
 					NumValidators: &numValsOne, NumFullNodes: &numFullNodesZero,
 				},
 				{
@@ -60,7 +60,6 @@ func TestSDKBoundaries(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		testname := tt.name
 		t.Run(testname, func(t *testing.T) {
 			t.Parallel()

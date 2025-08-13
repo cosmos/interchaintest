@@ -6,15 +6,17 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+
 	"cosmossdk.io/math"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos/wasm"
 	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/cosmos/interchaintest/v10/testreporter"
 	"github.com/cosmos/interchaintest/v10/testutil"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 func TestWasmIbc(t *testing.T) {
@@ -231,7 +233,7 @@ func TestWasmIbc(t *testing.T) {
 	require.Equal(t, 1, juno2PreIncrementedCountResponse.Data.Count)
 }
 
-// cw_ibc_example response data
+// cw_ibc_example response data.
 type CwIbcCountResponse struct {
 	Data struct {
 		Count int `json:"count"`

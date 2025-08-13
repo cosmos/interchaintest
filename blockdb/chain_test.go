@@ -57,7 +57,7 @@ func TestChain_SaveBlock(t *testing.T) {
 		err := chain.SaveBlock(ctx, 5, []Tx{tx1, tx2})
 		require.NoError(t, err)
 
-		row := db.QueryRow(`SELECT height, fk_chain_id, created_at FROM block LIMIT 1`)
+		row := db.QueryRowContext(ctx, `SELECT height, fk_chain_id, created_at FROM block LIMIT 1`)
 		var (
 			gotHeight    int
 			gotChainID   int
@@ -73,7 +73,7 @@ func TestChain_SaveBlock(t *testing.T) {
 		require.NoError(t, err)
 		require.WithinDuration(t, ts, time.Now(), 10*time.Second)
 
-		rows, err := db.Query(`SELECT data, fk_block_id FROM tx`)
+		rows, err := db.QueryContext(ctx, `SELECT data, fk_block_id FROM tx`)
 		require.NoError(t, err)
 		defer rows.Close()
 		var i int
@@ -89,7 +89,7 @@ func TestChain_SaveBlock(t *testing.T) {
 		}
 		require.Equal(t, 2, i)
 
-		rows, err = db.Query(`SELECT
+		rows, err = db.QueryContext(ctx, `SELECT
 tx.data, tendermint_event.type, key, value
 FROM tendermint_event_attr
 LEFT JOIN tendermint_event ON tendermint_event.id = fk_event_id
@@ -133,23 +133,23 @@ ORDER BY tendermint_event_attr.id`)
 		err = chain.SaveBlock(ctx, 1, []Tx{tx2})
 		require.NoError(t, err)
 
-		row := db.QueryRow(`SELECT count(*) FROM block`)
+		row := db.QueryRowContext(ctx, `SELECT count(*) FROM block`)
 		var count int
 		err = row.Scan(&count)
 		require.NoError(t, err)
 		require.Equal(t, 1, count)
 
-		row = db.QueryRow(`SELECT count(*) FROM tx`)
+		row = db.QueryRowContext(ctx, `SELECT count(*) FROM tx`)
 		err = row.Scan(&count)
 		require.NoError(t, err)
 		require.Equal(t, 1, count)
 
-		row = db.QueryRow(`SELECT count(*) FROM tendermint_event`)
+		row = db.QueryRowContext(ctx, `SELECT count(*) FROM tendermint_event`)
 		err = row.Scan(&count)
 		require.NoError(t, err)
 		require.Equal(t, 2, count)
 
-		row = db.QueryRow(`SELECT count(*) FROM tendermint_event_attr`)
+		row = db.QueryRowContext(ctx, `SELECT count(*) FROM tendermint_event_attr`)
 		err = row.Scan(&count)
 		require.NoError(t, err)
 		require.Equal(t, 3, count)
@@ -166,24 +166,24 @@ ORDER BY tendermint_event_attr.id`)
 		err := chain.SaveBlock(ctx, 5, nil)
 		require.NoError(t, err)
 
-		row := db.QueryRow(`SELECT height FROM block LIMIT 1`)
+		row := db.QueryRowContext(ctx, `SELECT height FROM block LIMIT 1`)
 		var gotHeight int
 		err = row.Scan(&gotHeight)
 		require.NoError(t, err)
 		require.Equal(t, 5, gotHeight)
 
 		var count int
-		row = db.QueryRow(`SELECT count(*) FROM tx`)
+		row = db.QueryRowContext(ctx, `SELECT count(*) FROM tx`)
 		err = row.Scan(&count)
 		require.NoError(t, err)
 		require.Zero(t, count)
 
-		row = db.QueryRow(`SELECT count(*) FROM tendermint_event`)
+		row = db.QueryRowContext(ctx, `SELECT count(*) FROM tendermint_event`)
 		err = row.Scan(&count)
 		require.NoError(t, err)
 		require.Zero(t, count)
 
-		row = db.QueryRow(`SELECT count(*) FROM tendermint_event_attr`)
+		row = db.QueryRowContext(ctx, `SELECT count(*) FROM tendermint_event_attr`)
 		err = row.Scan(&count)
 		require.NoError(t, err)
 		require.Zero(t, count)

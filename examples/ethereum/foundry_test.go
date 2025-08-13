@@ -6,15 +6,16 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+
 	"cosmossdk.io/math"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/ethereum"
 	"github.com/cosmos/interchaintest/v10/chain/ethereum/foundry"
 	"github.com/cosmos/interchaintest/v10/ibc"
-
 	"github.com/cosmos/interchaintest/v10/testreporter"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 func TestFoundry(t *testing.T) {
@@ -67,7 +68,7 @@ func TestFoundry(t *testing.T) {
 		// BlockDatabaseFile: interchaintest.DefaultBlockDatabaseFilepath(),
 		SkipPathCreation: true, // Skip path creation, so we can have granular control over the process
 	}))
-	fmt.Println("Interchain built")
+	t.Logf("Interchain built")
 
 	// Check faucet balance on start
 	faucetAddr := "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"

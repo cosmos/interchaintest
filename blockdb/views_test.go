@@ -49,7 +49,7 @@ func TestTxFlattenedView(t *testing.T) {
 		txID int
 		tx   string
 	)
-	rows, err := db.Query(`SELECT
+	rows, err := db.QueryContext(ctx, `SELECT
   test_case_id, test_case_created_at, test_case_name,
   chain_kid, chain_id, chain_type,
   block_id, block_created_at, block_height,
