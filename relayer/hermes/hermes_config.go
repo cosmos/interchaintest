@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-
-	"github.com/cosmos/interchaintest/v10/ibc"
 )
 
 // NewConfig returns a hermes Config with an entry for each of the provided ChainConfigs.
@@ -23,16 +21,9 @@ func NewConfig(chainConfigs ...ChainConfig) Config {
 		var chainType string
 		var accountPrefix string
 		var trustingPeriod string
-		switch chainCfg.Type {
-		case ibc.Namada:
-			chainType = Namada
-			accountPrefix = ""
-			trustingPeriod = "1day"
-		default:
-			chainType = Cosmos
-			accountPrefix = chainCfg.Bech32Prefix
-			trustingPeriod = "14days"
-		}
+		chainType = Cosmos
+		accountPrefix = chainCfg.Bech32Prefix
+		trustingPeriod = "14days"
 		chains = append(chains, Chain{
 			ID:               chainCfg.ChainID,
 			Type:             chainType,

@@ -56,7 +56,7 @@ type TestCaseResult struct {
 	CreatedAt   time.Time
 	ChainPKey   int64  // chain primary key
 	ChainID     string // E.g. osmosis-1001
-	ChainType   string // E.g. cosmos, penumbra
+	ChainType   string // E.g. cosmos
 	ChainHeight sql.NullInt64
 	TxTotal     sql.NullInt64
 }
