@@ -3,7 +3,7 @@ protoVer=0.13.2
 protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
 protoImage=$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(protoImageName)
 golangci_lint_cmd=golangci-lint
-golangci_version=v1.61.0
+golangci_version=v2.3.1
 gofumpt_cmd=gofumpt
 gofumpt_version=v0.7.0
 
@@ -60,7 +60,7 @@ proto-gen: ## Generate code from protos
 lint: ## Lint the repository
 	@echo "--> Running linter"
 	@if ! $(golangci_lint_cmd) --version 2>/dev/null | grep -q $(golangci_version); then \
-        go install github.com/golangci/golangci-lint/cmd/golangci-lint@$(golangci_version); \
+        go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(golangci_version); \
   fi
 	      @$(golangci_lint_cmd) run ./... --timeout 15m
 
@@ -68,7 +68,7 @@ lint: ## Lint the repository
 lint-fix: ## Lint the repository and fix warnings (if applicable)
 	@echo "--> Running linter and fixing issues"
 	@if ! $(golangci_lint_cmd) --version 2>/dev/null | grep -q $(golangci_version); then \
-		go install github.com/golangci/golangci-lint/cmd/golangci-lint@$(golangci_version); \
+		go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(golangci_version); \
 	fi
 	@$(golangci_lint_cmd) run ./... --fix --timeout 15m
 
