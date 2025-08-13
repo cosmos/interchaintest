@@ -5,12 +5,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/cosmos/interchaintest/v10/testutil"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap"
 )
 
 func TestJunoStateExport(t *testing.T) {
@@ -28,6 +29,7 @@ func TestJunoStateExport(t *testing.T) {
 }
 
 func HaltChainAndExportGenesis(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, relayer ibc.Relayer, haltHeight int64) {
+	t.Helper()
 	timeoutCtx, timeoutCtxCancel := context.WithTimeout(ctx, time.Minute*2)
 	defer timeoutCtxCancel()
 
@@ -37,7 +39,7 @@ func HaltChainAndExportGenesis(ctx context.Context, t *testing.T, chain *cosmos.
 	err = chain.StopAllNodes(ctx)
 	require.NoError(t, err, "error stopping node(s)")
 
-	state, err := chain.ExportState(ctx, int64(haltHeight))
+	state, err := chain.ExportState(ctx, haltHeight)
 	require.NoError(t, err, "error exporting state")
 
 	appToml := make(testutil.Toml)
@@ -72,5 +74,5 @@ func HaltChainAndExportGenesis(ctx context.Context, t *testing.T, chain *cosmos.
 	height, err := chain.Height(ctx)
 	require.NoError(t, err, "error getting height after halt")
 
-	require.Greater(t, int64(height), haltHeight, "height did not increment after halt")
+	require.Greater(t, height, haltHeight, "height did not increment after halt")
 }

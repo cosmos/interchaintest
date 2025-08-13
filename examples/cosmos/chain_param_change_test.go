@@ -5,14 +5,16 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"cosmossdk.io/math"
+
+	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	paramsutils "github.com/cosmos/cosmos-sdk/x/params/client/utils"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/stretchr/testify/require"
-
-	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 )
 
 func TestJunoParamChange(t *testing.T) {
@@ -20,6 +22,7 @@ func TestJunoParamChange(t *testing.T) {
 }
 
 func CosmosChainParamChangeTest(t *testing.T, name, version string) {
+	t.Helper()
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}

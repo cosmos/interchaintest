@@ -11,8 +11,9 @@ import (
 	"github.com/moby/moby/client"
 	"go.uber.org/zap"
 
-	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	"github.com/cosmos/evm/crypto/ethsecp256k1"
+
+	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 
 	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/cosmos/interchaintest/v10/relayer"

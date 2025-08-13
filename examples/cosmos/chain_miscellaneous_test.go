@@ -2,21 +2,21 @@ package cosmos_test
 
 import (
 	"context"
-	"fmt"
 	"testing"
+
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
 
 	"cosmossdk.io/math"
 
-	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	testutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 var (
@@ -103,38 +103,38 @@ func wasmEncoding() *testutil.TestEncodingConfig {
 }
 
 func testBuildDependencies(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain) {
+	t.Helper()
 	deps := chain.Validators[0].GetBuildInformation(ctx)
 
-	require.Equal(t, deps.Name, "juno")
-	require.Equal(t, deps.ServerName, "junod")
-	require.Equal(t, deps.BuildTags, "netgo muslc,")
+	require.Equal(t, "juno", deps.Name)
+	require.Equal(t, "junod", deps.ServerName)
+	require.Equal(t, "netgo muslc,", deps.BuildTags)
 
 	for _, dep := range deps.BuildDeps {
-		dep := dep
-
 		// Verify specific examples
-		if dep.Parent == "github.com/cosmos/cosmos-sdk" {
-			require.Equal(t, dep.IsReplacement, false)
-		} else if dep.Parent == "github.com/99designs/keyring" {
-			require.Equal(t, dep.Version, "v1.2.2")
-			require.Equal(t, dep.IsReplacement, true)
-			require.Equal(t, dep.Replacement, "github.com/cosmos/keyring")
-			require.Equal(t, dep.ReplacementVersion, "v1.2.0")
-
+		switch dep.Parent {
+		case "github.com/cosmos/cosmos-sdk":
+			require.False(t, dep.IsReplacement)
+		case "github.com/99designs/keyring":
+			require.Equal(t, "v1.2.2", dep.Version)
+			require.True(t, dep.IsReplacement)
+			require.Equal(t, "github.com/cosmos/keyring", dep.Replacement)
+			require.Equal(t, "v1.2.0", dep.ReplacementVersion)
 		}
 
 		// Verify all replacement logic
 		if dep.IsReplacement {
 			require.GreaterOrEqual(t, len(dep.ReplacementVersion), 6, "ReplacementVersion: %s must be >=6 length (ex: vA.B.C)", dep.ReplacementVersion)
-			require.Greater(t, len(dep.Replacement), 0, "Replacement: %s must be >0 length.", dep.Replacement)
+			require.NotEmpty(t, dep.Replacement, "Replacement: %s must be >0 length.", dep.Replacement)
 		} else {
-			require.Equal(t, len(dep.Replacement), 0, "Replacement: %s is not 0.", dep.Replacement)
-			require.Equal(t, len(dep.ReplacementVersion), 0, "ReplacementVersion: %s is not 0.", dep.ReplacementVersion)
+			require.Empty(t, dep.Replacement, "Replacement: %s is not 0.", dep.Replacement)
+			require.Empty(t, dep.ReplacementVersion, "ReplacementVersion: %s is not 0.", dep.ReplacementVersion)
 		}
 	}
 }
 
 func testFailedCWExecute(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, users []ibc.Wallet) {
+	t.Helper()
 	user := users[0]
 	keyName := user.KeyName()
 
@@ -151,12 +151,13 @@ func testFailedCWExecute(ctx context.Context, t *testing.T, chain *cosmos.Cosmos
 	// execute on the contract with the wrong message (err)
 	txResp, err := chain.ExecuteContract(ctx, keyName, contractAddr, `{"not_a_func":{}}`)
 	require.Error(t, err)
-	fmt.Printf("txResp.RawLog: %+v\n", txResp.RawLog)
-	fmt.Printf("err: %+v\n", err)
+	t.Logf("txResp.RawLog: %+v\n", txResp.RawLog)
+	t.Logf("err: %+v\n", err)
 	require.Contains(t, err.Error(), "failed to execute message")
 }
 
 func testWalletKeys(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain) {
+	t.Helper()
 	// create a general key
 	randKey := "randkey123"
 	err := chain.CreateKey(ctx, randKey)
@@ -181,7 +182,7 @@ func testWalletKeys(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain
 	tn := chain.Validators[0]
 	a, err := tn.KeyBech32(ctx, "key-abc", "val")
 	require.NoError(t, err)
-	require.Equal(t, a, "junovaloper1hj5fveer5cjtn4wd6wstzugjfdxzl0xp0r8xsx")
+	require.Equal(t, "junovaloper1hj5fveer5cjtn4wd6wstzugjfdxzl0xp0r8xsx", a)
 
 	a, err = tn.KeyBech32(ctx, "key-abc", "acc")
 	require.NoError(t, err)
@@ -193,6 +194,7 @@ func testWalletKeys(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain
 }
 
 func testSendingTokens(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, users []ibc.Wallet) {
+	t.Helper()
 	_, err := chain.GetBalance(ctx, users[0].FormattedAddress(), chain.Config().Denom)
 	require.NoError(t, err)
 	b2, err := chain.GetBalance(ctx, users[1].FormattedAddress(), chain.Config().Denom)
@@ -209,6 +211,7 @@ func testSendingTokens(ctx context.Context, t *testing.T, chain *cosmos.CosmosCh
 }
 
 func testFindTxs(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, users []ibc.Wallet) {
+	t.Helper()
 	height, _ := chain.Height(ctx)
 
 	_, err := sendTokens(ctx, chain, users[0], users[1], "", 1)
@@ -217,10 +220,11 @@ func testFindTxs(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, u
 	txs, err := chain.FindTxs(ctx, height+1)
 	require.NoError(t, err)
 	require.NotEmpty(t, txs)
-	require.Equal(t, txs[0].Events[0].Type, "coin_spent")
+	require.Equal(t, "coin_spent", txs[0].Events[0].Type)
 }
 
 func testPollForBalance(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, users []ibc.Wallet) {
+	t.Helper()
 	bal2, err := chain.GetBalance(ctx, users[1].FormattedAddress(), chain.Config().Denom)
 	require.NoError(t, err)
 
@@ -245,6 +249,7 @@ func testPollForBalance(ctx context.Context, t *testing.T, chain *cosmos.CosmosC
 }
 
 func testRangeBlockMessages(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, users []ibc.Wallet) {
+	t.Helper()
 	height, _ := chain.Height(ctx)
 
 	_, err := sendTokens(ctx, chain, users[0], users[1], "", 1)
@@ -262,13 +267,15 @@ func testRangeBlockMessages(ctx context.Context, t *testing.T, chain *cosmos.Cos
 }
 
 func testAddingNode(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain) {
+	t.Helper()
 	// This should be tested last or else Txs will fail on the new full node.
 	nodesAmt := len(chain.Nodes())
-	chain.AddFullNodes(ctx, nil, 1)
-	require.Equal(t, nodesAmt+1, len(chain.Nodes()))
+	_ = chain.AddFullNodes(ctx, nil, 1)
+	require.Len(t, chain.Nodes(), nodesAmt+1)
 }
 
 func testBroadcaster(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, users []ibc.Wallet) {
+	t.Helper()
 	from := users[0].FormattedAddress()
 	addr1 := "juno190g5j8aszqhvtg7cprmev8xcxs6csra7xnk3n3"
 	addr2 := "juno1a53udazy8ayufvy0s434pfwjcedzqv34q7p7vj"
@@ -301,7 +308,7 @@ func testBroadcaster(ctx context.Context, t *testing.T, chain *cosmos.CosmosChai
 	)
 	require.NoError(t, err)
 	require.NotEmpty(t, txResp.TxHash)
-	fmt.Printf("txResp: %+v\n", txResp)
+	t.Logf("txResp: %+v\n", txResp)
 
 	updatedBal1, err := chain.GetBalance(ctx, addr1, chain.Config().Denom)
 	require.NoError(t, err)
@@ -311,7 +318,7 @@ func testBroadcaster(ctx context.Context, t *testing.T, chain *cosmos.CosmosChai
 	require.NoError(t, err)
 	require.Equal(t, math.NewInt(2), updatedBal2)
 
-	txResp, err = cosmos.BroadcastTx(
+	_, err = cosmos.BroadcastTx(
 		ctx,
 		b,
 		users[0],
@@ -324,6 +331,7 @@ func testBroadcaster(ctx context.Context, t *testing.T, chain *cosmos.CosmosChai
 }
 
 func testQueryCmd(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain) {
+	t.Helper()
 	tn := chain.Validators[0]
 	stdout, stderr, err := tn.ExecQuery(ctx, "slashing", "params")
 	require.NoError(t, err)
@@ -332,6 +340,7 @@ func testQueryCmd(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain) 
 }
 
 func testHasCommand(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain) {
+	t.Helper()
 	tn := chain.Validators[0]
 	res := tn.HasCommand(ctx, "query")
 	require.True(t, res)
@@ -354,6 +363,7 @@ func testHasCommand(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain
 }
 
 func testTokenFactory(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, users []ibc.Wallet) {
+	t.Helper()
 	user := users[0]
 	user2 := users[1]
 
@@ -372,9 +382,9 @@ func testTokenFactory(ctx context.Context, t *testing.T, chain *cosmos.CosmosCha
 	// verify metadata
 	md, err := chain.QueryBankMetadata(ctx, tfDenom)
 	require.NoError(t, err)
-	require.Equal(t, md.Metadata.Description, "description here")
-	require.Equal(t, md.Metadata.Symbol, "SYMBOL")
-	require.Equal(t, md.Metadata.DenomUnits[1].Exponent, 6)
+	require.Equal(t, "description here", md.Metadata.Description)
+	require.Equal(t, "SYMBOL", md.Metadata.Symbol)
+	require.Equal(t, 6, md.Metadata.DenomUnits[1].Exponent)
 
 	// mint tokens
 	_, err = node.TokenFactoryMintDenom(ctx, user.KeyName(), tfDenom, 1)
@@ -417,6 +427,7 @@ func testTokenFactory(ctx context.Context, t *testing.T, chain *cosmos.CosmosCha
 }
 
 func testGetGovernanceAddress(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain) {
+	t.Helper()
 	govAddr, err := chain.GetGovernanceAddress(ctx)
 	require.NoError(t, err)
 	_, err = chain.AccAddressFromBech32(govAddr)
@@ -424,6 +435,7 @@ func testGetGovernanceAddress(ctx context.Context, t *testing.T, chain *cosmos.C
 }
 
 func testTXFailsOnBlockInclusion(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, users []ibc.Wallet) {
+	t.Helper()
 	// this isn't a real validator, but is well formed, so it will only fail once a validator checks the staking transaction
 	fakeValoper, err := chain.GetNode().KeyBech32(ctx, users[0].KeyName(), "val")
 	require.NoError(t, err)
@@ -434,6 +446,7 @@ func testTXFailsOnBlockInclusion(ctx context.Context, t *testing.T, chain *cosmo
 }
 
 func testTXEncodeDecode(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, users []ibc.Wallet) {
+	t.Helper()
 	generate := chain.GetNode().TxCommand(users[0].KeyName(), "bank", "send", users[0].FormattedAddress(), users[1].FormattedAddress(), "1"+chain.Config().Denom, "--generate-only")
 	txJson, _, err := chain.GetNode().Exec(ctx, generate, nil)
 	require.NoError(t, err)
@@ -463,8 +476,8 @@ func testTXEncodeDecode(ctx context.Context, t *testing.T, chain *cosmos.CosmosC
 	require.NoError(t, err)
 }
 
-// helpers
-func sendTokens(ctx context.Context, chain *cosmos.CosmosChain, from, to ibc.Wallet, token string, amount int64) (ibc.WalletAmount, error) {
+// helpers.
+func sendTokens(ctx context.Context, chain *cosmos.CosmosChain, from, to ibc.Wallet, token string, amount int64) (ibc.WalletAmount, error) { //nolint:unparam
 	if token == "" {
 		token = chain.Config().Denom
 	}
@@ -479,6 +492,7 @@ func sendTokens(ctx context.Context, chain *cosmos.CosmosChain, from, to ibc.Wal
 }
 
 func validateBalance(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain, user ibc.Wallet, tfDenom string, expected int64) {
+	t.Helper()
 	balance, err := chain.GetBalance(ctx, user.FormattedAddress(), tfDenom)
 	require.NoError(t, err)
 	require.Equal(t, balance, math.NewInt(expected))

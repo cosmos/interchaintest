@@ -23,7 +23,7 @@ func TestCreateTestCase(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, tc)
 
-		row := db.QueryRow(`SELECT name, created_at, git_sha FROM test_case LIMIT 1`)
+		row := db.QueryRowContext(ctx, `SELECT name, created_at, git_sha FROM test_case LIMIT 1`)
 		var (
 			gotName string
 			gotTime string
@@ -67,7 +67,7 @@ func TestTestCase_AddChain(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, chain)
 
-		row := db.QueryRow(`SELECT chain_id, chain_type, fk_test_id, id FROM chain`)
+		row := db.QueryRowContext(ctx, `SELECT chain_id, chain_type, fk_test_id, id FROM chain`)
 		var (
 			gotChainID    string
 			gotChainType  string

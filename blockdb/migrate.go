@@ -1,6 +1,7 @@
 package blockdb
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -33,7 +34,8 @@ func Migrate(db *sql.DB, gitSha string) error {
 	// writing to the same database file.
 	//
 	// https://www.sqlite.org/pragma.html#pragma_busy_timeout
-	_, err := db.Exec(`PRAGMA busy_timeout = 4000`)
+	ctx := context.Background()
+	_, err := db.ExecContext(ctx, `PRAGMA busy_timeout = 4000`)
 	if err != nil {
 		return fmt.Errorf("pragma busy_timeout: %w", err)
 	}
@@ -44,18 +46,18 @@ func Migrate(db *sql.DB, gitSha string) error {
 	// "WAL provides more concurrency as readers do not block writers and a writer does not block readers."
 	//
 	// https://www.sqlite.org/pragma.html#pragma_journal_mode
-	_, err = db.Exec(`PRAGMA journal_mode = WAL`)
+	_, err = db.ExecContext(ctx, `PRAGMA journal_mode = WAL`)
 	if err != nil {
 		return fmt.Errorf("pragma journal_mode: %w", err)
 	}
 
 	// TODO(nix 05-27-2022): Appropriate indexes?
-	_, err = db.Exec(`PRAGMA foreign_keys = ON`)
+	_, err = db.ExecContext(ctx, `PRAGMA foreign_keys = ON`)
 	if err != nil {
 		return fmt.Errorf("pragma foreign_keys: %w", err)
 	}
 
-	tx, err := db.Begin()
+	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("begin tx: %w", err)
 	}
@@ -65,7 +67,7 @@ func Migrate(db *sql.DB, gitSha string) error {
 		_ = tx.Rollback()
 	}()
 
-	_, err = tx.Exec(`CREATE TABLE IF NOT EXISTS schema_version(
+	_, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS schema_version(
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     created_at TEXT NOT NULL CHECK (length(created_at) > 0),
     git_sha TEXT NOT NULL CHECK (length(git_sha) > 0),
@@ -75,13 +77,13 @@ func Migrate(db *sql.DB, gitSha string) error {
 		return fmt.Errorf("create table schema_version: %w", err)
 	}
 
-	_, err = tx.Exec(`INSERT INTO schema_version(created_at, git_sha) VALUES (?, ?)
+	_, err = tx.ExecContext(ctx, `INSERT INTO schema_version(created_at, git_sha) VALUES (?, ?)
 ON CONFLICT(git_sha) DO UPDATE SET git_sha=git_sha`, nowRFC3339(), gitSha)
 	if err != nil {
 		return fmt.Errorf("upsert schema_version with git sha %s: %w", gitSha, err)
 	}
 
-	_, err = tx.Exec(`CREATE TABLE IF NOT EXISTS test_case (
+	_, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS test_case (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL CHECK ( length(name) > 0 ),
     git_sha TEXT NOT NULL CHECK ( length(git_sha) > 0 ),
@@ -91,7 +93,7 @@ ON CONFLICT(git_sha) DO UPDATE SET git_sha=git_sha`, nowRFC3339(), gitSha)
 	if err != nil {
 		return fmt.Errorf("create table test_case: %w", err)
 	}
-	_, err = tx.Exec(`CREATE TABLE IF NOT EXISTS chain (
+	_, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS chain (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     chain_id TEXT NOT NULL CHECK ( length(chain_id) > 0 ),
     fk_test_id INTEGER,
@@ -101,7 +103,7 @@ ON CONFLICT(git_sha) DO UPDATE SET git_sha=git_sha`, nowRFC3339(), gitSha)
 	if err != nil {
 		return fmt.Errorf("create table chain: %w", err)
 	}
-	_, err = tx.Exec(`CREATE TABLE IF NOT EXISTS block (
+	_, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS block (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     height INTEGER NOT NULL CHECK (length(height > 0)),
     fk_chain_id INTEGER,
@@ -112,7 +114,7 @@ ON CONFLICT(git_sha) DO UPDATE SET git_sha=git_sha`, nowRFC3339(), gitSha)
 	if err != nil {
 		return fmt.Errorf("create table block: %w", err)
 	}
-	_, err = tx.Exec(`CREATE TABLE IF NOT EXISTS tx (
+	_, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS tx (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     data TEXT NOT NULL CHECK (length(data > 0)),
     fk_block_id INTEGER,
@@ -122,12 +124,12 @@ ON CONFLICT(git_sha) DO UPDATE SET git_sha=git_sha`, nowRFC3339(), gitSha)
 		return fmt.Errorf("create table tx: %w", err)
 	}
 
-	_, err = tx.Exec(`ALTER TABLE chain ADD COLUMN chain_type TEXT NOT NULL check(length(chain_type) > 0) DEFAULT "unknown"`)
+	_, err = tx.ExecContext(ctx, `ALTER TABLE chain ADD COLUMN chain_type TEXT NOT NULL check(length(chain_type) > 0) DEFAULT "unknown"`)
 	if errIgnoreDuplicateColumn(err, "chain_type") != nil {
 		return fmt.Errorf("alter table chain add chain_type: %w", err)
 	}
 
-	_, err = tx.Exec(`CREATE TABLE IF NOT EXISTS tendermint_event (
+	_, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS tendermint_event (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     type TEXT NOT NULL CHECK (length(type) > 0),
     fk_tx_id INTEGER,
@@ -137,7 +139,7 @@ ON CONFLICT(git_sha) DO UPDATE SET git_sha=git_sha`, nowRFC3339(), gitSha)
 		return fmt.Errorf("create table tendermint_event: %w", err)
 	}
 
-	_, err = tx.Exec(`CREATE TABLE IF NOT EXISTS tendermint_event_attr (
+	_, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS tendermint_event_attr (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     key TEXT NOT NULL CHECK (length(key) > 0),
     value TEXT NOT NULL,
@@ -166,13 +168,13 @@ ON CONFLICT(git_sha) DO UPDATE SET git_sha=git_sha`, nowRFC3339(), gitSha)
 // Performance impact is negligible since views are essentially stored queries.
 func upsertViews(tx *sql.Tx) error {
 	// Drop and recreate views because it's performant and allows changing columns in earlier migration steps.
-
-	_, err := tx.Exec(`DROP VIEW IF EXISTS v_tx_flattened`)
+	ctx := context.Background()
+	_, err := tx.ExecContext(ctx, `DROP VIEW IF EXISTS v_tx_flattened`)
 	if err != nil {
 		return fmt.Errorf("drop old v_tx_flattened view: %w", err)
 	}
 
-	_, err = tx.Exec(`CREATE VIEW v_tx_flattened AS
+	_, err = tx.ExecContext(ctx, `CREATE VIEW v_tx_flattened AS
 SELECT
   test_case.id as test_case_id
   , test_case.created_at as test_case_created_at
@@ -194,11 +196,11 @@ LEFT JOIN test_case ON chain.fk_test_id = test_case.id
 		return fmt.Errorf("create v_tx_flattened view: %w", err)
 	}
 
-	_, err = tx.Exec(`DROP VIEW IF EXISTS v_cosmos_messages`)
+	_, err = tx.ExecContext(ctx, `DROP VIEW IF EXISTS v_cosmos_messages`)
 	if err != nil {
 		return fmt.Errorf("drop old v_cosmos_messages view: %w", err)
 	}
-	_, err = tx.Exec(`CREATE VIEW v_cosmos_messages AS
+	_, err = tx.ExecContext(ctx, `CREATE VIEW v_cosmos_messages AS
 SELECT
   test_case_id
   , test_case_name
@@ -243,12 +245,12 @@ FROM v_tx_flattened, json_each(v_tx_flattened.tx, "$.body.messages")
 		return fmt.Errorf("create v_cosmos_messages view: %w", err)
 	}
 
-	_, err = tx.Exec(`DROP VIEW IF EXISTS v_tx_agg`)
+	_, err = tx.ExecContext(ctx, `DROP VIEW IF EXISTS v_tx_agg`)
 	if err != nil {
 		return fmt.Errorf("drop old v_tx_agg view: %w", err)
 	}
 
-	_, err = tx.Exec(`CREATE VIEW v_tx_agg AS
+	_, err = tx.ExecContext(ctx, `CREATE VIEW v_tx_agg AS
     SELECT
        test_case.id AS test_case_id
      , test_case.created_at AS test_case_created_at

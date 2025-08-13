@@ -9,15 +9,17 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
+
 	sdkmath "cosmossdk.io/math"
 
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
 	"github.com/cosmos/interchaintest/v10/testutil"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest"
 )
 
 const (
@@ -150,7 +152,7 @@ func TestEthermintChain(t *testing.T) {
 	require.NoError(t, err)
 
 	data := []byte(`{"jsonrpc":"2.0","id":1,"method":"eth_getBlockByNumber","params":["0x1", null]}`)
-	resp, err := http.Post(evmJsonRpcUrl, "application/json", bytes.NewBuffer(data))
+	resp, err := http.Post(evmJsonRpcUrl, "application/json", bytes.NewBuffer(data)) // nolint:gosec,noctx // not a security issue for testing
 	require.NoError(t, err)
 	defer resp.Body.Close()
 
