@@ -22,7 +22,7 @@ require (
 	github.com/BurntSushi/toml v1.4.0
 	github.com/CosmWasm/wasmd v0.60.0
 	github.com/atotto/clipboard v0.1.4
-	github.com/avast/retry-go/v4 v4.5.1
+	github.com/avast/retry-go/v4 v4.6.1
 	github.com/cometbft/cometbft v0.38.17
 	github.com/cosmos/cosmos-sdk v0.53.0
 	github.com/cosmos/evm v0.2.0
