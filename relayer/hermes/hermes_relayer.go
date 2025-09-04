@@ -20,7 +20,7 @@ import (
 const (
 	hermes                  = "hermes"
 	defaultContainerImage   = "ghcr.io/informalsystems/hermes"
-	DefaultContainerVersion = "1.8.2"
+	DefaultContainerVersion = "1.13.1"
 
 	hermesDefaultUIDGID = "1000:1000"
 	hermesHome          = "/home/hermes"
@@ -90,8 +90,69 @@ func (r *Relayer) AddChainConfiguration(ctx context.Context, rep ibc.RelayerExec
 		return fmt.Errorf("failed to generate config content: %w", err)
 	}
 
+	// Debug: Check who we are running as
+	whoamiCmd := []string{"whoami"}
+	whoamiRes := r.Exec(ctx, rep, whoamiCmd, nil)
+	if whoamiRes.Err == nil {
+		fmt.Printf("DEBUG: Running as user: %s\n", string(whoamiRes.Stdout))
+	}
+
+	// Debug: Check if .hermes directory exists and create it if needed
+	mkdirCmd := []string{"mkdir", "-p", fmt.Sprintf("%s/.hermes", r.HomeDir())}
+	mkdirRes := r.Exec(ctx, rep, mkdirCmd, nil)
+	if mkdirRes.Err != nil {
+		fmt.Printf("DEBUG ERROR: Failed to create .hermes directory: %v\n", mkdirRes.Err)
+	}
+
 	if err := r.WriteFileToHomeDir(ctx, hermesConfigPath, configContent); err != nil {
 		return fmt.Errorf("failed to write hermes config: %w", err)
+	}
+
+	// Debug: show the config file content that was written
+	fmt.Printf("DEBUG: Written Hermes config file at path: %s\n", hermesConfigPath)
+	fmt.Printf("DEBUG: Config content:\n%s\n", string(configContent))
+
+	// Debug: check file permissions and ownership
+	lsCmd := []string{"ls", "-la", fmt.Sprintf("%s/", r.HomeDir())}
+	lsRes := r.Exec(ctx, rep, lsCmd, nil)
+	if lsRes.Err == nil {
+		fmt.Printf("DEBUG: Home directory listing:\n%s\n", string(lsRes.Stdout))
+	}
+
+	lsCmd2 := []string{"ls", "-la", fmt.Sprintf("%s/.hermes/", r.HomeDir())}
+	lsRes2 := r.Exec(ctx, rep, lsCmd2, nil)
+	if lsRes2.Err == nil {
+		fmt.Printf("DEBUG: .hermes directory listing:\n%s\n", string(lsRes2.Stdout))
+	} else {
+		fmt.Printf("DEBUG ERROR: Failed to list .hermes directory: %v\n", lsRes2.Err)
+	}
+
+	// Check if we can access the file with sudo
+	sudoCatCmd := []string{"sudo", "cat", fmt.Sprintf("%s/%s", r.HomeDir(), hermesConfigPath)}
+	sudoCatRes := r.Exec(ctx, rep, sudoCatCmd, nil)
+	if sudoCatRes.Err == nil {
+		fmt.Printf("DEBUG: Config file exists (via sudo), length: %d\n", len(sudoCatRes.Stdout))
+	} else {
+		fmt.Printf("DEBUG: Sudo cat also failed: %v\n", sudoCatRes.Err)
+	}
+
+	// Debug: Try to read the file that WriteFileToHomeDir created
+	// First check with stat to see if file exists
+	statCmd := []string{"stat", fmt.Sprintf("%s/%s", r.HomeDir(), hermesConfigPath)}
+	statRes := r.Exec(ctx, rep, statCmd, nil)
+	if statRes.Err == nil {
+		fmt.Printf("DEBUG: File stat info:\n%s\n", string(statRes.Stdout))
+	} else {
+		fmt.Printf("DEBUG ERROR: File does not exist or cannot stat: %v\n", statRes.Err)
+	}
+
+	// Debug: read back the file to confirm it was written correctly
+	catCmd := []string{"cat", fmt.Sprintf("%s/%s", r.HomeDir(), hermesConfigPath)}
+	catRes := r.Exec(ctx, rep, catCmd, nil)
+	if catRes.Err == nil {
+		fmt.Printf("DEBUG: Config file content from container (length: %d)\n", len(catRes.Stdout))
+	} else {
+		fmt.Printf("DEBUG ERROR: Failed to read config file from container: %v\n", catRes.Err)
 	}
 
 	if err := r.validateConfig(ctx, rep); err != nil {
@@ -398,11 +459,56 @@ func (r *Relayer) configContent(cfg ibc.ChainConfig, keyName, rpcAddr, grpcAddr 
 
 // validateConfig validates the hermes config file. Any errors are propagated to the test.
 func (r *Relayer) validateConfig(ctx context.Context, rep ibc.RelayerExecReporter) error {
-	cmd := []string{hermes, "--config", fmt.Sprintf("%s/%s", r.HomeDir(), hermesConfigPath), "config", "validate"}
+	configPath := fmt.Sprintf("%s/%s", r.HomeDir(), hermesConfigPath)
+	
+	// Debug: show what config file we're validating
+	fmt.Printf("DEBUG: Validating Hermes config at path: %s\n", configPath)
+	
+	// Debug: check who is running the validation
+	whoamiCmd := []string{"whoami"}
+	whoamiRes := r.Exec(ctx, rep, whoamiCmd, nil)
+	if whoamiRes.Err == nil {
+		fmt.Printf("DEBUG: Validation running as user: %s", string(whoamiRes.Stdout))
+	}
+	
+	idCmd := []string{"id"}
+	idRes := r.Exec(ctx, rep, idCmd, nil)
+	if idRes.Err == nil {
+		fmt.Printf("DEBUG: User id info: %s", string(idRes.Stdout))
+	}
+	
+	// Debug: check if file exists and show its content
+	lsCmd := []string{"ls", "-la", configPath}
+	lsRes := r.Exec(ctx, rep, lsCmd, nil)
+	if lsRes.Err == nil {
+		fmt.Printf("DEBUG: Config file info:\n%s\n", string(lsRes.Stdout))
+	} else {
+		fmt.Printf("DEBUG ERROR: Failed to list config file: %v\n", lsRes.Err)
+	}
+	
+	cmd := []string{hermes, "--config", configPath, "config", "validate"}
+	fmt.Printf("DEBUG: Running validation command: %v\n", cmd)
+	
 	res := r.Exec(ctx, rep, cmd, nil)
 	if res.Err != nil {
-		return res.Err
+		// Debug: show more details on validation error
+		fmt.Printf("DEBUG ERROR: Config validation failed\n")
+		fmt.Printf("  Error: %v\n", res.Err)
+		fmt.Printf("  Stdout: %s\n", string(res.Stdout))
+		fmt.Printf("  Stderr: %s\n", string(res.Stderr))
+		fmt.Printf("  Config path: %s\n", configPath)
+		
+		// Try to show the actual content of the config file for debugging
+		catCmd := []string{"cat", configPath}
+		catRes := r.Exec(ctx, rep, catCmd, nil)
+		if catRes.Err == nil {
+			fmt.Printf("DEBUG: Failed config content:\n%s\n", string(catRes.Stdout))
+		}
+		
+		return fmt.Errorf("config validation failed: %w (stdout: %s, stderr: %s)", res.Err, string(res.Stdout), string(res.Stderr))
 	}
+	
+	fmt.Printf("DEBUG: Config validation successful\n")
 	return nil
 }
 
