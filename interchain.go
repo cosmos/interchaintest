@@ -13,6 +13,7 @@ import (
 
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v10/relayer/hermes"
 	"github.com/cosmos/interchaintest/v10/testreporter"
 )
 
@@ -641,6 +642,20 @@ func (ic *Interchain) configureRelayerKeys(ctx context.Context, rep *testreporte
 				ic.relayerWallets[relayerChain{R: r, C: c}].Mnemonic(),
 			); err != nil {
 				return fmt.Errorf("failed to restore key to relayer %s for chain %s: %w", ic.relayers[r], chainName, err)
+			}
+
+			// Fund the relayer wallet if it's a Hermes relayer
+			if hermesRelayer, ok := r.(*hermes.Relayer); ok {
+				relayerWallet := ic.relayerWallets[relayerChain{R: r, C: c}]
+				fundingAmount := ibc.WalletAmount{
+					Address: relayerWallet.FormattedAddress(),
+					Denom:   c.Config().Denom,
+					Amount:  sdkmath.NewInt(1000000000000000000), // 1 token with 18 decimals
+				}
+				
+				if err := hermesRelayer.FundRelayerWallet(ctx, c, fundingAmount); err != nil {
+					return fmt.Errorf("failed to fund relayer wallet for %s on chain %s: %w", ic.relayers[r], chainName, err)
+				}
 			}
 		}
 	}

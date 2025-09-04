@@ -372,7 +372,15 @@ func (r *Relayer) RestoreKey(ctx context.Context, rep ibc.RelayerExecReporter, c
 			fmt.Printf("DEBUG ERROR: Failed to read back mnemonic file: %v\n", catRes.Err)
 		}
 
+		// Build the command with correct HD path for the coin type
 		cmd = []string{hermes, "keys", "add", "--chain", chainID, "--mnemonic-file", mnemonicPath, "--key-name", keyName}
+		
+		// Add HD path based on coin type if it's not the default (118)
+		if cfg.CoinType != "" && cfg.CoinType != "118" {
+			hdPath := fmt.Sprintf("m/44'/%s'/0'/0/0", cfg.CoinType)
+			cmd = append(cmd, "--hd-path", hdPath)
+			fmt.Printf("DEBUG: Using custom HD path: %s for coin type: %s\n", hdPath, cfg.CoinType)
+		}
 	}
 
 	// Debug: Show the exact command being executed
@@ -408,6 +416,26 @@ func (r *Relayer) RestoreKey(ctx context.Context, rep ibc.RelayerExecReporter, c
 	fmt.Printf("  Address: %s\n", addrBytes)
 	fmt.Printf("  Mnemonic: %s\n", mnemonic)
 	
+	return nil
+}
+
+// FundRelayerWallet funds the relayer wallet with tokens from the faucet account.
+// This should be called after RestoreKey to ensure the relayer has funds for transactions.
+func (r *Relayer) FundRelayerWallet(ctx context.Context, chain ibc.Chain, amount ibc.WalletAmount) error {
+	chainID := chain.Config().ChainID
+	
+	// Debug: Show funding attempt
+	fmt.Printf("DEBUG: FundRelayerWallet called for chain %s\n", chainID)
+	fmt.Printf("  Amount: %s %s\n", amount.Amount.String(), amount.Denom)
+	fmt.Printf("  Target Address: %s\n", amount.Address)
+	
+	// Fund the relayer wallet using the faucet account
+	if err := chain.SendFunds(ctx, "faucet", amount); err != nil {
+		fmt.Printf("DEBUG ERROR: Failed to fund relayer wallet: %v\n", err)
+		return fmt.Errorf("failed to fund relayer wallet for chain %s: %w", chainID, err)
+	}
+	
+	fmt.Printf("DEBUG: Successfully funded relayer wallet for chain %s\n", chainID)
 	return nil
 }
 
@@ -495,11 +523,49 @@ func (r *Relayer) configContent(cfg ibc.ChainConfig, keyName, rpcAddr, grpcAddr 
 		grpcAddr: grpcAddr,
 	})
 	hermesConfig := NewConfig(r.chainConfigs...)
-	bz, err := toml.Marshal(hermesConfig)
+	bz, err := marshalHermesConfig(hermesConfig)
 	if err != nil {
 		return nil, err
 	}
 	return bz, nil
+}
+
+// marshalHermesConfig creates a TOML representation of the Hermes config with proper inline tables for address_type
+func marshalHermesConfig(config Config) ([]byte, error) {
+	// First marshal the config normally
+	bz, err := toml.Marshal(config)
+	if err != nil {
+		return nil, err
+	}
+	
+	configStr := string(bz)
+	
+	// Replace the address_type sections with inline table format
+	// Look for chains with eth_secp256k1 signing and fix their address_type
+	for _, chain := range config.Chains {
+		if chain.AddressType.Derivation == "ethermint" && chain.AddressType.ProtoType.PkType != "" {
+			// Create the inline table format
+			inlineTable := fmt.Sprintf(`address_type = { derivation = "%s", proto_type = { pk_type = "%s" } }`,
+				chain.AddressType.Derivation, chain.AddressType.ProtoType.PkType)
+			
+			// Since we skipped serializing address_type, we need to add it manually
+			// Find the position after key_store_type for this chain
+			chainPattern := fmt.Sprintf(`id = "%s"`, chain.ID)
+			chainStart := strings.Index(configStr, chainPattern)
+			if chainStart != -1 {
+				// Find the key_store_type line for this chain
+				keyStorePattern := fmt.Sprintf(`key_store_type = "%s"`, chain.KeyStoreType)
+				keyStorePos := strings.Index(configStr[chainStart:], keyStorePattern)
+				if keyStorePos != -1 {
+					keyStoreEndPos := chainStart + keyStorePos + len(keyStorePattern)
+					// Insert the address_type line after key_store_type
+					configStr = configStr[:keyStoreEndPos] + "\n  " + inlineTable + configStr[keyStoreEndPos:]
+				}
+			}
+		}
+	}
+	
+	return []byte(configStr), nil
 }
 
 // validateConfig validates the hermes config file. Any errors are propagated to the test.

@@ -193,13 +193,15 @@ type EventSource struct {
 	BatchDelay string `toml:"batch_delay,omitempty"`
 }
 
+// AddressType represents the address_type configuration
+// For TOML serialization, this will be handled as a special case to create inline tables
 type AddressType struct {
-	Derivation string    `toml:"derivation"`
-	ProtoType  ProtoType `toml:"proto_type,omitempty"`
+	Derivation string    `toml:"-"` // Skip normal serialization
+	ProtoType  ProtoType `toml:"-"` // Skip normal serialization
 }
 
 type ProtoType struct {
-	PkType string `toml:"pk_type"`
+	PkType string `toml:"-"` // Skip normal serialization
 }
 
 type GasPrice struct {
@@ -224,7 +226,7 @@ type Chain struct {
 	AccountPrefix      string         `toml:"account_prefix"`
 	KeyName            string         `toml:"key_name"`
 	KeyStoreType       string         `toml:"key_store_type"`
-	AddressType        AddressType    `toml:"address_type"`
+	AddressType        AddressType    `toml:"-"` // Handle manually in custom serialization
 	StorePrefix        string         `toml:"store_prefix"`
 	DefaultGas         int            `toml:"default_gas"`
 	MaxGas             int            `toml:"max_gas"`
