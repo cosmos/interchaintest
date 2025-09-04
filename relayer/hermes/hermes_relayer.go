@@ -337,6 +337,17 @@ func (r *Relayer) CreateClient(ctx context.Context, rep ibc.RelayerExecReporter,
 // to copy the contents of the mnemonic into a file on disk and then reference the newly created file.
 func (r *Relayer) RestoreKey(ctx context.Context, rep ibc.RelayerExecReporter, cfg ibc.ChainConfig, keyName, mnemonic string) error {
 	chainID := cfg.ChainID
+	
+	// Debug: Show the mnemonic being used for key restoration
+	fmt.Printf("DEBUG: RestoreKey called with:\n")
+	fmt.Printf("  ChainID: %s\n", chainID)
+	fmt.Printf("  KeyName: %s\n", keyName)
+	fmt.Printf("  Mnemonic: %s\n", mnemonic)
+	fmt.Printf("  Chain Type: %s\n", cfg.Type)
+	fmt.Printf("  SigningAlgorithm: %s\n", cfg.SigningAlgorithm)
+	fmt.Printf("  CoinType: %s\n", cfg.CoinType)
+	fmt.Printf("  Bech32Prefix: %s\n", cfg.Bech32Prefix)
+	
 	var cmd []string
 	switch cfg.Type {
 	case "namada":
@@ -348,8 +359,24 @@ func (r *Relayer) RestoreKey(ctx context.Context, rep ibc.RelayerExecReporter, c
 			return fmt.Errorf("failed to write mnemonic file: %w", err)
 		}
 
-		cmd = []string{hermes, "keys", "add", "--chain", chainID, "--mnemonic-file", fmt.Sprintf("%s/%s", r.HomeDir(), relativeMnemonicFilePath), "--key-name", keyName}
+		// Debug: Show the mnemonic file path and verify it was written
+		mnemonicPath := fmt.Sprintf("%s/%s", r.HomeDir(), relativeMnemonicFilePath)
+		fmt.Printf("DEBUG: Mnemonic written to file: %s\n", mnemonicPath)
+		
+		// Debug: Read back the mnemonic file to verify it was written correctly
+		catCmd := []string{"cat", mnemonicPath}
+		catRes := r.Exec(ctx, rep, catCmd, nil)
+		if catRes.Err == nil {
+			fmt.Printf("DEBUG: Mnemonic file content: %s\n", string(catRes.Stdout))
+		} else {
+			fmt.Printf("DEBUG ERROR: Failed to read back mnemonic file: %v\n", catRes.Err)
+		}
+
+		cmd = []string{hermes, "keys", "add", "--chain", chainID, "--mnemonic-file", mnemonicPath, "--key-name", keyName}
 	}
+
+	// Debug: Show the exact command being executed
+	fmt.Printf("DEBUG: Executing hermes key restoration command: %v\n", cmd)
 
 	// Restoring a key should be near-instantaneous, so add a 1-minute timeout
 	// to detect if Docker has hung.
@@ -358,11 +385,29 @@ func (r *Relayer) RestoreKey(ctx context.Context, rep ibc.RelayerExecReporter, c
 
 	res := r.Exec(ctx, rep, cmd, nil)
 	if res.Err != nil {
+		fmt.Printf("DEBUG ERROR: Key restoration failed\n")
+		fmt.Printf("  Error: %v\n", res.Err)
+		fmt.Printf("  Stdout: %s\n", string(res.Stdout))
+		fmt.Printf("  Stderr: %s\n", string(res.Stderr))
 		return res.Err
 	}
 
+	// Debug: Show the successful restoration output
+	fmt.Printf("DEBUG: Key restoration successful\n")
+	fmt.Printf("  Stdout: %s\n", string(res.Stdout))
+
 	addrBytes := parseRestoreKeyOutput(string(res.Stdout))
-	r.AddWallet(chainID, NewWallet(chainID, addrBytes, mnemonic))
+	fmt.Printf("DEBUG: Parsed address from hermes output: %s\n", addrBytes)
+	
+	wallet := NewWallet(chainID, addrBytes, mnemonic)
+	r.AddWallet(chainID, wallet)
+	
+	// Debug: Show the wallet that was added
+	fmt.Printf("DEBUG: Wallet added to relayer:\n")
+	fmt.Printf("  ChainID: %s\n", chainID)
+	fmt.Printf("  Address: %s\n", addrBytes)
+	fmt.Printf("  Mnemonic: %s\n", mnemonic)
+	
 	return nil
 }
 

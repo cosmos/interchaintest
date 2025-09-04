@@ -24,6 +24,24 @@ func NewConfig(chainConfigs ...ChainConfig) Config {
 		chainType = Cosmos
 		accountPrefix = chainCfg.Bech32Prefix
 		trustingPeriod = "14days"
+		
+		// Configure address type based on signing algorithm
+		var addressType AddressType
+		if chainCfg.SigningAlgorithm == "eth_secp256k1" {
+			// For EVM-compatible chains, use ethermint derivation
+			addressType = AddressType{
+				Derivation: "ethermint",
+				ProtoType: ProtoType{
+					PkType: "/cosmos.evm.crypto.v1.ethsecp256k1.PubKey",
+				},
+			}
+		} else {
+			// For standard Cosmos chains, use cosmos derivation
+			addressType = AddressType{
+				Derivation: "cosmos",
+			}
+		}
+		
 		chains = append(chains, Chain{
 			ID:               chainCfg.ChainID,
 			Type:             chainType,
@@ -40,9 +58,7 @@ func NewConfig(chainConfigs ...ChainConfig) Config {
 			AccountPrefix:   accountPrefix,
 			KeyName:         hermesCfg.keyName,
 			KeyStoreType:    "Test",
-			AddressType: AddressType{
-				Derivation: "cosmos",
-			},
+			AddressType:     addressType,
 			StorePrefix: "ibc",
 			DefaultGas:  200000,
 			MaxGas:      400000,
@@ -178,7 +194,12 @@ type EventSource struct {
 }
 
 type AddressType struct {
-	Derivation string `toml:"derivation"`
+	Derivation string    `toml:"derivation"`
+	ProtoType  ProtoType `toml:"proto_type,omitempty"`
+}
+
+type ProtoType struct {
+	PkType string `toml:"pk_type"`
 }
 
 type GasPrice struct {
