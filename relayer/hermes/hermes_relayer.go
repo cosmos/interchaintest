@@ -404,14 +404,24 @@ func (r *Relayer) configContent(cfg ibc.ChainConfig, keyName, rpcAddr, grpcAddr 
 		rpcAddr:  rpcAddr,
 		grpcAddr: grpcAddr,
 	})
-	hermesConfig := NewConfig(r.chainConfigs...)
+
+	// Get custom PkTypes from the DockerRelayer if available
+	chainPkTypes := make(map[string]string)
+	if r.DockerRelayer != nil {
+		for _, chainCfg := range r.chainConfigs {
+			if pkType := r.DockerRelayer.GetChainPkType(chainCfg.cfg.ChainID); pkType != "" {
+				chainPkTypes[chainCfg.cfg.ChainID] = pkType
+			}
+		}
+	}
+
+	hermesConfig := NewConfigWithPkTypes(chainPkTypes, r.chainConfigs...)
 	bz, err := toml.Marshal(hermesConfig)
 	if err != nil {
 		return nil, err
 	}
 	return bz, nil
 }
-
 
 // validateConfig validates the hermes config file. Any errors are propagated to the test.
 func (r *Relayer) validateConfig(ctx context.Context, rep ibc.RelayerExecReporter) error {

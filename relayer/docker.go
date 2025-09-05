@@ -51,6 +51,9 @@ type DockerRelayer struct {
 	homeDir string
 
 	extraStartupFlags []string
+
+	// chainPkTypes contains a mapping of chainID to PkType for Hermes configuration
+	chainPkTypes map[string]string
 }
 
 var _ ibc.Relayer = (*DockerRelayer)(nil)
@@ -210,6 +213,15 @@ func (r *DockerRelayer) AddKey(ctx context.Context, rep ibc.RelayerExecReporter,
 
 func (r *DockerRelayer) GetExtraStartupFlags() []string {
 	return r.extraStartupFlags
+}
+
+// GetChainPkType returns the PkType configured for the specified chain ID.
+// If no PkType is configured, it returns an empty string.
+func (r *DockerRelayer) GetChainPkType(chainID string) string {
+	if r.chainPkTypes == nil {
+		return ""
+	}
+	return r.chainPkTypes[chainID]
 }
 
 func (r *DockerRelayer) GetWallet(chainID string) (ibc.Wallet, bool) {

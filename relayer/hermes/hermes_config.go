@@ -9,6 +9,12 @@ import (
 // NewConfig returns a hermes Config with an entry for each of the provided ChainConfigs.
 // The defaults were adapted from the sample config file found here: https://github.com/informalsystems/hermes/blob/master/config.toml
 func NewConfig(chainConfigs ...ChainConfig) Config {
+	return NewConfigWithPkTypes(nil, chainConfigs...)
+}
+
+// NewConfigWithPkTypes returns a hermes Config with an entry for each of the provided ChainConfigs,
+// allowing custom PkType configuration per chain.
+func NewConfigWithPkTypes(chainPkTypes map[string]string, chainConfigs ...ChainConfig) Config {
 	var chains []Chain
 	for _, hermesCfg := range chainConfigs {
 		chainCfg := hermesCfg.cfg
@@ -25,18 +31,28 @@ func NewConfig(chainConfigs ...ChainConfig) Config {
 		accountPrefix = chainCfg.Bech32Prefix
 		trustingPeriod = "14days"
 
-		// Configure address type based on signing algorithm
+		// Configure address type
 		var addressType AddressType
-		if chainCfg.SigningAlgorithm == "eth_secp256k1" {
-			// For EVM-compatible chains, use ethermint derivation
+
+		// Priority: custom PkType > eth_secp256k1 default > cosmos default
+		customPkType := chainPkTypes[chainCfg.ChainID]
+
+		switch {
+		case customPkType != "":
+			addressType = AddressType{
+				Derivation: "ethermint",
+				ProtoType: &ProtoType{
+					PkType: customPkType,
+				},
+			}
+		case chainCfg.SigningAlgorithm == "eth_secp256k1":
 			addressType = AddressType{
 				Derivation: "ethermint",
 				ProtoType: &ProtoType{
 					PkType: "/cosmos.evm.crypto.v1.ethsecp256k1.PubKey",
 				},
 			}
-		} else {
-			// For standard Cosmos chains, use cosmos derivation
+		default:
 			addressType = AddressType{
 				Derivation: "cosmos",
 				ProtoType:  nil,
