@@ -312,29 +312,11 @@ func (r *Relayer) RestoreKey(ctx context.Context, rep ibc.RelayerExecReporter, c
 
 	res := r.Exec(ctx, rep, cmd, nil)
 	if res.Err != nil {
-		fmt.Printf("DEBUG ERROR: Key restoration failed\n")
-		fmt.Printf("  Error: %v\n", res.Err)
-		fmt.Printf("  Stdout: %s\n", string(res.Stdout))
-		fmt.Printf("  Stderr: %s\n", string(res.Stderr))
 		return res.Err
 	}
 
 	addrBytes := parseRestoreKeyOutput(string(res.Stdout))
 	r.AddWallet(chainID, NewWallet(chainID, addrBytes, mnemonic))
-
-	return nil
-}
-
-// FundRelayerWallet funds the relayer wallet with tokens from the faucet account.
-// This should be called after RestoreKey to ensure the relayer has funds for transactions.
-func (r *Relayer) FundRelayerWallet(ctx context.Context, chain ibc.Chain, amount ibc.WalletAmount) error {
-	chainID := chain.Config().ChainID
-
-	// Fund the relayer wallet using the faucet account
-	if err := chain.SendFunds(ctx, "faucet", amount); err != nil {
-		fmt.Printf("DEBUG ERROR: Failed to fund relayer wallet: %v\n", err)
-		return fmt.Errorf("failed to fund relayer wallet for chain %s: %w", chainID, err)
-	}
 
 	return nil
 }

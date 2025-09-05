@@ -24,7 +24,7 @@ func NewConfig(chainConfigs ...ChainConfig) Config {
 		chainType = Cosmos
 		accountPrefix = chainCfg.Bech32Prefix
 		trustingPeriod = "14days"
-		
+
 		// Configure address type based on signing algorithm
 		var addressType AddressType
 		if chainCfg.SigningAlgorithm == "eth_secp256k1" {
@@ -41,7 +41,7 @@ func NewConfig(chainConfigs ...ChainConfig) Config {
 				Derivation: "cosmos",
 			}
 		}
-		
+
 		chains = append(chains, Chain{
 			ID:               chainCfg.ChainID,
 			Type:             chainType,
@@ -53,15 +53,15 @@ func NewConfig(chainConfigs ...ChainConfig) Config {
 				URL:      strings.ReplaceAll(fmt.Sprintf("%s/websocket", hermesCfg.rpcAddr), "http", "ws"),
 				Interval: "100ms",
 			},
-			RPCTimeout:      "10s",
-			TrustedNode:     true,
-			AccountPrefix:   accountPrefix,
-			KeyName:         hermesCfg.keyName,
-			KeyStoreType:    "Test",
-			AddressType:     addressType,
-			StorePrefix: "ibc",
-			DefaultGas:  200000,
-			MaxGas:      400000,
+			RPCTimeout:    "10s",
+			TrustedNode:   true,
+			AccountPrefix: accountPrefix,
+			KeyName:       hermesCfg.keyName,
+			KeyStoreType:  "Test",
+			AddressType:   addressType,
+			StorePrefix:   "ibc",
+			DefaultGas:    200000,
+			MaxGas:        400000,
 			GasPrice: GasPrice{
 				Price: gasPricesStr,
 				Denom: chainCfg.Denom,
@@ -215,32 +215,32 @@ type TrustThreshold struct {
 }
 
 type Chain struct {
-	ID                 string         `toml:"id"`
-	Type               string         `toml:"type"`
-	RPCAddr            string         `toml:"rpc_addr"`
-	GrpcAddr           string         `toml:"grpc_addr"`
-	EventSource        EventSource    `toml:"event_source"`
-	CCVConsumerChain   bool           `toml:"ccv_consumer_chain"`
-	RPCTimeout         string         `toml:"rpc_timeout"`
-	TrustedNode        bool           `toml:"trusted_node"`
-	AccountPrefix      string         `toml:"account_prefix"`
-	KeyName            string         `toml:"key_name"`
-	KeyStoreType       string         `toml:"key_store_type"`
-	AddressType        AddressType    `toml:"-"` // Handle manually in custom serialization
-	StorePrefix        string         `toml:"store_prefix"`
-	DefaultGas         int            `toml:"default_gas"`
-	MaxGas             int            `toml:"max_gas"`
-	GasPrice           GasPrice       `toml:"gas_price"`
-	GasMultiplier      float64        `toml:"gas_multiplier"`
-	MaxMsgNum          int            `toml:"max_msg_num"`
-	MaxTxSize          int            `toml:"max_tx_size"`
-	MaxGrpcDecodingSize int           `toml:"max_grpc_decoding_size,omitempty"`
-	QueryPacketsChunkSize int         `toml:"query_packets_chunk_size,omitempty"`
-	ClockDrift         string         `toml:"clock_drift"`
-	MaxBlockTime       string         `toml:"max_block_time"`
-	ClientRefreshRate  string         `toml:"client_refresh_rate,omitempty"`
-	TrustingPeriod     string         `toml:"trusting_period"`
-	TrustThreshold     TrustThreshold `toml:"trust_threshold"`
-	SequentialBatchTx  bool           `toml:"sequential_batch_tx"`
-	MemoPrefix         string         `toml:"memo_prefix,omitempty"`
+	ID                    string         `toml:"id"`
+	Type                  string         `toml:"type"`
+	RPCAddr               string         `toml:"rpc_addr"`
+	GrpcAddr              string         `toml:"grpc_addr"`
+	EventSource           EventSource    `toml:"event_source"`
+	CCVConsumerChain      bool           `toml:"ccv_consumer_chain"`
+	RPCTimeout            string         `toml:"rpc_timeout"`
+	TrustedNode           bool           `toml:"trusted_node"`
+	AccountPrefix         string         `toml:"account_prefix"`
+	KeyName               string         `toml:"key_name"`
+	KeyStoreType          string         `toml:"key_store_type"`
+	AddressType           AddressType    `toml:"-"` // Handle manually in custom serialization
+	StorePrefix           string         `toml:"store_prefix"`
+	DefaultGas            int            `toml:"default_gas"`
+	MaxGas                int            `toml:"max_gas"`
+	GasPrice              GasPrice       `toml:"gas_price"`
+	GasMultiplier         float64        `toml:"gas_multiplier"`
+	MaxMsgNum             int            `toml:"max_msg_num"`
+	MaxTxSize             int            `toml:"max_tx_size"`
+	MaxGrpcDecodingSize   int            `toml:"max_grpc_decoding_size,omitempty"`
+	QueryPacketsChunkSize int            `toml:"query_packets_chunk_size,omitempty"`
+	ClockDrift            string         `toml:"clock_drift"`
+	MaxBlockTime          string         `toml:"max_block_time"`
+	ClientRefreshRate     string         `toml:"client_refresh_rate,omitempty"`
+	TrustingPeriod        string         `toml:"trusting_period"`
+	TrustThreshold        TrustThreshold `toml:"trust_threshold"`
+	SequentialBatchTx     bool           `toml:"sequential_batch_tx"`
+	MemoPrefix            string         `toml:"memo_prefix,omitempty"`
 }
