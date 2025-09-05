@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/moby/moby/client"
-	"github.com/pelletier/go-toml"
+	"github.com/pelletier/go-toml/v2"
 	"go.uber.org/zap"
 
 	"github.com/cosmos/interchaintest/v10/ibc"
@@ -405,50 +405,13 @@ func (r *Relayer) configContent(cfg ibc.ChainConfig, keyName, rpcAddr, grpcAddr 
 		grpcAddr: grpcAddr,
 	})
 	hermesConfig := NewConfig(r.chainConfigs...)
-	bz, err := marshalHermesConfig(hermesConfig)
+	bz, err := toml.Marshal(hermesConfig)
 	if err != nil {
 		return nil, err
 	}
 	return bz, nil
 }
 
-// marshalHermesConfig creates a TOML representation of the Hermes config with proper inline tables for address_type
-func marshalHermesConfig(config Config) ([]byte, error) {
-	// First marshal the config normally
-	bz, err := toml.Marshal(config)
-	if err != nil {
-		return nil, err
-	}
-
-	configStr := string(bz)
-
-	// Replace the address_type sections with inline table format
-	// Look for chains with eth_secp256k1 signing and fix their address_type
-	for _, chain := range config.Chains {
-		if chain.AddressType.Derivation == "ethermint" && chain.AddressType.ProtoType.PkType != "" {
-			// Create the inline table format
-			inlineTable := fmt.Sprintf(`address_type = { derivation = "%s", proto_type = { pk_type = "%s" } }`,
-				chain.AddressType.Derivation, chain.AddressType.ProtoType.PkType)
-
-			// Since we skipped serializing address_type, we need to add it manually
-			// Find the position after key_store_type for this chain
-			chainPattern := fmt.Sprintf(`id = "%s"`, chain.ID)
-			chainStart := strings.Index(configStr, chainPattern)
-			if chainStart != -1 {
-				// Find the key_store_type line for this chain
-				keyStorePattern := fmt.Sprintf(`key_store_type = "%s"`, chain.KeyStoreType)
-				keyStorePos := strings.Index(configStr[chainStart:], keyStorePattern)
-				if keyStorePos != -1 {
-					keyStoreEndPos := chainStart + keyStorePos + len(keyStorePattern)
-					// Insert the address_type line after key_store_type
-					configStr = configStr[:keyStoreEndPos] + "\n  " + inlineTable + configStr[keyStoreEndPos:]
-				}
-			}
-		}
-	}
-
-	return []byte(configStr), nil
-}
 
 // validateConfig validates the hermes config file. Any errors are propagated to the test.
 func (r *Relayer) validateConfig(ctx context.Context, rep ibc.RelayerExecReporter) error {

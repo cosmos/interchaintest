@@ -31,7 +31,7 @@ func NewConfig(chainConfigs ...ChainConfig) Config {
 			// For EVM-compatible chains, use ethermint derivation
 			addressType = AddressType{
 				Derivation: "ethermint",
-				ProtoType: ProtoType{
+				ProtoType: &ProtoType{
 					PkType: "/cosmos.evm.crypto.v1.ethsecp256k1.PubKey",
 				},
 			}
@@ -39,6 +39,7 @@ func NewConfig(chainConfigs ...ChainConfig) Config {
 			// For standard Cosmos chains, use cosmos derivation
 			addressType = AddressType{
 				Derivation: "cosmos",
+				ProtoType:  nil,
 			}
 		}
 
@@ -194,14 +195,14 @@ type EventSource struct {
 }
 
 // AddressType represents the address_type configuration
-// For TOML serialization, this will be handled as a special case to create inline tables
+// go-toml/v2 will automatically serialize this as an inline table
 type AddressType struct {
-	Derivation string    `toml:"-"` // Skip normal serialization
-	ProtoType  ProtoType `toml:"-"` // Skip normal serialization
+	Derivation string     `toml:"derivation"`
+	ProtoType  *ProtoType `toml:"proto_type,omitempty,inline"`
 }
 
 type ProtoType struct {
-	PkType string `toml:"-"` // Skip normal serialization
+	PkType string `toml:"pk_type"`
 }
 
 type GasPrice struct {
@@ -226,7 +227,7 @@ type Chain struct {
 	AccountPrefix         string         `toml:"account_prefix"`
 	KeyName               string         `toml:"key_name"`
 	KeyStoreType          string         `toml:"key_store_type"`
-	AddressType           AddressType    `toml:"-"` // Handle manually in custom serialization
+	AddressType           AddressType    `toml:"address_type,inline"` // Will be serialized as inline table
 	StorePrefix           string         `toml:"store_prefix"`
 	DefaultGas            int            `toml:"default_gas"`
 	MaxGas                int            `toml:"max_gas"`
