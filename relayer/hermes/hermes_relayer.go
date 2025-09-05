@@ -90,14 +90,8 @@ func (r *Relayer) AddChainConfiguration(ctx context.Context, rep ibc.RelayerExec
 		return fmt.Errorf("failed to generate config content: %w", err)
 	}
 
-	// Debug: Check who we are running as
-	whoamiCmd := []string{"whoami"}
-	whoamiRes := r.Exec(ctx, rep, whoamiCmd, nil)
-	if whoamiRes.Err == nil {
-		fmt.Printf("DEBUG: Running as user: %s\n", string(whoamiRes.Stdout))
-	}
-
-	// Debug: Check if .hermes directory exists and create it if needed
+	// Create the .hermes directory with the proper permissions
+	// without this you will get `The Hermes configuration file at path '/home/hermes/.hermes/config.toml' is invalid, reason: config error: path error: /home/hermes/.hermes/config.toml`
 	mkdirCmd := []string{"mkdir", "-p", fmt.Sprintf("%s/.hermes", r.HomeDir())}
 	mkdirRes := r.Exec(ctx, rep, mkdirCmd, nil)
 	if mkdirRes.Err != nil {
@@ -106,53 +100,6 @@ func (r *Relayer) AddChainConfiguration(ctx context.Context, rep ibc.RelayerExec
 
 	if err := r.WriteFileToHomeDir(ctx, hermesConfigPath, configContent); err != nil {
 		return fmt.Errorf("failed to write hermes config: %w", err)
-	}
-
-	// Debug: show the config file content that was written
-	fmt.Printf("DEBUG: Written Hermes config file at path: %s\n", hermesConfigPath)
-	fmt.Printf("DEBUG: Config content:\n%s\n", string(configContent))
-
-	// Debug: check file permissions and ownership
-	lsCmd := []string{"ls", "-la", fmt.Sprintf("%s/", r.HomeDir())}
-	lsRes := r.Exec(ctx, rep, lsCmd, nil)
-	if lsRes.Err == nil {
-		fmt.Printf("DEBUG: Home directory listing:\n%s\n", string(lsRes.Stdout))
-	}
-
-	lsCmd2 := []string{"ls", "-la", fmt.Sprintf("%s/.hermes/", r.HomeDir())}
-	lsRes2 := r.Exec(ctx, rep, lsCmd2, nil)
-	if lsRes2.Err == nil {
-		fmt.Printf("DEBUG: .hermes directory listing:\n%s\n", string(lsRes2.Stdout))
-	} else {
-		fmt.Printf("DEBUG ERROR: Failed to list .hermes directory: %v\n", lsRes2.Err)
-	}
-
-	// Check if we can access the file with sudo
-	sudoCatCmd := []string{"sudo", "cat", fmt.Sprintf("%s/%s", r.HomeDir(), hermesConfigPath)}
-	sudoCatRes := r.Exec(ctx, rep, sudoCatCmd, nil)
-	if sudoCatRes.Err == nil {
-		fmt.Printf("DEBUG: Config file exists (via sudo), length: %d\n", len(sudoCatRes.Stdout))
-	} else {
-		fmt.Printf("DEBUG: Sudo cat also failed: %v\n", sudoCatRes.Err)
-	}
-
-	// Debug: Try to read the file that WriteFileToHomeDir created
-	// First check with stat to see if file exists
-	statCmd := []string{"stat", fmt.Sprintf("%s/%s", r.HomeDir(), hermesConfigPath)}
-	statRes := r.Exec(ctx, rep, statCmd, nil)
-	if statRes.Err == nil {
-		fmt.Printf("DEBUG: File stat info:\n%s\n", string(statRes.Stdout))
-	} else {
-		fmt.Printf("DEBUG ERROR: File does not exist or cannot stat: %v\n", statRes.Err)
-	}
-
-	// Debug: read back the file to confirm it was written correctly
-	catCmd := []string{"cat", fmt.Sprintf("%s/%s", r.HomeDir(), hermesConfigPath)}
-	catRes := r.Exec(ctx, rep, catCmd, nil)
-	if catRes.Err == nil {
-		fmt.Printf("DEBUG: Config file content from container (length: %d)\n", len(catRes.Stdout))
-	} else {
-		fmt.Printf("DEBUG ERROR: Failed to read config file from container: %v\n", catRes.Err)
 	}
 
 	if err := r.validateConfig(ctx, rep); err != nil {
@@ -337,17 +284,7 @@ func (r *Relayer) CreateClient(ctx context.Context, rep ibc.RelayerExecReporter,
 // to copy the contents of the mnemonic into a file on disk and then reference the newly created file.
 func (r *Relayer) RestoreKey(ctx context.Context, rep ibc.RelayerExecReporter, cfg ibc.ChainConfig, keyName, mnemonic string) error {
 	chainID := cfg.ChainID
-	
-	// Debug: Show the mnemonic being used for key restoration
-	fmt.Printf("DEBUG: RestoreKey called with:\n")
-	fmt.Printf("  ChainID: %s\n", chainID)
-	fmt.Printf("  KeyName: %s\n", keyName)
-	fmt.Printf("  Mnemonic: %s\n", mnemonic)
-	fmt.Printf("  Chain Type: %s\n", cfg.Type)
-	fmt.Printf("  SigningAlgorithm: %s\n", cfg.SigningAlgorithm)
-	fmt.Printf("  CoinType: %s\n", cfg.CoinType)
-	fmt.Printf("  Bech32Prefix: %s\n", cfg.Bech32Prefix)
-	
+
 	var cmd []string
 	switch cfg.Type {
 	case "namada":
@@ -359,32 +296,14 @@ func (r *Relayer) RestoreKey(ctx context.Context, rep ibc.RelayerExecReporter, c
 			return fmt.Errorf("failed to write mnemonic file: %w", err)
 		}
 
-		// Debug: Show the mnemonic file path and verify it was written
-		mnemonicPath := fmt.Sprintf("%s/%s", r.HomeDir(), relativeMnemonicFilePath)
-		fmt.Printf("DEBUG: Mnemonic written to file: %s\n", mnemonicPath)
-		
-		// Debug: Read back the mnemonic file to verify it was written correctly
-		catCmd := []string{"cat", mnemonicPath}
-		catRes := r.Exec(ctx, rep, catCmd, nil)
-		if catRes.Err == nil {
-			fmt.Printf("DEBUG: Mnemonic file content: %s\n", string(catRes.Stdout))
-		} else {
-			fmt.Printf("DEBUG ERROR: Failed to read back mnemonic file: %v\n", catRes.Err)
-		}
+		cmd = []string{hermes, "keys", "add", "--chain", chainID, "--mnemonic-file", fmt.Sprintf("%s/%s", r.HomeDir(), relativeMnemonicFilePath), "--key-name", keyName}
 
-		// Build the command with correct HD path for the coin type
-		cmd = []string{hermes, "keys", "add", "--chain", chainID, "--mnemonic-file", mnemonicPath, "--key-name", keyName}
-		
 		// Add HD path based on coin type if it's not the default (118)
 		if cfg.CoinType != "" && cfg.CoinType != "118" {
 			hdPath := fmt.Sprintf("m/44'/%s'/0'/0/0", cfg.CoinType)
 			cmd = append(cmd, "--hd-path", hdPath)
-			fmt.Printf("DEBUG: Using custom HD path: %s for coin type: %s\n", hdPath, cfg.CoinType)
 		}
 	}
-
-	// Debug: Show the exact command being executed
-	fmt.Printf("DEBUG: Executing hermes key restoration command: %v\n", cmd)
 
 	// Restoring a key should be near-instantaneous, so add a 1-minute timeout
 	// to detect if Docker has hung.
@@ -400,22 +319,9 @@ func (r *Relayer) RestoreKey(ctx context.Context, rep ibc.RelayerExecReporter, c
 		return res.Err
 	}
 
-	// Debug: Show the successful restoration output
-	fmt.Printf("DEBUG: Key restoration successful\n")
-	fmt.Printf("  Stdout: %s\n", string(res.Stdout))
-
 	addrBytes := parseRestoreKeyOutput(string(res.Stdout))
-	fmt.Printf("DEBUG: Parsed address from hermes output: %s\n", addrBytes)
-	
-	wallet := NewWallet(chainID, addrBytes, mnemonic)
-	r.AddWallet(chainID, wallet)
-	
-	// Debug: Show the wallet that was added
-	fmt.Printf("DEBUG: Wallet added to relayer:\n")
-	fmt.Printf("  ChainID: %s\n", chainID)
-	fmt.Printf("  Address: %s\n", addrBytes)
-	fmt.Printf("  Mnemonic: %s\n", mnemonic)
-	
+	r.AddWallet(chainID, NewWallet(chainID, addrBytes, mnemonic))
+
 	return nil
 }
 
@@ -423,19 +329,13 @@ func (r *Relayer) RestoreKey(ctx context.Context, rep ibc.RelayerExecReporter, c
 // This should be called after RestoreKey to ensure the relayer has funds for transactions.
 func (r *Relayer) FundRelayerWallet(ctx context.Context, chain ibc.Chain, amount ibc.WalletAmount) error {
 	chainID := chain.Config().ChainID
-	
-	// Debug: Show funding attempt
-	fmt.Printf("DEBUG: FundRelayerWallet called for chain %s\n", chainID)
-	fmt.Printf("  Amount: %s %s\n", amount.Amount.String(), amount.Denom)
-	fmt.Printf("  Target Address: %s\n", amount.Address)
-	
+
 	// Fund the relayer wallet using the faucet account
 	if err := chain.SendFunds(ctx, "faucet", amount); err != nil {
 		fmt.Printf("DEBUG ERROR: Failed to fund relayer wallet: %v\n", err)
 		return fmt.Errorf("failed to fund relayer wallet for chain %s: %w", chainID, err)
 	}
-	
-	fmt.Printf("DEBUG: Successfully funded relayer wallet for chain %s\n", chainID)
+
 	return nil
 }
 
@@ -537,9 +437,9 @@ func marshalHermesConfig(config Config) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	configStr := string(bz)
-	
+
 	// Replace the address_type sections with inline table format
 	// Look for chains with eth_secp256k1 signing and fix their address_type
 	for _, chain := range config.Chains {
@@ -547,7 +447,7 @@ func marshalHermesConfig(config Config) ([]byte, error) {
 			// Create the inline table format
 			inlineTable := fmt.Sprintf(`address_type = { derivation = "%s", proto_type = { pk_type = "%s" } }`,
 				chain.AddressType.Derivation, chain.AddressType.ProtoType.PkType)
-			
+
 			// Since we skipped serializing address_type, we need to add it manually
 			// Find the position after key_store_type for this chain
 			chainPattern := fmt.Sprintf(`id = "%s"`, chain.ID)
@@ -564,62 +464,17 @@ func marshalHermesConfig(config Config) ([]byte, error) {
 			}
 		}
 	}
-	
+
 	return []byte(configStr), nil
 }
 
 // validateConfig validates the hermes config file. Any errors are propagated to the test.
 func (r *Relayer) validateConfig(ctx context.Context, rep ibc.RelayerExecReporter) error {
-	configPath := fmt.Sprintf("%s/%s", r.HomeDir(), hermesConfigPath)
-	
-	// Debug: show what config file we're validating
-	fmt.Printf("DEBUG: Validating Hermes config at path: %s\n", configPath)
-	
-	// Debug: check who is running the validation
-	whoamiCmd := []string{"whoami"}
-	whoamiRes := r.Exec(ctx, rep, whoamiCmd, nil)
-	if whoamiRes.Err == nil {
-		fmt.Printf("DEBUG: Validation running as user: %s", string(whoamiRes.Stdout))
-	}
-	
-	idCmd := []string{"id"}
-	idRes := r.Exec(ctx, rep, idCmd, nil)
-	if idRes.Err == nil {
-		fmt.Printf("DEBUG: User id info: %s", string(idRes.Stdout))
-	}
-	
-	// Debug: check if file exists and show its content
-	lsCmd := []string{"ls", "-la", configPath}
-	lsRes := r.Exec(ctx, rep, lsCmd, nil)
-	if lsRes.Err == nil {
-		fmt.Printf("DEBUG: Config file info:\n%s\n", string(lsRes.Stdout))
-	} else {
-		fmt.Printf("DEBUG ERROR: Failed to list config file: %v\n", lsRes.Err)
-	}
-	
-	cmd := []string{hermes, "--config", configPath, "config", "validate"}
-	fmt.Printf("DEBUG: Running validation command: %v\n", cmd)
-	
+	cmd := []string{hermes, "--config", fmt.Sprintf("%s/%s", r.HomeDir(), hermesConfigPath), "config", "validate"}
 	res := r.Exec(ctx, rep, cmd, nil)
 	if res.Err != nil {
-		// Debug: show more details on validation error
-		fmt.Printf("DEBUG ERROR: Config validation failed\n")
-		fmt.Printf("  Error: %v\n", res.Err)
-		fmt.Printf("  Stdout: %s\n", string(res.Stdout))
-		fmt.Printf("  Stderr: %s\n", string(res.Stderr))
-		fmt.Printf("  Config path: %s\n", configPath)
-		
-		// Try to show the actual content of the config file for debugging
-		catCmd := []string{"cat", configPath}
-		catRes := r.Exec(ctx, rep, catCmd, nil)
-		if catRes.Err == nil {
-			fmt.Printf("DEBUG: Failed config content:\n%s\n", string(catRes.Stdout))
-		}
-		
-		return fmt.Errorf("config validation failed: %w (stdout: %s, stderr: %s)", res.Err, string(res.Stdout), string(res.Stderr))
+		return res.Err
 	}
-	
-	fmt.Printf("DEBUG: Config validation successful\n")
 	return nil
 }
 

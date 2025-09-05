@@ -652,7 +652,7 @@ func (ic *Interchain) configureRelayerKeys(ctx context.Context, rep *testreporte
 					Denom:   c.Config().Denom,
 					Amount:  sdkmath.NewInt(1000000000000000000), // 1 token with 18 decimals
 				}
-				
+
 				if err := hermesRelayer.FundRelayerWallet(ctx, c, fundingAmount); err != nil {
 					return fmt.Errorf("failed to fund relayer wallet for %s on chain %s: %w", ic.relayers[r], chainName, err)
 				}

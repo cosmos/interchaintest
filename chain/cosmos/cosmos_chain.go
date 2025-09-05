@@ -339,22 +339,10 @@ func (c *CosmosChain) BuildRelayerWallet(ctx context.Context, keyName string) (i
 		keyAlgo = hd.Secp256k1
 	}
 
-	hdPath := hd.CreateHDPath(uint32(coinType), 0, 0).String()
-	
-	// Debug: Show relayer wallet creation parameters
-	fmt.Printf("DEBUG: BuildRelayerWallet called with:\n")
-	fmt.Printf("  KeyName: %s\n", keyName)
-	fmt.Printf("  ChainID: %s\n", c.cfg.ChainID)
-	fmt.Printf("  CoinType: %s (%d)\n", c.cfg.CoinType, coinType)
-	fmt.Printf("  SigningAlgorithm: %s\n", c.cfg.SigningAlgorithm)
-	fmt.Printf("  KeyAlgorithm: %T\n", keyAlgo)
-	fmt.Printf("  HDPath: %s\n", hdPath)
-	fmt.Printf("  Bech32Prefix: %s\n", c.cfg.Bech32Prefix)
-
 	info, mnemonic, err := c.keyring.NewMnemonic(
 		keyName,
 		keyring.English,
-		hdPath,
+		hd.CreateHDPath(uint32(coinType), 0, 0).String(),
 		"", // Empty passphrase.
 		keyAlgo,
 	)
@@ -362,22 +350,12 @@ func (c *CosmosChain) BuildRelayerWallet(ctx context.Context, keyName string) (i
 		return nil, fmt.Errorf("failed to create mnemonic: %w", err)
 	}
 
-	// Debug: Show the generated mnemonic
-	fmt.Printf("DEBUG: Generated mnemonic for relayer wallet: %s\n", mnemonic)
-
 	addrBytes, err := info.GetAddress()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get address: %w", err)
 	}
 
-	// Debug: Show the generated address
-	wallet := NewWallet(keyName, addrBytes, mnemonic, c.cfg)
-	fmt.Printf("DEBUG: Generated relayer wallet:\n")
-	fmt.Printf("  Address (bytes): %x\n", addrBytes)
-	fmt.Printf("  Address (formatted): %s\n", wallet.FormattedAddress())
-	fmt.Printf("  Mnemonic: %s\n", mnemonic)
-
-	return wallet, nil
+	return NewWallet(keyName, addrBytes, mnemonic, c.cfg), nil
 }
 
 // Implements Chain interface.
