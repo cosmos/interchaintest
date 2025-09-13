@@ -409,7 +409,7 @@ func (r *Relayer) configContent(cfg ibc.ChainConfig, keyName, rpcAddr, grpcAddr 
 	chainPkTypes := make(map[string]string)
 	if r.DockerRelayer != nil {
 		for _, chainCfg := range r.chainConfigs {
-			if pkType := r.DockerRelayer.GetChainPkType(chainCfg.cfg.ChainID); pkType != "" {
+			if pkType := r.GetChainPkType(chainCfg.cfg.ChainID); pkType != "" {
 				chainPkTypes[chainCfg.cfg.ChainID] = pkType
 			}
 		}
