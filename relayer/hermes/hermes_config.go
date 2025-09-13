@@ -211,7 +211,7 @@ type EventSource struct {
 }
 
 // AddressType represents the address_type configuration
-// go-toml/v2 will automatically serialize this as an inline table
+// go-toml/v2 will automatically serialize this as an inline table.
 type AddressType struct {
 	Derivation string     `toml:"derivation"`
 	ProtoType  *ProtoType `toml:"proto_type,omitempty,inline"`
