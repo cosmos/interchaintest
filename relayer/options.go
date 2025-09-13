@@ -48,7 +48,7 @@ func StartupFlags(flags ...string) RelayerOpt {
 
 // HermesPkType configures the PkType for specific chains in Hermes relayer.
 // The map key is the chain ID and the value is the PkType to use for that chain.
-// Example: HermesPkType(map[string]string{"evmos_9001-2": "/cosmos.evm.crypto.v1.ethsecp256k1.PubKey"})
+// Example: HermesPkType(map[string]string{"evmos_9001-2": "/cosmos.evm.crypto.v1.ethsecp256k1.PubKey"}).
 func HermesPkType(chainPkTypes map[string]string) RelayerOpt {
 	return func(r *DockerRelayer) {
 		if r.chainPkTypes == nil {
