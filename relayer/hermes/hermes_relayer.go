@@ -95,7 +95,7 @@ func (r *Relayer) AddChainConfiguration(ctx context.Context, rep ibc.RelayerExec
 	mkdirCmd := []string{"mkdir", "-p", fmt.Sprintf("%s/.hermes", r.HomeDir())}
 	mkdirRes := r.Exec(ctx, rep, mkdirCmd, nil)
 	if mkdirRes.Err != nil {
-		fmt.Printf("DEBUG ERROR: Failed to create .hermes directory: %v\n", mkdirRes.Err)
+		return fmt.Errorf("failed to create .hermes directory: %w", mkdirRes.Err)
 	}
 
 	if err := r.WriteFileToHomeDir(ctx, hermesConfigPath, configContent); err != nil {
