@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/moby/moby/client"
-	"github.com/pelletier/go-toml"
+	"github.com/pelletier/go-toml/v2"
 	"go.uber.org/zap"
 
 	"github.com/cosmos/interchaintest/v10/ibc"
@@ -20,7 +20,7 @@ import (
 const (
 	hermes                  = "hermes"
 	defaultContainerImage   = "ghcr.io/informalsystems/hermes"
-	DefaultContainerVersion = "1.8.2"
+	DefaultContainerVersion = "1.13.1"
 
 	hermesDefaultUIDGID = "1000:1000"
 	hermesHome          = "/home/hermes"
@@ -88,6 +88,14 @@ func (r *Relayer) AddChainConfiguration(ctx context.Context, rep ibc.RelayerExec
 	configContent, err := r.configContent(chainConfig, keyName, rpcAddr, grpcAddr)
 	if err != nil {
 		return fmt.Errorf("failed to generate config content: %w", err)
+	}
+
+	// Create the .hermes directory with the proper permissions
+	// without this you will get `The Hermes configuration file at path '/home/hermes/.hermes/config.toml' is invalid, reason: config error: path error: /home/hermes/.hermes/config.toml`
+	mkdirCmd := []string{"mkdir", "-p", fmt.Sprintf("%s/.hermes", r.HomeDir())}
+	mkdirRes := r.Exec(ctx, rep, mkdirCmd, nil)
+	if mkdirRes.Err != nil {
+		return fmt.Errorf("failed to create .hermes directory: %w", mkdirRes.Err)
 	}
 
 	if err := r.WriteFileToHomeDir(ctx, hermesConfigPath, configContent); err != nil {
@@ -276,6 +284,7 @@ func (r *Relayer) CreateClient(ctx context.Context, rep ibc.RelayerExecReporter,
 // to copy the contents of the mnemonic into a file on disk and then reference the newly created file.
 func (r *Relayer) RestoreKey(ctx context.Context, rep ibc.RelayerExecReporter, cfg ibc.ChainConfig, keyName, mnemonic string) error {
 	chainID := cfg.ChainID
+
 	var cmd []string
 	switch cfg.Type {
 	case "namada":
@@ -288,6 +297,12 @@ func (r *Relayer) RestoreKey(ctx context.Context, rep ibc.RelayerExecReporter, c
 		}
 
 		cmd = []string{hermes, "keys", "add", "--chain", chainID, "--mnemonic-file", fmt.Sprintf("%s/%s", r.HomeDir(), relativeMnemonicFilePath), "--key-name", keyName}
+
+		// Add HD path based on coin type if it's not the default (118)
+		if cfg.CoinType != "" && cfg.CoinType != "118" {
+			hdPath := fmt.Sprintf("m/44'/%s'/0'/0/0", cfg.CoinType)
+			cmd = append(cmd, "--hd-path", hdPath)
+		}
 	}
 
 	// Restoring a key should be near-instantaneous, so add a 1-minute timeout
@@ -302,6 +317,7 @@ func (r *Relayer) RestoreKey(ctx context.Context, rep ibc.RelayerExecReporter, c
 
 	addrBytes := parseRestoreKeyOutput(string(res.Stdout))
 	r.AddWallet(chainID, NewWallet(chainID, addrBytes, mnemonic))
+
 	return nil
 }
 
@@ -388,7 +404,18 @@ func (r *Relayer) configContent(cfg ibc.ChainConfig, keyName, rpcAddr, grpcAddr 
 		rpcAddr:  rpcAddr,
 		grpcAddr: grpcAddr,
 	})
-	hermesConfig := NewConfig(r.chainConfigs...)
+
+	// Get custom PkTypes from the DockerRelayer if available
+	chainPkTypes := make(map[string]string)
+	if r.DockerRelayer != nil {
+		for _, chainCfg := range r.chainConfigs {
+			if pkType := r.GetChainPkType(chainCfg.cfg.ChainID); pkType != "" {
+				chainPkTypes[chainCfg.cfg.ChainID] = pkType
+			}
+		}
+	}
+
+	hermesConfig := NewConfigWithPkTypes(chainPkTypes, r.chainConfigs...)
 	bz, err := toml.Marshal(hermesConfig)
 	if err != nil {
 		return nil, err
