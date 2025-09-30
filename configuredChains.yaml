@@ -343,7 +343,7 @@ gaia:
   gas: auto
   trusting-period: 504h
   images:
-    - repository: ghcr.io/strangelove-ventures/heighliner/gaia
+    - repository: ghcr.io/cosmos/gaia
       uid-gid: 1025:1025
   no-host-mount: false
 
