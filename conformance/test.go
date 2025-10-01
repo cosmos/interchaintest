@@ -93,12 +93,12 @@ var relayerTestCaseConfigs = [...]RelayerTestCaseConfig{
 		PreRelayerStart: preRelayerStartNoTimeout,
 		Test:            testPacketRelaySuccess,
 	},
-	{
-		Name:                        "height timeout",
-		RequiredRelayerCapabilities: []relayer.Capability{relayer.HeightTimeout},
-		PreRelayerStart:             preRelayerStartHeightTimeout,
-		Test:                        testPacketRelayFail,
-	},
+	// { // Relative timeouts using block height are not supported as of IBC v9.0.0
+	// 	Name:                        "height timeout",
+	// 	RequiredRelayerCapabilities: []relayer.Capability{relayer.HeightTimeout},
+	// 	PreRelayerStart:             preRelayerStartHeightTimeout,
+	// 	Test:                        testPacketRelayFail,
+	// },
 	{
 		Name:                        "timestamp timeout",
 		RequiredRelayerCapabilities: []relayer.Capability{relayer.TimestampTimeout},
