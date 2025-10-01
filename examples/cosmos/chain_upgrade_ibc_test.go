@@ -45,17 +45,19 @@ func CosmosChainUpgradeIBCTest(t *testing.T, chainName, initialVersion, upgradeC
 
 	t.Parallel()
 
-	var shortVoteGenesis []cosmos.GenesisKV
+	var upgradeChainGenesis []cosmos.GenesisKV
+	var gasPrices string
 	if chainName == "juno" {
 		// SDK v45 params for Juno genesis
-		shortVoteGenesis = []cosmos.GenesisKV{
+		upgradeChainGenesis = []cosmos.GenesisKV{
 			cosmos.NewGenesisKV("app_state.gov.voting_params.voting_period", votingPeriod),
 			cosmos.NewGenesisKV("app_state.gov.deposit_params.max_deposit_period", maxDepositPeriod),
 			cosmos.NewGenesisKV("app_state.gov.deposit_params.min_deposit.0.denom", "ujuno"),
 		}
+		gasPrices = "0ujuno"
 	} else {
 		// SDK > v45 params for Gaia genesis
-		shortVoteGenesis = []cosmos.GenesisKV{
+		upgradeChainGenesis = []cosmos.GenesisKV{
 			cosmos.NewGenesisKV("app_state.gov.params.voting_period", votingPeriod),
 			cosmos.NewGenesisKV("app_state.gov.params.max_deposit_period", maxDepositPeriod),
 			cosmos.NewGenesisKV("app_state.gov.params.min_deposit.0.denom", "uatom"),
@@ -65,7 +67,19 @@ func CosmosChainUpgradeIBCTest(t *testing.T, chainName, initialVersion, upgradeC
 			cosmos.NewGenesisKV("app_state.feemarket.params.max_block_utilization", "50000000"),
 			cosmos.NewGenesisKV("app_state.feemarket.state.base_gas_price", "0.001"),
 		}
+		gasPrices = "0.001uatom"
 	}
+	fixedChainGenesis := []cosmos.GenesisKV{
+		cosmos.NewGenesisKV("app_state.gov.params.voting_period", votingPeriod),
+		cosmos.NewGenesisKV("app_state.gov.params.max_deposit_period", maxDepositPeriod),
+		cosmos.NewGenesisKV("app_state.gov.params.min_deposit.0.denom", "uatom"),
+		// configure the feemarket module
+		cosmos.NewGenesisKV("app_state.feemarket.params.enabled", false),
+		cosmos.NewGenesisKV("app_state.feemarket.params.min_base_gas_price", "0.001"),
+		cosmos.NewGenesisKV("app_state.feemarket.params.max_block_utilization", "50000000"),
+		cosmos.NewGenesisKV("app_state.feemarket.state.base_gas_price", "0.001"),
+	}
+	fixedChainGasPrices := "0.001uatom"
 
 	chains := interchaintest.CreateChainsWithChainSpecs(t, []*interchaintest.ChainSpec{
 		{
@@ -73,8 +87,8 @@ func CosmosChainUpgradeIBCTest(t *testing.T, chainName, initialVersion, upgradeC
 			ChainName: chainName,
 			Version:   initialVersion,
 			ChainConfig: ibc.ChainConfig{
-				GasPrices:     "0.001uatom",
-				ModifyGenesis: cosmos.ModifyGenesis(shortVoteGenesis),
+				GasPrices:     gasPrices,
+				ModifyGenesis: cosmos.ModifyGenesis(upgradeChainGenesis),
 			},
 			NumValidators: &numValsOne,
 			NumFullNodes:  &numFullNodesZero,
@@ -84,8 +98,8 @@ func CosmosChainUpgradeIBCTest(t *testing.T, chainName, initialVersion, upgradeC
 			ChainName: "gaia-ibc",
 			Version:   "v25.1.0",
 			ChainConfig: ibc.ChainConfig{
-				GasPrices:     "0.001uatom",
-				ModifyGenesis: cosmos.ModifyGenesis(shortVoteGenesis),
+				GasPrices:     fixedChainGasPrices,
+				ModifyGenesis: cosmos.ModifyGenesis(fixedChainGenesis),
 			},
 			NumValidators: &numValsOne,
 			NumFullNodes:  &numFullNodesZero,
