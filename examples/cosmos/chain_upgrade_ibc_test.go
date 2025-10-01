@@ -117,7 +117,7 @@ func CosmosChainUpgradeIBCTest(t *testing.T, chainName, initialVersion, upgradeC
 
 	// Get a relayer instance
 	rf := interchaintest.NewBuiltinRelayerFactory(
-		ibc.CosmosRly,
+		ibc.Hermes,
 		zaptest.NewLogger(t),
 		relayer.StartupFlags("-b", "100"),
 	)
