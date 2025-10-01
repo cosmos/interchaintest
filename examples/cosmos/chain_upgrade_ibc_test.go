@@ -34,7 +34,7 @@ func TestJunoUpgradeIBC(t *testing.T) {
 }
 
 func TestGaiaUpgradeIBC(t *testing.T) {
-	CosmosChainUpgradeIBCTest(t, "gaia", "v17.3.0", "ghcr.io/strangelove-ventures/heighliner/gaia", "v18.1.0", "v18")
+	CosmosChainUpgradeIBCTest(t, "gaia", "v24.0.0", "ghcr.io/cosmos/gaia", "v25.1.0", "v25.1.0")
 }
 
 func CosmosChainUpgradeIBCTest(t *testing.T, chainName, initialVersion, upgradeContainerRepo, upgradeVersion string, upgradeName string) {
@@ -59,6 +59,11 @@ func CosmosChainUpgradeIBCTest(t *testing.T, chainName, initialVersion, upgradeC
 			cosmos.NewGenesisKV("app_state.gov.params.voting_period", votingPeriod),
 			cosmos.NewGenesisKV("app_state.gov.params.max_deposit_period", maxDepositPeriod),
 			cosmos.NewGenesisKV("app_state.gov.params.min_deposit.0.denom", "uatom"),
+			// configure the feemarket module
+			cosmos.NewGenesisKV("app_state.feemarket.params.enabled", false),
+			cosmos.NewGenesisKV("app_state.feemarket.params.min_base_gas_price", "0.001"),
+			cosmos.NewGenesisKV("app_state.feemarket.params.max_block_utilization", "50000000"),
+			cosmos.NewGenesisKV("app_state.feemarket.state.base_gas_price", "0.001"),
 		}
 	}
 
@@ -68,15 +73,20 @@ func CosmosChainUpgradeIBCTest(t *testing.T, chainName, initialVersion, upgradeC
 			ChainName: chainName,
 			Version:   initialVersion,
 			ChainConfig: ibc.ChainConfig{
+				GasPrices:     "0.001uatom",
 				ModifyGenesis: cosmos.ModifyGenesis(shortVoteGenesis),
 			},
 			NumValidators: &numValsOne,
 			NumFullNodes:  &numFullNodesZero,
 		},
 		{
-			Name:          "gaia",
-			ChainName:     "gaia-ibc",
-			Version:       "v7.0.3",
+			Name:      "gaia",
+			ChainName: "gaia-ibc",
+			Version:   "v25.1.0",
+			ChainConfig: ibc.ChainConfig{
+				GasPrices:     "0.001uatom",
+				ModifyGenesis: cosmos.ModifyGenesis(shortVoteGenesis),
+			},
 			NumValidators: &numValsOne,
 			NumFullNodes:  &numFullNodesZero,
 		},
