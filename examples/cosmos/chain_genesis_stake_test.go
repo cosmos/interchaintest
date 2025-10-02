@@ -31,15 +31,25 @@ func TestChainGenesisUnequalStake(t *testing.T) {
 		balance    = 1_000_000_000_000
 	)
 	validators := 2
+
+	DefaultGenesis := []cosmos.GenesisKV{
+		// configure the feemarket module
+		cosmos.NewGenesisKV("app_state.feemarket.params.enabled", false),
+		cosmos.NewGenesisKV("app_state.feemarket.params.min_base_gas_price", "0.001"),
+		cosmos.NewGenesisKV("app_state.feemarket.params.max_block_utilization", "50000000"),
+		cosmos.NewGenesisKV("app_state.feemarket.state.base_gas_price", "0.001"),
+	}
+
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
 			Name:          "gaia",
 			ChainName:     "gaia",
-			Version:       "v15.1.0",
+			Version:       "v25.1.0",
 			NumValidators: &validators,
 			NumFullNodes:  &numFullNodesZero,
 			ChainConfig: ibc.ChainConfig{
-				Denom: denom,
+				Denom:         denom,
+				ModifyGenesis: cosmos.ModifyGenesis(DefaultGenesis),
 				ModifyGenesisAmounts: func(i int) (sdk.Coin, sdk.Coin) {
 					if i == 0 {
 						return sdk.NewCoin(denom, sdkmath.NewInt(balance)), sdk.NewCoin(denom, sdkmath.NewInt(val1_stake))

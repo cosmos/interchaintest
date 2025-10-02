@@ -33,7 +33,7 @@ func TestSDKBoundaries(t *testing.T) {
 			name: "sdk 45 <-> 50",
 			chainSpecs: []*interchaintest.ChainSpec{
 				{
-					Name: "gaia", ChainName: "gaia", Version: "v7.0.3", // sdk 0.45.6
+					Name: "ibc-go-simd", ChainName: "simd-45", Version: "v4.4.0", // sdk v0.45.15
 					NumValidators: &numValsOne, NumFullNodes: &numFullNodesZero,
 				},
 				{
