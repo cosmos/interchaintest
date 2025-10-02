@@ -93,12 +93,6 @@ var relayerTestCaseConfigs = [...]RelayerTestCaseConfig{
 		PreRelayerStart: preRelayerStartNoTimeout,
 		Test:            testPacketRelaySuccess,
 	},
-	// { // Relative timeouts using block height are not supported as of IBC v9.0.0
-	// 	Name:                        "height timeout",
-	// 	RequiredRelayerCapabilities: []relayer.Capability{relayer.HeightTimeout},
-	// 	PreRelayerStart:             preRelayerStartHeightTimeout,
-	// 	Test:                        testPacketRelayFail,
-	// },
 	{
 		Name:                        "timestamp timeout",
 		RequiredRelayerCapabilities: []relayer.Capability{relayer.TimestampTimeout},
@@ -279,8 +273,7 @@ func Test(t *testing.T, ctx context.Context, cfs []interchaintest.ChainFactory, 
 // Given 2 chains, Chain A and Chain B, this test asserts:
 // 1. Successful IBC transfer from A -> B and B -> A.
 // 2. Proper handling of no timeout from A -> B and B -> A.
-// 3. Proper handling of height timeout from A -> B and B -> A.
-// 4. Proper handling of timestamp timeout from A -> B and B -> A.
+// 3. Proper handling of timestamp timeout from A -> B and B -> A.
 // If a non-nil relayerImpl is passed, it is assumed that the chains are already started.
 func TestChainPair(
 	t *testing.T,
@@ -372,15 +365,6 @@ func preRelayerStartNoTimeout(ctx context.Context, t *testing.T, testCase *Relay
 	// TODO should we wait here to make sure it successfully relays a packet beyond the default timeout period?
 	// would need to shorten the chain default timeouts somehow to make that a feasible test
 }
-
-// Relative timeouts using block height are not supported as of IBC v9.0.0
-// func preRelayerStartHeightTimeout(ctx context.Context, t *testing.T, testCase *RelayerTestCase, srcChain ibc.Chain, dstChain ibc.Chain, channels []ibc.ChannelOutput) {
-// 	t.Helper()
-// 	ibcTimeoutHeight := ibc.IBCTimeout{Height: 10}
-// 	sendIBCTransfersFromBothChainsWithTimeout(ctx, t, testCase, srcChain, dstChain, channels, &ibcTimeoutHeight)
-// 	// wait for both chains to produce 15 blocks to expire timeout
-// 	require.NoError(t, testutil.WaitForBlocks(ctx, 15, srcChain, dstChain), "failed to wait for blocks")
-// }
 
 func preRelayerStartTimestampTimeout(ctx context.Context, t *testing.T, testCase *RelayerTestCase, srcChain ibc.Chain, dstChain ibc.Chain, channels []ibc.ChannelOutput) {
 	t.Helper()
