@@ -39,7 +39,7 @@ func DefaultConfigToml() testutil.Toml {
 	return configToml
 }
 
-// Query the status of an IBC client using Cosmos SDK gRPC
+// Query the status of an IBC client using Cosmos SDK gRPC.
 func IBCClientStatus(ctx context.Context, chain *cosmos.CosmosChain, clientID string) (string, error) {
 	grpcConn := chain.GetNode().GrpcConn
 	if grpcConn == nil {
@@ -57,6 +57,8 @@ func IBCClientStatus(ctx context.Context, chain *cosmos.CosmosChain, clientID st
 }
 
 func TriggerClientExpiry(t *testing.T, ctx context.Context, eRep ibc.RelayerExecReporter, r ibc.Relayer) error {
+	t.Helper()
+
 	err := r.StopRelayer(ctx, eRep)
 	require.NoError(t, err)
 
@@ -69,6 +71,7 @@ func TriggerClientExpiry(t *testing.T, ctx context.Context, eRep ibc.RelayerExec
 }
 
 func RecoverClient(t *testing.T, ctx context.Context, chain *cosmos.CosmosChain, eRep ibc.RelayerExecReporter, r ibc.Relayer, oldClientID string, newClientID string, user ibc.Wallet) error {
+	t.Helper()
 
 	status, err := IBCClientStatus(ctx, chain, newClientID)
 	require.NoError(t, err)
@@ -96,7 +99,7 @@ func RecoverClient(t *testing.T, ctx context.Context, chain *cosmos.CosmosChain,
 		return err
 	}
 	// Pass proposal
-	chain.VoteOnProposalAllValidators(ctx, uint64(propID), cosmos.ProposalVoteYes)
+	err = chain.VoteOnProposalAllValidators(ctx, uint64(propID), cosmos.ProposalVoteYes)
 	require.NoError(t, err)
 	time.Sleep(VotingWaitTime)
 
@@ -137,7 +140,8 @@ func TestClientRecovery(t *testing.T) {
 				ConfigFileOverrides: map[string]any{
 					"config/config.toml": DefaultConfigToml(),
 				},
-			}},
+			},
+		},
 		{
 			Name:    "gaia",
 			Version: "v25.1.0",
@@ -148,7 +152,8 @@ func TestClientRecovery(t *testing.T) {
 				ConfigFileOverrides: map[string]any{
 					"config/config.toml": DefaultConfigToml(),
 				},
-			}},
+			},
+		},
 	})
 
 	chains, err := cf.Chains(t.Name())
@@ -204,7 +209,6 @@ func TestClientRecovery(t *testing.T) {
 	gaia2User := users[1]
 
 	{
-
 		gaia1UserBalInitial, err := gaia1.GetBalance(ctx, gaia1User.FormattedAddress(), gaia1.Config().Denom)
 		require.NoError(t, err)
 		require.True(t, gaia1UserBalInitial.Equal(fundAmount))
@@ -259,7 +263,6 @@ func TestClientRecovery(t *testing.T) {
 
 		require.Equal(t, "07-tendermint-0", msg.ClientId)
 		require.NotEmpty(t, msg.Signer)
-
 	}
 
 	// Make IBC clients expire
@@ -360,7 +363,5 @@ func TestClientRecovery(t *testing.T) {
 
 		require.Equal(t, "07-tendermint-0", msg.ClientId)
 		require.NotEmpty(t, msg.Signer)
-
 	}
-
 }
