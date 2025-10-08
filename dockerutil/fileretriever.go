@@ -50,8 +50,7 @@ func (r *FileRetriever) SingleFileContent(ctx context.Context, volumeName, relPa
 			Labels: map[string]string{CleanupLabel: r.testName},
 		},
 		&container.HostConfig{
-			Binds:      []string{volumeName + ":" + mountPath},
-			AutoRemove: true,
+			Binds: []string{volumeName + ":" + mountPath},
 		},
 		nil, // No networking necessary.
 		nil,

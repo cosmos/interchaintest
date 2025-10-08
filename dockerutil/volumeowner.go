@@ -57,8 +57,7 @@ func SetVolumeOwner(ctx context.Context, opts VolumeOwnerOptions) error {
 			Labels: map[string]string{CleanupLabel: opts.TestName},
 		},
 		&container.HostConfig{
-			Binds:      []string{opts.VolumeName + ":" + mountPath},
-			AutoRemove: true,
+			Binds: []string{opts.VolumeName + ":" + mountPath},
 		},
 		nil, // No networking necessary.
 		nil,

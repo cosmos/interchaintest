@@ -58,8 +58,7 @@ func (w *FileWriter) WriteFile(ctx context.Context, volumeName, relPath string, 
 			Labels: map[string]string{CleanupLabel: w.testName},
 		},
 		&container.HostConfig{
-			Binds:      []string{volumeName + ":" + mountPath},
-			AutoRemove: true,
+			Binds: []string{volumeName + ":" + mountPath},
 		},
 		nil, // No networking necessary.
 		nil,
