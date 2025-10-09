@@ -78,7 +78,7 @@ func SetVolumeOwner(ctx context.Context, opts VolumeOwnerOptions) error {
 
 		if err := opts.Client.ContainerRemove(ctx, cc.ID, container.RemoveOptions{
 			Force: true,
-		}); err != nil && !errdefs.IsNotFound(err) {
+		}); err != nil {
 			opts.Log.Warn("Volume owner: Failed to remove container", zap.String("container_id", cc.ID), zap.Error(err))
 		}
 	}()

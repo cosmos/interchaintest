@@ -79,7 +79,7 @@ func (w *FileWriter) WriteFile(ctx context.Context, volumeName, relPath string, 
 
 		if err := w.cli.ContainerRemove(ctx, cc.ID, container.RemoveOptions{
 			Force: true,
-		}); err != nil && !errdefs.IsNotFound(err) {
+		}); err != nil {
 			w.log.Warn("File writer: Failed to remove file content container", zap.String("container_id", cc.ID), zap.Error(err))
 		}
 	}()
@@ -113,17 +113,10 @@ func (w *FileWriter) WriteFile(ctx context.Context, volumeName, relPath string, 
 		&buf,
 		container.CopyToContainerOptions{},
 	); err != nil {
-		if errdefs.IsNotFound(err) {
-			return fmt.Errorf("copying tar to container: container was removed: %w", err)
-		}
 		return fmt.Errorf("copying tar to container: %w", err)
 	}
 
 	if err := w.cli.ContainerStart(ctx, cc.ID, container.StartOptions{}); err != nil {
-		if errdefs.IsNotFound(err) {
-			// Container was auto-removed, likely due to an error. This is non-recoverable.
-			return fmt.Errorf("starting write-file container: container was removed: %w", err)
-		}
 		return fmt.Errorf("starting write-file container: %w", err)
 	}
 

@@ -158,7 +158,7 @@ func (image *Image) CreateContainer(ctx context.Context, containerName, hostName
 		if err := image.client.ContainerRemove(ctx, c.ID, container.RemoveOptions{
 			RemoveVolumes: true,
 			Force:         true,
-		}); err != nil && !errdefs.IsNotFound(err) {
+		}); err != nil {
 			return "", fmt.Errorf("Image: unable to remove container %s: %w", containerName, err)
 		}
 	}
