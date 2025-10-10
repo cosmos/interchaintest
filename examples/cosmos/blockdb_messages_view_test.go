@@ -96,6 +96,9 @@ func TestBlockDBMessagesView(t *testing.T) {
 		// Creating the clients will cause transactions.
 		require.NoError(t, r.CreateClients(ctx, eRep, pathName, ibc.DefaultClientOpts()))
 
+		// Wait for blocks to ensure transactions are processed and recorded in the database
+		require.NoError(t, testutil.WaitForBlocks(ctx, 2, gaia0, gaia1))
+
 		// MsgCreateClient should match the opposite chain IDs.
 		const qCreateClient = `SELECT
 client_chain_id

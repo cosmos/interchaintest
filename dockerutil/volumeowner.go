@@ -7,6 +7,7 @@ import (
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/moby/moby/client"
+	"github.com/moby/moby/errdefs"
 	"go.uber.org/zap"
 )
 
@@ -78,11 +79,17 @@ func SetVolumeOwner(ctx context.Context, opts VolumeOwnerOptions) error {
 		if err := opts.Client.ContainerRemove(ctx, cc.ID, container.RemoveOptions{
 			Force: true,
 		}); err != nil {
-			opts.Log.Warn("Failed to remove volume-owner container", zap.String("container_id", cc.ID), zap.Error(err))
+			opts.Log.Warn("Volume owner: Failed to remove container", zap.String("container_id", cc.ID), zap.Error(err))
 		}
 	}()
 
 	if err := opts.Client.ContainerStart(ctx, cc.ID, container.StartOptions{}); err != nil {
+		if errdefs.IsNotFound(err) {
+			// Container was auto-removed before we could start it.
+			// This could indicate the container failed immediately or was cleaned up.
+			// Since we can't recover from this, we'll treat it as an error.
+			return fmt.Errorf("starting volume-owner container: container was removed before start: %w", err)
+		}
 		return fmt.Errorf("starting volume-owner container: %w", err)
 	}
 
@@ -91,6 +98,12 @@ func SetVolumeOwner(ctx context.Context, opts VolumeOwnerOptions) error {
 	case <-ctx.Done():
 		return ctx.Err()
 	case err := <-errCh:
+		if errdefs.IsNotFound(err) {
+			// Container was auto-removed, which means it completed successfully.
+			// This can happen due to a race condition where the container finishes
+			// and gets auto-removed before ContainerWait can observe its completion.
+			return nil
+		}
 		return err
 	case res := <-waitCh:
 		autoRemoved = true

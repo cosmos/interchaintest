@@ -65,7 +65,7 @@ func (r *FileRetriever) SingleFileContent(ctx context.Context, volumeName, relPa
 		if err := r.cli.ContainerRemove(ctx, cc.ID, container.RemoveOptions{
 			Force: true,
 		}); err != nil {
-			r.log.Warn("Failed to remove file content container", zap.String("container_id", cc.ID), zap.Error(err))
+			r.log.Warn("File retriever: Failed to remove container", zap.String("container_id", cc.ID), zap.Error(err))
 		}
 	}()
 

@@ -9,6 +9,7 @@ import (
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/moby/moby/client"
+	"github.com/moby/moby/errdefs"
 	"go.uber.org/zap"
 )
 
@@ -79,7 +80,7 @@ func (w *FileWriter) WriteFile(ctx context.Context, volumeName, relPath string, 
 		if err := w.cli.ContainerRemove(ctx, cc.ID, container.RemoveOptions{
 			Force: true,
 		}); err != nil {
-			w.log.Warn("Failed to remove file content container", zap.String("container_id", cc.ID), zap.Error(err))
+			w.log.Warn("File writer: Failed to remove file content container", zap.String("container_id", cc.ID), zap.Error(err))
 		}
 	}()
 
@@ -124,6 +125,13 @@ func (w *FileWriter) WriteFile(ctx context.Context, volumeName, relPath string, 
 	case <-ctx.Done():
 		return ctx.Err()
 	case err := <-errCh:
+		if errdefs.IsNotFound(err) {
+			// Container was auto-removed, which means it completed successfully.
+			// This can happen due to a race condition where the container finishes
+			// and gets auto-removed before ContainerWait can observe its completion.
+			autoRemoved = true
+			return nil
+		}
 		return err
 	case res := <-waitCh:
 		autoRemoved = true
