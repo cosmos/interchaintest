@@ -55,13 +55,17 @@ There's also an option to [build and run `interchaintest` as a binary](./docs/bu
 
 🌌 Extras
 =============================
-## Maintained Branches
 
-|                 **Branch Name**                  | **IBC-Go** | **Cosmos-SDK** |
-| :----------------------------------------------: | :--------: | :------------: |
-| [main](https://github.com/cosmos/interchaintest) |    v10     |     v0.53      |
+## Version Tagging
 
-We strive to keep `interchaintest` aligned to stable versions from the IBC-Go and Cosmos SDK teams.
+Tags are assigned to commits that target a specific chain version. For instance, the `v25.1.1-gaia` tag targets Gaia `v25.1.1`.
+This allows interchaintest to support specific combinations of the Cosmos stack that are used in production.
+
+|                                    Tag                                     | Cosmos SDK | CometBFT | IBC-Go  | wasmd | Hermes  |
+| :------------------------------------------------------------------------: | :--------: | :------: | :-----: | :---: | :-----: |
+| [v25.1.1-gaia](https://github.com/cosmos/interchaintest/tree/v25.0.0-gaia) |   v0.53    |  v38.17  | v10.3.0 | v0.60 | v1.13.2 |
+|      [v10.0.0](https://github.com/cosmos/interchaintest/tree/v10.0.0)      |   v0.53    |  v38.17  | v10.3.0 | v0.60 | v1.8.2  |
+
 
 ## Contributing
 
