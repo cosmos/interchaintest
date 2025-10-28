@@ -63,7 +63,7 @@ This allows interchaintest to support specific combinations of the Cosmos stack 
 
 |      Tag       | Cosmos SDK | CometBFT | IBC-Go  | wasmd | Hermes  |
 | :------------: | :--------: | :------: | :-----: | :---: | :-----: |
-| `v25.0.0-gaia` |   v0.53    |  v38.17  | v10.3.0 | v0.60 | v1.13.2 |
+| `v25.0.0-gaia` |   v0.53    |  v38.17  | v10.3.0 | v0.60 | v1.13.1 |
 |   `v10.0.0`    |   v0.53    |  v38.17  | v10.3.0 | v0.60 | v1.8.2  |
 
 
