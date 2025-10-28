@@ -23,7 +23,7 @@ require (
 	github.com/CosmWasm/wasmd v0.60.0
 	github.com/atotto/clipboard v0.1.4
 	github.com/avast/retry-go/v4 v4.6.1
-	github.com/cometbft/cometbft v0.38.18
+	github.com/cometbft/cometbft v0.38.19
 	github.com/cosmos/cosmos-sdk v0.53.4
 	github.com/cosmos/evm v0.4.1
 	github.com/cosmos/gogoproto v1.7.0
