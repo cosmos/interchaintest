@@ -58,12 +58,12 @@ There's also an option to [build and run `interchaintest` as a binary](./docs/bu
 
 ## Version Tagging
 
-Tags are assigned to commits that target a specific chain version. For instance, the `v25.1.1-gaia` tag targets Gaia `v25.1.1`.
+Tags are assigned to commits that target a specific chain version. For instance, the `v25.0.0-gaia` tag targets Gaia `v25.0.0`.
 This allows interchaintest to support specific combinations of the Cosmos stack that are used in production.
 
 |      Tag       | Cosmos SDK | CometBFT | IBC-Go  | wasmd | Hermes  |
 | :------------: | :--------: | :------: | :-----: | :---: | :-----: |
-| `v25.1.1-gaia` |   v0.53    |  v38.17  | v10.3.0 | v0.60 | v1.13.2 |
+| `v25.0.0-gaia` |   v0.53    |  v38.17  | v10.3.0 | v0.60 | v1.13.2 |
 |   `v10.0.0`    |   v0.53    |  v38.17  | v10.3.0 | v0.60 | v1.8.2  |
 
 
