@@ -58,8 +58,8 @@ There's also an option to [build and run `interchaintest` as a binary](./docs/bu
 
 ## Version Tagging
 
-Tags target combinations of the Cosmos stack used in the Cosmos Hub. For instance, the `v10.0.1` tag targets Gaia `v25.1.1`.
-This allows interchaintest to support compatible combinations of the Cosmos stack that are used in production.
+Tags will target stack versions used in the Cosmos Hub. For instance, the `v10.0.1` tag targets Gaia `v25.1.1`.
+This allows interchaintest to support combinations of the Cosmos stack that are used in production and are compatible with one another.
 
 |    Tag    |   Gaia    | Cosmos SDK | CometBFT | IBC-Go  | wasmd | Hermes  |
 | :-------: | :-------: | :--------: | :------: | :-----: | :---: | :-----: |
