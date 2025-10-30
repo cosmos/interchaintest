@@ -28,7 +28,7 @@ require (
 	github.com/cosmos/evm v0.4.1
 	github.com/cosmos/gogoproto v1.7.0
 	github.com/cosmos/ibc-go/v10 v10.3.0
-	github.com/cosmos/interchain-security/v7 v7.0.0-20250408210344-06e0dc6bf6d6
+	github.com/cosmos/interchain-security/v7 v7.0.1
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/docker/docker v27.5.1+incompatible
 	github.com/docker/go-connections v0.5.0
