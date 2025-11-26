@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 
+	cerrdefs "github.com/containerd/errdefs"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/go-connections/nat"
 	dockerclient "github.com/moby/moby/client"
-	"github.com/moby/moby/errdefs"
 	"go.uber.org/zap"
 
 	"github.com/cosmos/interchaintest/v10/ibc"
@@ -215,7 +215,7 @@ func (c *ContainerLifecycle) RemoveContainer(ctx context.Context) error {
 		Force:         true,
 		RemoveVolumes: true,
 	})
-	if err != nil && !errdefs.IsNotFound(err) {
+	if err != nil && !cerrdefs.IsNotFound(err) {
 		return fmt.Errorf("remove container %s: %w", c.containerName, err)
 	}
 	return nil

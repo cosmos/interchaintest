@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"time"
 
+	cerrdefs "github.com/containerd/errdefs"
 	"github.com/docker/docker/api/types/container"
 	"github.com/moby/moby/client"
-	"github.com/moby/moby/errdefs"
 	"go.uber.org/zap"
 )
 
@@ -125,7 +125,7 @@ func (w *FileWriter) WriteFile(ctx context.Context, volumeName, relPath string, 
 	case <-ctx.Done():
 		return ctx.Err()
 	case err := <-errCh:
-		if errdefs.IsNotFound(err) {
+		if cerrdefs.IsNotFound(err) {
 			// Container was auto-removed, which means it completed successfully.
 			// This can happen due to a race condition where the container finishes
 			// and gets auto-removed before ContainerWait can observe its completion.

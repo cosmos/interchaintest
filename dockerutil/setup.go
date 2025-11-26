@@ -11,11 +11,11 @@ import (
 	"time"
 
 	"github.com/avast/retry-go/v4"
+	cerrdefs "github.com/containerd/errdefs"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/network"
 	"github.com/moby/moby/client"
-	"github.com/moby/moby/errdefs"
 )
 
 // DockerSetupTestingT is a subset of testing.T required for DockerSetup.
@@ -270,7 +270,7 @@ func PruneVolumesWithRetry(ctx context.Context, t DockerSetupTestingT, cli *clie
 		func() error {
 			res, err := cli.VolumesPrune(ctx, filters.NewArgs(filters.Arg("label", CleanupLabel+"="+t.Name())))
 			if err != nil {
-				if errdefs.IsConflict(err) {
+				if cerrdefs.IsConflict(err) {
 					// Prune is already in progress; try again.
 					return err
 				}
@@ -306,7 +306,7 @@ func PruneNetworksWithRetry(ctx context.Context, t DockerSetupTestingT, cli *cli
 		func() error {
 			res, err := cli.NetworksPrune(ctx, filters.NewArgs(filters.Arg("label", CleanupLabel+"="+t.Name())))
 			if err != nil {
-				if errdefs.IsConflict(err) {
+				if cerrdefs.IsConflict(err) {
 					// Prune is already in progress; try again.
 					return err
 				}
@@ -335,5 +335,5 @@ func IsLoggableStopError(err error) bool {
 	if err == nil {
 		return false
 	}
-	return !errdefs.IsNotModified(err) && !errdefs.IsNotFound(err)
+	return !cerrdefs.IsNotFound(err)
 }
