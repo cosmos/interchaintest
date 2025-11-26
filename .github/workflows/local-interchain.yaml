@@ -63,6 +63,19 @@ jobs:
       - name: Start background ibc local-interchain
         run: /tmp/local-ic start juno_ibc --api-port 8080 &
 
+      - name: Wait for API to be ready
+        run: |
+          echo "Waiting for local-interchain API to be ready..."
+          for i in {1..120}; do
+            if curl -s http://127.0.0.1:8080/info > /dev/null 2>&1; then
+              echo "API is ready!"
+              break
+            fi
+            echo "Attempt $i: API not ready yet, waiting..."
+            sleep 10
+          done
+          curl -s http://127.0.0.1:8080/info || (echo "API failed to start" && exit 1)
+
       - name: Run Bash Script
         run: |
           cd bash
