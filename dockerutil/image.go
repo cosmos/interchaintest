@@ -359,7 +359,7 @@ func (c *Container) Stop(timeout time.Duration) error {
 	stopOptions.Timeout = &timeoutRound
 	err := c.image.client.ContainerStop(ctx, c.containerID, stopOptions)
 	if err != nil {
-		// Only return the error if it didn't match an already stopped, or a missing container.
+		// Only return the error if it's not a "not modified" (already stopped) or "not found" error
 		if !cerrdefs.IsNotModified(err) && !cerrdefs.IsNotFound(err) {
 			return c.image.WrapErr(fmt.Errorf("stop container %s: %w", c.Name, err))
 		}
