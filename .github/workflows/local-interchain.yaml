@@ -63,27 +63,6 @@ jobs:
       - name: Start background ibc local-interchain
         run: /tmp/local-ic start juno_ibc --api-port 8080 &
 
-      - name: Wait for chains to be ready
-        run: |
-          echo "Waiting for local-interchain chains to be ready..."
-          for i in {1..120}; do
-            if curl -s http://127.0.0.1:8080/info > /dev/null 2>&1; then
-              IBC_CHANNEL_COUNT=$(curl -s http://127.0.0.1:8080/info | jq -r '.logs.ibc_channels | length')
-              if [ "$IBC_CHANNEL_COUNT" != "null" ] && [ "$IBC_CHANNEL_COUNT" -ge 2 ]; then
-                echo "Chains are ready! (ibc_channels: $IBC_CHANNEL_COUNT)"
-                break
-              fi
-            fi
-            echo "Attempt $i: Chains not ready yet, waiting..."
-            sleep 10
-          done
-          IBC_CHANNEL_COUNT=$(curl -s http://127.0.0.1:8080/info | jq -r '.logs.ibc_channels | length')
-          if [ "$IBC_CHANNEL_COUNT" = "null" ] || [ "$IBC_CHANNEL_COUNT" -lt 2 ]; then
-            echo "Chains failed to start properly (ibc_channels: $IBC_CHANNEL_COUNT)"
-            curl -s http://127.0.0.1:8080/info
-            exit 1
-          fi
-
       - name: Run Bash Script
         run: |
           cd bash
@@ -125,27 +104,6 @@ jobs:
 
       - name: Start background ibc local-interchain
         run: /tmp/local-ic start juno_ibc --api-port 8080 &
-
-      - name: Wait for chains to be ready
-        run: |
-          echo "Waiting for local-interchain chains to be ready..."
-          for i in {1..120}; do
-            if curl -s http://127.0.0.1:8080/info > /dev/null 2>&1; then
-              IBC_CHANNEL_COUNT=$(curl -s http://127.0.0.1:8080/info | jq -r '.logs.ibc_channels | length')
-              if [ "$IBC_CHANNEL_COUNT" != "null" ] && [ "$IBC_CHANNEL_COUNT" -ge 2 ]; then
-                echo "Chains are ready! (ibc_channels: $IBC_CHANNEL_COUNT)"
-                break
-              fi
-            fi
-            echo "Attempt $i: Chains not ready yet, waiting..."
-            sleep 10
-          done
-          IBC_CHANNEL_COUNT=$(curl -s http://127.0.0.1:8080/info | jq -r '.logs.ibc_channels | length')
-          if [ "$IBC_CHANNEL_COUNT" = "null" ] || [ "$IBC_CHANNEL_COUNT" -lt 2 ]; then
-            echo "Chains failed to start properly (ibc_channels: $IBC_CHANNEL_COUNT)"
-            curl -s http://127.0.0.1:8080/info
-            exit 1
-          fi
 
       - name: Run Rust Script
         run: cd rust && cargo run --package localic-bin --bin localic-bin
@@ -189,27 +147,6 @@ jobs:
 
       - name: Start background ibc local-interchain
         run: /tmp/local-ic start juno_ibc --api-port ${{ matrix.test[1] }} &
-
-      - name: Wait for chains to be ready
-        run: |
-          echo "Waiting for local-interchain chains to be ready..."
-          for i in {1..120}; do
-            if curl -s http://127.0.0.1:${{ matrix.test[1] }}/info > /dev/null 2>&1; then
-              IBC_CHANNEL_COUNT=$(curl -s http://127.0.0.1:${{ matrix.test[1] }}/info | jq -r '.logs.ibc_channels | length')
-              if [ "$IBC_CHANNEL_COUNT" != "null" ] && [ "$IBC_CHANNEL_COUNT" -ge 2 ]; then
-                echo "Chains are ready! (ibc_channels: $IBC_CHANNEL_COUNT)"
-                break
-              fi
-            fi
-            echo "Attempt $i: Chains not ready yet, waiting..."
-            sleep 10
-          done
-          IBC_CHANNEL_COUNT=$(curl -s http://127.0.0.1:${{ matrix.test[1] }}/info | jq -r '.logs.ibc_channels | length')
-          if [ "$IBC_CHANNEL_COUNT" = "null" ] || [ "$IBC_CHANNEL_COUNT" -lt 2 ]; then
-            echo "Chains failed to start properly (ibc_channels: $IBC_CHANNEL_COUNT)"
-            curl -s http://127.0.0.1:${{ matrix.test[1] }}/info
-            exit 1
-          fi
 
       - name: Run Python Script
         run: python3 ./python/${{ matrix.test[0] }}.py --api-port ${{ matrix.test[1] }}
