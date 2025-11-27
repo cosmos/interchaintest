@@ -10,13 +10,13 @@ import (
 	"strings"
 	"time"
 
+	cerrdefs "github.com/containerd/errdefs"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	dockerimagetypes "github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/api/types/network"
 	"github.com/moby/moby/client"
-	"github.com/moby/moby/errdefs"
 	"github.com/moby/moby/pkg/stdcopy"
 	"go.uber.org/zap"
 )
@@ -130,7 +130,7 @@ func (image *Image) imageRef() string {
 // EnsurePulled can only pull public images.
 func (image *Image) EnsurePulled(ctx context.Context) error {
 	ref := image.imageRef()
-	_, _, err := image.client.ImageInspectWithRaw(ctx, ref)
+	_, err := image.client.ImageInspect(ctx, ref)
 	if err != nil {
 		rc, err := image.client.ImagePull(ctx, ref, dockerimagetypes.PullOptions{})
 		if err != nil {
@@ -359,8 +359,8 @@ func (c *Container) Stop(timeout time.Duration) error {
 	stopOptions.Timeout = &timeoutRound
 	err := c.image.client.ContainerStop(ctx, c.containerID, stopOptions)
 	if err != nil {
-		// Only return the error if it didn't match an already stopped, or a missing container.
-		if !errdefs.IsNotModified(err) && !errdefs.IsNotFound(err) {
+		// Only return the error if it's not a "not modified" (already stopped) or "not found" error
+		if !cerrdefs.IsNotModified(err) && !cerrdefs.IsNotFound(err) {
 			return c.image.WrapErr(fmt.Errorf("stop container %s: %w", c.Name, err))
 		}
 	}
@@ -370,7 +370,7 @@ func (c *Container) Stop(timeout time.Duration) error {
 		Force:         true,
 		RemoveVolumes: true,
 	})
-	if err != nil && !errdefs.IsNotFound(err) {
+	if err != nil && !cerrdefs.IsNotFound(err) {
 		return c.image.WrapErr(fmt.Errorf("remove container %s: %w", c.Name, err))
 	}
 

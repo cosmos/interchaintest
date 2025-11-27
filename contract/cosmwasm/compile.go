@@ -8,12 +8,12 @@ import (
 	"path/filepath"
 	"runtime"
 
+	cerrdefs "github.com/containerd/errdefs"
 	containertypes "github.com/docker/docker/api/types/container"
 	imagetypes "github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/hashicorp/go-version"
 	"github.com/moby/moby/client"
-	"github.com/moby/moby/errdefs"
 	"github.com/moby/moby/pkg/stdcopy"
 )
 
@@ -116,8 +116,8 @@ func compile(image string, optVersion string, repoPath string) (string, error) {
 
 	err = cli.ContainerStop(ctx, resp.ID, containertypes.StopOptions{})
 	if err != nil {
-		// Only return the error if it didn't match an already stopped, or a missing container.
-		if !errdefs.IsNotModified(err) && !errdefs.IsNotFound(err) {
+		// Only return the error if it's not a "not modified" (already stopped) or "not found" error
+		if !cerrdefs.IsNotModified(err) && !cerrdefs.IsNotFound(err) {
 			return "", fmt.Errorf("stop container %s: %w", imageFull, err)
 		}
 	}
@@ -126,7 +126,7 @@ func compile(image string, optVersion string, repoPath string) (string, error) {
 		Force:         true,
 		RemoveVolumes: true,
 	})
-	if err != nil && !errdefs.IsNotFound(err) {
+	if err != nil && !cerrdefs.IsNotFound(err) {
 		return "", fmt.Errorf("remove container %s: %w", imageFull, err)
 	}
 

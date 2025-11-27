@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"testing"
 
+	cerrdefs "github.com/containerd/errdefs"
 	volumetypes "github.com/docker/docker/api/types/volume"
-	"github.com/moby/moby/errdefs"
 	"github.com/stretchr/testify/require"
 
 	"github.com/cosmos/interchaintest/v10/dockerutil"
@@ -67,10 +67,9 @@ func TestDockerSetup_KeepVolumes(t *testing.T) {
 
 			_, err := cli.VolumeInspect(ctx, volumeName)
 			if !tc.volumeKept {
-				require.Truef(t, errdefs.IsNotFound(err), "expected not found error, got %v", err)
+				require.Truef(t, cerrdefs.IsNotFound(err), "expected not found error, got %v", err)
 				return
 			}
-
 			require.NoError(t, err)
 			if err := cli.VolumeRemove(ctx, volumeName, true); err != nil {
 				t.Logf("failed to remove volume %s: %v", volumeName, err)
