@@ -31,7 +31,7 @@ require (
 	github.com/cosmos/ibc-go/v10 v10.3.0
 	github.com/cosmos/interchain-security/v7 v7.0.0-20250408210344-06e0dc6bf6d6
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
-	github.com/docker/docker v28.5.1+incompatible
+	github.com/docker/docker v28.5.2+incompatible
 	github.com/docker/go-connections v0.6.0
 	github.com/ethereum/go-ethereum v1.16.7
 	github.com/gdamore/tcell/v2 v2.9.0
