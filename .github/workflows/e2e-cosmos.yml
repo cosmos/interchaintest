@@ -21,7 +21,7 @@ jobs:
           cache: false
 
       - name: checkout interchaintest
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       # cleanup environment on self-hosted test runner
       - name: clean
