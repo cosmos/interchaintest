@@ -37,7 +37,7 @@ require (
 	github.com/gdamore/tcell/v2 v2.9.0
 	github.com/google/go-cmp v0.7.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
-	github.com/hashicorp/go-version v1.7.0
+	github.com/hashicorp/go-version v1.8.0
 	github.com/icza/dyno v0.0.0-20220812133438-f0b6f8a18845
 	github.com/moby/moby v28.5.1+incompatible
 	github.com/pelletier/go-toml/v2 v2.2.4
