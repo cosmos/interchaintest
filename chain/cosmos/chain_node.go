@@ -11,7 +11,6 @@ import (
 	"math/rand"
 	"os"
 	"path"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
@@ -22,13 +21,11 @@ import (
 	"github.com/docker/go-connections/nat"
 	dockerclient "github.com/moby/moby/client"
 	"go.uber.org/zap"
-	"golang.org/x/mod/semver"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
 	icatypes "github.com/cosmos/ibc-go/v10/modules/apps/27-interchain-accounts/types"
-	ccvclient "github.com/cosmos/interchain-security/v7/x/ccv/provider/client"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -755,24 +752,6 @@ func (tn *ChainNode) IsAboveSDK47(ctx context.Context) bool {
 	return tn.HasCommand(ctx, "genesis")
 }
 
-// ICSVersion returns the version of interchain-security the binary was built with.
-// If it doesn't depend on interchain-security, it returns an empty string.
-func (tn *ChainNode) ICSVersion(ctx context.Context) string {
-	if strings.HasPrefix(tn.Chain.Config().Bin, "interchain-security") {
-		// This isn't super pretty, but it's the best we can do for an interchain-security binary.
-		// It doesn't depend on itself, and the version command doesn't actually output a version.
-		// Ideally if you have a binary called something like "v3.3.0-my-fix" you can use it as a version, since the v3.3.0 part is in it.
-		return semver.Canonical(tn.Image.Version)
-	}
-	info := tn.GetBuildInformation(ctx)
-	for _, dep := range info.BuildDeps {
-		if strings.HasPrefix(dep.Parent, "github.com/cosmos/interchain-security") {
-			return semver.Canonical(dep.Version)
-		}
-	}
-	return ""
-}
-
 // AddGenesisAccount adds a genesis account for each key.
 func (tn *ChainNode) AddGenesisAccount(ctx context.Context, address string, genesisAmount []sdk.Coin) error {
 	amount := ""
@@ -885,27 +864,6 @@ func (tn *ChainNode) SendIBCTransfer(
 		command = append(command, "--memo", options.Memo)
 	}
 	return tn.ExecTx(ctx, keyName, command...)
-}
-
-func (tn *ChainNode) ConsumerAdditionProposal(ctx context.Context, keyName string, prop ccvclient.ConsumerAdditionProposalJSON) (string, error) {
-	propBz, err := json.Marshal(prop)
-	if err != nil {
-		return "", err
-	}
-
-	fileName := "proposal_" + dockerutil.RandLowerCaseLetterString(4) + ".json"
-
-	fw := dockerutil.NewFileWriter(tn.logger(), tn.DockerClient, tn.TestName)
-	if err := fw.WriteFile(ctx, tn.VolumeName, fileName, propBz); err != nil {
-		return "", fmt.Errorf("failure writing proposal json: %w", err)
-	}
-
-	filePath := filepath.Join(tn.HomeDir(), fileName)
-
-	return tn.ExecTx(ctx, keyName,
-		"gov", "submit-legacy-proposal", "consumer-addition", filePath,
-		"--gas", "auto",
-	)
 }
 
 func (tn *ChainNode) GetTransaction(clientCtx client.Context, txHash string) (*sdk.TxResponse, error) {

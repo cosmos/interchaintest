@@ -12,10 +12,10 @@ import (
 	"strings"
 	"time"
 
-	types "github.com/cosmos/interchaintest/local-interchain/interchain/types"
-	"github.com/cosmos/interchaintest/local-interchain/interchain/util"
 	"gopkg.in/yaml.v3"
 
+	types "github.com/cosmos/interchaintest/local-interchain/interchain/types"
+	"github.com/cosmos/interchaintest/local-interchain/interchain/util"
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
@@ -200,9 +200,8 @@ func CreateChainConfigs(cfg types.Chain) (ibc.ChainConfig, *interchaintest.Chain
 		ConfigFileOverrides: ConfigurationOverrides(cfg),
 		EncodingConfig:      nil,
 
-		InterchainSecurityConfig: cfg.ICSVersionOverride,
-		AdditionalStartArgs:      cfg.AdditionalStartArgs,
-		Env:                      cfg.Env,
+		AdditionalStartArgs: cfg.AdditionalStartArgs,
+		Env:                 cfg.Env,
 	}
 
 	if cfg.DockerImage.Version == "" {

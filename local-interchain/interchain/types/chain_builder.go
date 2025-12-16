@@ -6,9 +6,10 @@ import (
 	"os"
 	"path/filepath"
 
+	"gopkg.in/yaml.v3"
+
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
-	"gopkg.in/yaml.v3"
 )
 
 // NewChainBuilder creates a new Chain.
@@ -91,18 +92,13 @@ func (c *Chain) SetTrustingPeriod(trustingPeriod string) *Chain {
 	return c
 }
 
-func (c *Chain) SetICSConsumerLink(icsConsumerLink string) *Chain {
-	c.ICSConsumerLink = icsConsumerLink
-	return c
-}
-
 // SetIBCPaths hardcodes the set IBC paths array for the chain.
 func (c *Chain) SetIBCPaths(ibcPaths []string) *Chain {
 	c.IBCPaths = ibcPaths
 	return c
 }
 
-// SetChainsIBCLink appends the new IBC path to both chains
+// SetAppendedIBCPathLink appends the new IBC path to both chains
 func (c *Chain) SetAppendedIBCPathLink(counterParty *Chain) *Chain {
 	ibcPath := fmt.Sprintf("%s_%s", c.ChainID, counterParty.ChainID)
 	c.IBCPaths = append(c.IBCPaths, ibcPath)

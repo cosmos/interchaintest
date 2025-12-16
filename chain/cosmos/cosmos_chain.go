@@ -26,7 +26,6 @@ import (
 	ethkeyring "github.com/cosmos/evm/crypto/keyring"
 	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types" // nolint:staticcheck
 	chanTypes "github.com/cosmos/ibc-go/v10/modules/core/04-channel/types"
-	ccvclient "github.com/cosmos/interchain-security/v7/x/ccv/provider/client"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
@@ -54,8 +53,6 @@ type CosmosChain struct {
 	numFullNodes  int
 	Validators    ChainNodes
 	FullNodes     ChainNodes
-	Provider      *CosmosChain
-	Consumers     []*CosmosChain
 
 	// preStartNodes is able to mutate the node containers before
 	// they are all started
@@ -528,15 +525,6 @@ func (c *CosmosChain) QueryBankMetadata(ctx context.Context, denom string) (*Ban
 	return c.GetFullNode().QueryBankMetadata(ctx, denom)
 }
 
-// ConsumerAdditionProposal submits a legacy governance proposal to add a consumer to the chain.
-func (c *CosmosChain) ConsumerAdditionProposal(ctx context.Context, keyName string, prop ccvclient.ConsumerAdditionProposalJSON) (tx TxProposal, _ error) {
-	txHash, err := c.GetFullNode().ConsumerAdditionProposal(ctx, keyName, prop)
-	if err != nil {
-		return tx, fmt.Errorf("failed to submit consumer addition proposal: %w", err)
-	}
-	return c.txProposal(txHash)
-}
-
 func (c *CosmosChain) txProposal(txHash string) (tx TxProposal, _ error) {
 	txResp, err := c.GetTransaction(txHash)
 	if err != nil {
@@ -856,10 +844,6 @@ type ValidatorWithIntPower struct {
 
 // Bootstraps the chain and starts it from genesis.
 func (c *CosmosChain) Start(testName string, ctx context.Context, additionalGenesisWallets ...ibc.WalletAmount) error {
-	if c.cfg.InterchainSecurityConfig.ConsumerCopyProviderKey != nil && c.Provider == nil {
-		return fmt.Errorf("don't set ConsumerCopyProviderKey if it's not a consumer chain")
-	}
-
 	chainCfg := c.Config()
 
 	decimalPow := int64(math.Pow10(int(*chainCfg.CoinDecimals)))
