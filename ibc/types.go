@@ -442,14 +442,6 @@ type PathUpdateOptions struct {
 	DstChainID    *string
 }
 
-type ICSConfig struct {
-	ProviderVerOverride     string         `yaml:"provider,omitempty" json:"provider,omitempty"`
-	ConsumerVerOverride     string         `yaml:"consumer,omitempty" json:"consumer,omitempty"`
-	ConsumerCopyProviderKey func(int) bool `yaml:"-" json:"-"`
-	TopN                    int            `yaml:"top-n,omitempty" json:"top-n,omitempty"`
-	ICSImageRepo            string         `yaml:"ics-image-repo,omitempty" json:"ics-image-repo,omitempty"`
-}
-
 // GenesisConfig is used to start a chain from a pre-defined genesis state.
 type GenesisConfig struct {
 	// Genesis file contents for the chain (e.g. genesis.json for CometBFT chains).
