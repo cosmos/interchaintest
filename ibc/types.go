@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	dockerimagetypes "github.com/docker/docker/api/types/image"
-	"github.com/google/go-cmp/cmp"
 	"github.com/moby/moby/client"
 
 	"cosmossdk.io/math"
@@ -78,8 +77,6 @@ type ChainConfig struct {
 	UsingChainIDFlagCLI bool `yaml:"using-chain-id-flag-cli"`
 	// Configuration describing additional sidecar processes.
 	SidecarConfigs []SidecarConfig
-	// Configuration describing additional interchain security options.
-	InterchainSecurityConfig ICSConfig
 	// CoinDecimals for the chains base micro/nano/atto token configuration.
 	CoinDecimals *int64
 	// HostPortOverride exposes ports to the host.
@@ -246,10 +243,6 @@ func (c ChainConfig) MergeChainSpecConfig(other ChainConfig) ChainConfig {
 
 	if len(other.ExposeAdditionalPorts) > 0 {
 		c.ExposeAdditionalPorts = append(c.ExposeAdditionalPorts, other.ExposeAdditionalPorts...)
-	}
-
-	if !cmp.Equal(other.InterchainSecurityConfig, ICSConfig{}) {
-		c.InterchainSecurityConfig = other.InterchainSecurityConfig
 	}
 
 	if other.Genesis != nil {
