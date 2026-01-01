@@ -19,7 +19,7 @@ require (
 	cosmossdk.io/store v1.1.2
 	cosmossdk.io/x/feegrant v0.2.0
 	cosmossdk.io/x/upgrade v0.2.0
-	github.com/BurntSushi/toml v1.5.0
+	github.com/BurntSushi/toml v1.6.0
 	github.com/CosmWasm/wasmd v0.60.0
 	github.com/atotto/clipboard v0.1.4
 	github.com/avast/retry-go/v4 v4.7.0
@@ -46,7 +46,6 @@ require (
 	github.com/tidwall/gjson v1.18.0
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.1
-	golang.org/x/mod v0.30.0
 	golang.org/x/sync v0.18.0
 	golang.org/x/tools v0.39.0
 	google.golang.org/grpc v1.77.0
@@ -265,6 +264,7 @@ require (
 	golang.org/x/arch v0.17.0 // indirect
 	golang.org/x/crypto v0.44.0 // indirect
 	golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b // indirect
+	golang.org/x/mod v0.30.0 // indirect
 	golang.org/x/net v0.47.0 // indirect
 	golang.org/x/oauth2 v0.32.0 // indirect
 	golang.org/x/sys v0.38.0 // indirect
