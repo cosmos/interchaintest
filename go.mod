@@ -19,7 +19,7 @@ require (
 	cosmossdk.io/store v1.1.2
 	cosmossdk.io/x/feegrant v0.2.0
 	cosmossdk.io/x/upgrade v0.2.0
-	github.com/BurntSushi/toml v1.5.0
+	github.com/BurntSushi/toml v1.6.0
 	github.com/CosmWasm/wasmd v0.60.0
 	github.com/atotto/clipboard v0.1.4
 	github.com/avast/retry-go/v4 v4.7.0
