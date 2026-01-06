@@ -33,7 +33,7 @@ require (
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/docker/go-connections v0.6.0
 	github.com/ethereum/go-ethereum v1.16.7
-	github.com/gdamore/tcell/v2 v2.13.2
+	github.com/gdamore/tcell/v2 v2.13.5
 	github.com/google/go-cmp v0.7.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/hashicorp/go-version v1.8.0
