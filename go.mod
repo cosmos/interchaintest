@@ -41,7 +41,7 @@ require (
 	github.com/moby/moby v28.5.2+incompatible
 	github.com/pelletier/go-toml/v2 v2.2.4
 	github.com/rivo/tview v0.42.0
-	github.com/spf13/cobra v1.10.1
+	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
 	github.com/tidwall/gjson v1.18.0
 	go.uber.org/multierr v1.11.0
