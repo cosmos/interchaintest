@@ -19,8 +19,9 @@ const _mainContent_name = "testCasesMaincosmosMessagesMaintxDetailMainerrorModal
 var _mainContent_index = [...]uint8{0, 13, 31, 43, 57}
 
 func (i mainContent) String() string {
-	if i < 0 || i >= mainContent(len(_mainContent_index)-1) {
+	idx := int(i) - 0
+	if i < 0 || idx >= len(_mainContent_index)-1 {
 		return "mainContent(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
-	return _mainContent_name[_mainContent_index[i]:_mainContent_index[i+1]]
+	return _mainContent_name[_mainContent_index[idx]:_mainContent_index[idx+1]]
 }
