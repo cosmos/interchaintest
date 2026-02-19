@@ -9,7 +9,7 @@ concurrency:
     cancel-in-progress: true
 
 env:
-    GO_VERSION: 1.25
+    GO_VERSION: 1.25.7
     NODE_JS_VERSION: v21.x
 
 jobs:
