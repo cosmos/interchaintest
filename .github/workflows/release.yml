@@ -5,7 +5,7 @@ on:
     types: [created]
 
 env:
-  GO_VERSION: 1.25
+  GO_VERSION: 1.25.7
 
 jobs:
   release-static-binary:
