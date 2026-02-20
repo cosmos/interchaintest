@@ -18,8 +18,9 @@ const _Capability_name = "TimestampTimeoutHeightTimeoutFlush"
 var _Capability_index = [...]uint8{0, 16, 29, 34}
 
 func (i Capability) String() string {
-	if i < 0 || i >= Capability(len(_Capability_index)-1) {
+	idx := int(i) - 0
+	if i < 0 || idx >= len(_Capability_index)-1 {
 		return "Capability(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
-	return _Capability_name[_Capability_index[i]:_Capability_index[i+1]]
+	return _Capability_name[_Capability_index[idx]:_Capability_index[idx+1]]
 }

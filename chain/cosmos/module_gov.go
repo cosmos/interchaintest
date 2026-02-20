@@ -9,11 +9,10 @@ import (
 	"path/filepath"
 	"strconv"
 
-	upgradetypes "cosmossdk.io/x/upgrade/types"
-
 	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	paramsutils "github.com/cosmos/cosmos-sdk/x/params/client/utils"
+	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
 	"github.com/cosmos/interchaintest/v10/dockerutil"
 )

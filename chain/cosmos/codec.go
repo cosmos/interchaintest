@@ -1,8 +1,6 @@
 package cosmos
 
 import (
-	"cosmossdk.io/x/upgrade"
-
 	transfer "github.com/cosmos/ibc-go/v10/modules/apps/transfer"
 	ibccore "github.com/cosmos/ibc-go/v10/modules/core"
 	ibctm "github.com/cosmos/ibc-go/v10/modules/light-clients/07-tendermint"
@@ -25,6 +23,7 @@ import (
 	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
+	"github.com/cosmos/cosmos-sdk/x/upgrade"
 
 	ibcwasm "github.com/cosmos/interchaintest/v10/chain/cosmos/08-wasm-types"
 )
