@@ -32,7 +32,7 @@ jobs:
         run: go mod tidy && make install
 
       - name: Upload localic artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: local-ic
           path: ~/go/bin/local-ic
