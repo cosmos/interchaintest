@@ -9,7 +9,7 @@ import (
 
 	_ "embed"
 
-	interchaintest "github.com/cosmos/interchaintest/v10"
+	interchaintest "github.com/cosmos/interchaintest/v11"
 )
 
 // Embed the matrix files as strings since they aren't intended to be changed.

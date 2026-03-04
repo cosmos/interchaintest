@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/cosmos/interchaintest/local-interchain/interchain/util"
-	"github.com/cosmos/interchaintest/v10/chain/cosmos"
+	"github.com/cosmos/interchaintest/v11/chain/cosmos"
 )
 
 type upload struct {

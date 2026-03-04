@@ -1,8 +1,8 @@
 package types
 
 import (
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/testutil"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/testutil"
 )
 
 func ChainCosmosHub(chainID string) *Chain {

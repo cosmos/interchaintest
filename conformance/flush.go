@@ -11,11 +11,11 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/cosmos/interchaintest/v10"
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/relayer"
-	"github.com/cosmos/interchaintest/v10/testreporter"
-	"github.com/cosmos/interchaintest/v10/testutil"
+	"github.com/cosmos/interchaintest/v11"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/relayer"
+	"github.com/cosmos/interchaintest/v11/testreporter"
+	"github.com/cosmos/interchaintest/v11/testutil"
 )
 
 func TestRelayerFlushing(t *testing.T, ctx context.Context, cf interchaintest.ChainFactory, rf interchaintest.RelayerFactory, rep *testreporter.Reporter) {

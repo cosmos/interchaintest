@@ -8,7 +8,7 @@ import (
 
 	"github.com/icza/dyno"
 
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11/ibc"
 )
 
 type GenesisKV struct {

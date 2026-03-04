@@ -17,7 +17,7 @@ import (
 	dockerclient "github.com/moby/moby/client"
 	"go.uber.org/zap"
 
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11/ibc"
 )
 
 // Example Go/Cosmos-SDK panic format is `panic: bad Duration: time: invalid duration "bad"\n`.

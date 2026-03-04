@@ -14,7 +14,7 @@ import (
 	paramsutils "github.com/cosmos/cosmos-sdk/x/params/client/utils"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
-	"github.com/cosmos/interchaintest/v10/dockerutil"
+	"github.com/cosmos/interchaintest/v11/dockerutil"
 )
 
 // VoteOnProposal submits a vote for the specified proposal.

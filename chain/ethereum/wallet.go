@@ -3,7 +3,7 @@ package ethereum
 import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11/ibc"
 )
 
 var _ ibc.Wallet = &EthereumWallet{}

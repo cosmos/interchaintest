@@ -4,7 +4,7 @@ import (
 	"context"
 	"runtime"
 
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11/ibc"
 )
 
 func PanicFunctionName() {

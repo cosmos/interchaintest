@@ -11,10 +11,10 @@ import (
 
 	_ "embed"
 
-	"github.com/cosmos/interchaintest/v10/chain/cosmos"
-	"github.com/cosmos/interchaintest/v10/chain/ethereum/foundry"
-	"github.com/cosmos/interchaintest/v10/chain/ethereum/geth"
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11/chain/cosmos"
+	"github.com/cosmos/interchaintest/v11/chain/ethereum/foundry"
+	"github.com/cosmos/interchaintest/v11/chain/ethereum/geth"
+	"github.com/cosmos/interchaintest/v11/ibc"
 )
 
 // ChainFactory describes how to get chains for tests.

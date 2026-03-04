@@ -1,4 +1,4 @@
-module github.com/cosmos/interchaintest/v10
+module github.com/cosmos/interchaintest/v11
 
 go 1.25.7
 

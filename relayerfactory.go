@@ -7,10 +7,10 @@ import (
 	"github.com/moby/moby/client"
 	"go.uber.org/zap"
 
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/relayer"
-	"github.com/cosmos/interchaintest/v10/relayer/hermes"
-	"github.com/cosmos/interchaintest/v10/relayer/rly"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/relayer"
+	"github.com/cosmos/interchaintest/v11/relayer/hermes"
+	"github.com/cosmos/interchaintest/v11/relayer/rly"
 )
 
 type TestName interface {

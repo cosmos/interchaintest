@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11/ibc"
 )
 
 // TokenFactoryCreateDenom creates a new tokenfactory token in the format 'factory/accountaddress/name'.

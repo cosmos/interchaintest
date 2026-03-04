@@ -13,8 +13,8 @@ import (
 	"github.com/pelletier/go-toml/v2"
 	"go.uber.org/zap"
 
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/relayer"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/relayer"
 )
 
 const (

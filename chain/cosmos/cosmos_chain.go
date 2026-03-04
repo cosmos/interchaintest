@@ -36,12 +36,12 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	paramsutils "github.com/cosmos/cosmos-sdk/x/params/client/utils"
 
-	"github.com/cosmos/interchaintest/v10/blockdb"
-	wasmtypes "github.com/cosmos/interchaintest/v10/chain/cosmos/08-wasm-types"
-	"github.com/cosmos/interchaintest/v10/chain/internal/tendermint"
-	"github.com/cosmos/interchaintest/v10/dockerutil"
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/testutil"
+	"github.com/cosmos/interchaintest/v11/blockdb"
+	wasmtypes "github.com/cosmos/interchaintest/v11/chain/cosmos/08-wasm-types"
+	"github.com/cosmos/interchaintest/v11/chain/internal/tendermint"
+	"github.com/cosmos/interchaintest/v11/dockerutil"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/testutil"
 )
 
 // CosmosChain is a local docker testnet for a Cosmos SDK chain.

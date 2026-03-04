@@ -10,9 +10,9 @@ import (
 
 	ictypes "github.com/cosmos/interchaintest/local-interchain/interchain/types"
 	"github.com/cosmos/interchaintest/local-interchain/interchain/util"
-	"github.com/cosmos/interchaintest/v10"
-	"github.com/cosmos/interchaintest/v10/chain/cosmos"
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11"
+	"github.com/cosmos/interchaintest/v11/chain/cosmos"
+	"github.com/cosmos/interchaintest/v11/ibc"
 	"github.com/gorilla/mux"
 	"github.com/moby/moby/client"
 	"go.uber.org/zap"

@@ -10,8 +10,8 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/interchaintest/v10/mocktesting"
-	"github.com/cosmos/interchaintest/v10/testreporter"
+	"github.com/cosmos/interchaintest/v11/mocktesting"
+	"github.com/cosmos/interchaintest/v11/testreporter"
 )
 
 // nopCloser wraps an io.Writer to provide a Close method that always returns nil.

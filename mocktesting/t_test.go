@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/interchaintest/v10/mocktesting"
+	"github.com/cosmos/interchaintest/v11/mocktesting"
 )
 
 func TestT_Name(t *testing.T) {
