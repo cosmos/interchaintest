@@ -12,9 +12,9 @@ import (
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	paramsutils "github.com/cosmos/cosmos-sdk/x/params/client/utils"
 
-	"github.com/cosmos/interchaintest/v10"
-	"github.com/cosmos/interchaintest/v10/chain/cosmos"
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11"
+	"github.com/cosmos/interchaintest/v11/chain/cosmos"
+	"github.com/cosmos/interchaintest/v11/ibc"
 )
 
 func TestJunoParamChange(t *testing.T) {

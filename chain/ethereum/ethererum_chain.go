@@ -18,9 +18,9 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 
-	"github.com/cosmos/interchaintest/v10/dockerutil"
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/testutil"
+	"github.com/cosmos/interchaintest/v11/dockerutil"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/testutil"
 )
 
 const (

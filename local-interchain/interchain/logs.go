@@ -7,9 +7,9 @@ import (
 	"time"
 
 	types "github.com/cosmos/interchaintest/local-interchain/interchain/types"
-	"github.com/cosmos/interchaintest/v10/chain/cosmos"
-	"github.com/cosmos/interchaintest/v10/chain/ethereum/foundry"
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11/chain/cosmos"
+	"github.com/cosmos/interchaintest/v11/chain/ethereum/foundry"
+	"github.com/cosmos/interchaintest/v11/ibc"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

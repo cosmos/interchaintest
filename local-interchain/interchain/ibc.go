@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	types "github.com/cosmos/interchaintest/local-interchain/interchain/types"
-	"github.com/cosmos/interchaintest/v10"
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11"
+	"github.com/cosmos/interchaintest/v11/ibc"
 )
 
 func VerifyIBCPaths(ibcpaths map[string][]int) error {

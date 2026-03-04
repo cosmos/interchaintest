@@ -11,8 +11,8 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/testreporter"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/testreporter"
 )
 
 // Interchain represents a full IBC network, encompassing a collection of

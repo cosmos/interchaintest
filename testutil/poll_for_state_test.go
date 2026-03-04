@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11/ibc"
 )
 
 type mockChain struct {

@@ -10,7 +10,7 @@ import (
 	"github.com/moby/moby/client"
 	"go.uber.org/zap"
 
-	"github.com/cosmos/interchaintest/v10/dockerutil"
+	"github.com/cosmos/interchaintest/v11/dockerutil"
 )
 
 // Toml is used for holding the decoded state of a toml config file.

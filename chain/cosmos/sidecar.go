@@ -9,8 +9,8 @@ import (
 	dockerclient "github.com/moby/moby/client"
 	"go.uber.org/zap"
 
-	"github.com/cosmos/interchaintest/v10/dockerutil"
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11/dockerutil"
+	"github.com/cosmos/interchaintest/v11/ibc"
 )
 
 type SidecarProcesses []*SidecarProcess

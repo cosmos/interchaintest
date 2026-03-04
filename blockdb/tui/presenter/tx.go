@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/cosmos/interchaintest/v10/blockdb"
+	"github.com/cosmos/interchaintest/v11/blockdb"
 )
 
 var bufPool = sync.Pool{New: func() any { return new(bytes.Buffer) }}

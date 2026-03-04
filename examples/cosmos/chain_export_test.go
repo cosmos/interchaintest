@@ -8,10 +8,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	"github.com/cosmos/interchaintest/v10"
-	"github.com/cosmos/interchaintest/v10/chain/cosmos"
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/testutil"
+	"github.com/cosmos/interchaintest/v11"
+	"github.com/cosmos/interchaintest/v11/chain/cosmos"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/testutil"
 )
 
 func TestJunoStateExport(t *testing.T) {

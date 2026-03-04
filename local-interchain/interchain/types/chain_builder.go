@@ -8,8 +8,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/cosmos/interchaintest/v10/chain/cosmos"
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11/chain/cosmos"
+	"github.com/cosmos/interchaintest/v11/ibc"
 )
 
 // NewChainBuilder creates a new Chain.

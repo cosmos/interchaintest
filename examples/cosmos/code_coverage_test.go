@@ -9,11 +9,11 @@ import (
 	"go.uber.org/zap/zapcore"
 	"go.uber.org/zap/zaptest"
 
-	"github.com/cosmos/interchaintest/v10"
-	"github.com/cosmos/interchaintest/v10/chain/cosmos"
-	"github.com/cosmos/interchaintest/v10/dockerutil"
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/testreporter"
+	"github.com/cosmos/interchaintest/v11"
+	"github.com/cosmos/interchaintest/v11/chain/cosmos"
+	"github.com/cosmos/interchaintest/v11/dockerutil"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/testreporter"
 )
 
 func TestCodeCoverage(t *testing.T) {

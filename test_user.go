@@ -10,9 +10,9 @@ import (
 
 	"cosmossdk.io/math"
 
-	"github.com/cosmos/interchaintest/v10/dockerutil"
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/testutil"
+	"github.com/cosmos/interchaintest/v11/dockerutil"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/testutil"
 )
 
 // GetAndFundTestUserWithMnemonic restores a user using the given mnemonic

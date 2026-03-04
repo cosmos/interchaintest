@@ -15,8 +15,8 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cosmos/interchaintest/v10/blockdb"
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11/blockdb"
+	"github.com/cosmos/interchaintest/v11/ibc"
 )
 
 // chainSet is an unordered collection of ibc.Chain,

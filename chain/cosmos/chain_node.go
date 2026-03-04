@@ -43,10 +43,10 @@ import (
 	coretypes "github.com/cometbft/cometbft/rpc/core/types"
 	libclient "github.com/cometbft/cometbft/rpc/jsonrpc/client"
 
-	"github.com/cosmos/interchaintest/v10/blockdb"
-	"github.com/cosmos/interchaintest/v10/dockerutil"
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/testutil"
+	"github.com/cosmos/interchaintest/v11/blockdb"
+	"github.com/cosmos/interchaintest/v11/dockerutil"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/testutil"
 )
 
 // ChainNode represents a node in the test network that is being created.

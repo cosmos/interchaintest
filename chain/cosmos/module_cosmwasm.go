@@ -12,7 +12,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/cosmos/interchaintest/v10/testutil"
+	"github.com/cosmos/interchaintest/v11/testutil"
 )
 
 type InstantiateContractAttribute struct {

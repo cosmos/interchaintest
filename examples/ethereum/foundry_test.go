@@ -11,11 +11,11 @@ import (
 
 	"cosmossdk.io/math"
 
-	"github.com/cosmos/interchaintest/v10"
-	"github.com/cosmos/interchaintest/v10/chain/ethereum"
-	"github.com/cosmos/interchaintest/v10/chain/ethereum/foundry"
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/testreporter"
+	"github.com/cosmos/interchaintest/v11"
+	"github.com/cosmos/interchaintest/v11/chain/ethereum"
+	"github.com/cosmos/interchaintest/v11/chain/ethereum/foundry"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/testreporter"
 )
 
 func TestFoundry(t *testing.T) {

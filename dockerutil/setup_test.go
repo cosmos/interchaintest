@@ -9,8 +9,8 @@ import (
 	volumetypes "github.com/docker/docker/api/types/volume"
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/interchaintest/v10/dockerutil"
-	"github.com/cosmos/interchaintest/v10/mocktesting"
+	"github.com/cosmos/interchaintest/v11/dockerutil"
+	"github.com/cosmos/interchaintest/v11/mocktesting"
 )
 
 func TestDockerSetup_KeepVolumes(t *testing.T) {

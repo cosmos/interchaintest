@@ -11,10 +11,10 @@ import (
 	conntypes "github.com/cosmos/ibc-go/v10/modules/core/03-connection/types"
 	"github.com/cosmos/ibc-go/v10/modules/core/exported"
 
-	"github.com/cosmos/interchaintest/v10"
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/testreporter"
-	"github.com/cosmos/interchaintest/v10/testutil"
+	"github.com/cosmos/interchaintest/v11"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/testreporter"
+	"github.com/cosmos/interchaintest/v11/testutil"
 )
 
 // TestRelayerSetup contains a series of subtests that configure a relayer step-by-step.

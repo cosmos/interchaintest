@@ -16,14 +16,14 @@ import (
 
 	"cosmossdk.io/math"
 
-	"github.com/cosmos/interchaintest/v10"
-	cosmosChain "github.com/cosmos/interchaintest/v10/chain/cosmos"
-	"github.com/cosmos/interchaintest/v10/chain/cosmos/wasm"
-	"github.com/cosmos/interchaintest/v10/dockerutil"
-	"github.com/cosmos/interchaintest/v10/ibc"
-	"github.com/cosmos/interchaintest/v10/relayer"
-	"github.com/cosmos/interchaintest/v10/testreporter"
-	"github.com/cosmos/interchaintest/v10/testutil"
+	"github.com/cosmos/interchaintest/v11"
+	cosmosChain "github.com/cosmos/interchaintest/v11/chain/cosmos"
+	"github.com/cosmos/interchaintest/v11/chain/cosmos/wasm"
+	"github.com/cosmos/interchaintest/v11/dockerutil"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	"github.com/cosmos/interchaintest/v11/relayer"
+	"github.com/cosmos/interchaintest/v11/testreporter"
+	"github.com/cosmos/interchaintest/v11/testutil"
 )
 
 // TestInterchainQueriesWASM is a test case that performs a round trip query from an ICQ wasm contract <> ICQ module.

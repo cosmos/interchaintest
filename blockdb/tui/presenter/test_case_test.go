@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/interchaintest/v10/blockdb"
+	"github.com/cosmos/interchaintest/v11/blockdb"
 )
 
 func TestTestCase(t *testing.T) {

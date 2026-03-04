@@ -7,7 +7,7 @@ import (
 	"github.com/atotto/clipboard"
 	"github.com/rivo/tview"
 
-	"github.com/cosmos/interchaintest/v10/blockdb"
+	"github.com/cosmos/interchaintest/v11/blockdb"
 )
 
 //go:generate go run golang.org/x/tools/cmd/stringer -type=mainContent

@@ -3,7 +3,7 @@ package presenter
 import (
 	"strconv"
 
-	"github.com/cosmos/interchaintest/v10/blockdb"
+	"github.com/cosmos/interchaintest/v11/blockdb"
 )
 
 // TestCase presents a blockdb.TestCaseResult.

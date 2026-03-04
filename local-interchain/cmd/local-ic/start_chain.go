@@ -9,7 +9,7 @@ import (
 
 	"github.com/cosmos/interchaintest/local-interchain/interchain"
 	"github.com/cosmos/interchaintest/local-interchain/interchain/types"
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11/ibc"
 	"github.com/spf13/cobra"
 )
 

@@ -10,7 +10,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/cosmos/interchaintest/v10/ibc"
+	"github.com/cosmos/interchaintest/v11/ibc"
 )
 
 // ChainSpec is a wrapper around an ibc.ChainConfig

@@ -19,13 +19,13 @@ import (
 
 	"github.com/cosmos/interchaintest/local-interchain/interchain/router"
 	"github.com/cosmos/interchaintest/local-interchain/interchain/types"
-	"github.com/cosmos/interchaintest/v10"
-	"github.com/cosmos/interchaintest/v10/chain/cosmos"
-	"github.com/cosmos/interchaintest/v10/dockerutil"
-	"github.com/cosmos/interchaintest/v10/ibc"
-	interchaintestrelayer "github.com/cosmos/interchaintest/v10/relayer"
-	"github.com/cosmos/interchaintest/v10/testreporter"
-	"github.com/cosmos/interchaintest/v10/testutil"
+	"github.com/cosmos/interchaintest/v11"
+	"github.com/cosmos/interchaintest/v11/chain/cosmos"
+	"github.com/cosmos/interchaintest/v11/dockerutil"
+	"github.com/cosmos/interchaintest/v11/ibc"
+	interchaintestrelayer "github.com/cosmos/interchaintest/v11/relayer"
+	"github.com/cosmos/interchaintest/v11/testreporter"
+	"github.com/cosmos/interchaintest/v11/testutil"
 )
 
 func StartChain(installDir, chainCfgFile string, ac *types.AppStartConfig) {
