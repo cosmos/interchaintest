@@ -22,7 +22,7 @@ require (
 	github.com/cometbft/cometbft v0.39.0-beta.2.0.20260224200643-e10492fb96af
 	github.com/containerd/errdefs v1.0.0
 	github.com/cosmos/cosmos-sdk v0.54.0-rc.1.0.20260304151650-0da9e85a3129
-	github.com/cosmos/evm v0.5.0-rc.0
+	github.com/cosmos/evm v1.0.0-rc2
 	github.com/cosmos/gogoproto v1.7.2
 	github.com/cosmos/ibc-go/v10 v10.0.0-beta.0.0.20260304133652-f0732e3fc19f
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
