@@ -7,6 +7,8 @@ replace (
 	github.com/ChainSafe/go-schnorrkel/1 => github.com/ChainSafe/go-schnorrkel v1.0.0
 	// cometbft API breaking change fix
 	github.com/btcsuite/btcd/btcec/v2 => github.com/btcsuite/btcd/btcec/v2 v2.3.3
+	// use local evm with ibc-go v11 (evm v0.5.0-rc.0 pulls in ibc-go v10)
+	github.com/cosmos/evm => ../evm
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 	github.com/vedhavyas/go-subkey => github.com/strangelove-ventures/go-subkey v1.0.7
@@ -24,7 +26,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.54.0-rc.1.0.20260304151650-0da9e85a3129
 	github.com/cosmos/evm v0.5.0-rc.0
 	github.com/cosmos/gogoproto v1.7.2
-	github.com/cosmos/ibc-go/v10 v10.0.0-beta.0.0.20260304133652-f0732e3fc19f
+	github.com/cosmos/ibc-go/v11 v11.0.0-20260304204640-9f835275a381
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/docker/go-connections v0.6.0

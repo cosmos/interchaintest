@@ -14,7 +14,7 @@ import (
 
 	"cosmossdk.io/math"
 
-	ibcexported "github.com/cosmos/ibc-go/v10/modules/core/03-connection/types"
+	ibcexported "github.com/cosmos/ibc-go/v11/modules/core/03-connection/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module/testutil"
