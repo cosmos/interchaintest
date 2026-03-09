@@ -13,8 +13,8 @@ import (
 
 	"cosmossdk.io/math"
 
-	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
-	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
+	transfertypes "github.com/cosmos/ibc-go/v11/modules/apps/transfer/types"
+	clienttypes "github.com/cosmos/ibc-go/v11/modules/core/02-client/types"
 
 	"github.com/cosmos/interchaintest/v11"
 	"github.com/cosmos/interchaintest/v11/chain/cosmos"
@@ -77,7 +77,7 @@ func RecoverClient(t *testing.T, ctx context.Context, chain *cosmos.CosmosChain,
 	require.NoError(t, err)
 	require.Equal(t, "Active", status)
 
-	authority, err := chain.GetGovernanceAddress(ctx)
+	authority, err := chain.GetGovernanceAddress(ctx) //nolint:staticcheck // TODO: SA1019 - migrate to AuthQueryModuleAddress(ctx, "gov")
 	require.NoError(t, err)
 
 	recoverMessage := fmt.Sprintf(`{

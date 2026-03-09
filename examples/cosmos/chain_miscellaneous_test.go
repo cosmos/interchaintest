@@ -428,7 +428,7 @@ func testTokenFactory(ctx context.Context, t *testing.T, chain *cosmos.CosmosCha
 
 func testGetGovernanceAddress(ctx context.Context, t *testing.T, chain *cosmos.CosmosChain) {
 	t.Helper()
-	govAddr, err := chain.GetGovernanceAddress(ctx)
+	govAddr, err := chain.GetGovernanceAddress(ctx) //nolint:staticcheck // TODO: SA1019 - migrate to AuthQueryModuleAddress(ctx, "gov")
 	require.NoError(t, err)
 	_, err = chain.AccAddressFromBech32(govAddr)
 	require.NoError(t, err)

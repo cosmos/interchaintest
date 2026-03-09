@@ -57,7 +57,7 @@ func initBuiltinChainConfig(log *zap.Logger) (map[string]ibc.ChainConfig, error)
 	val := os.Getenv("ICTEST_CONFIGURED_CHAINS")
 
 	if val != "" {
-		dat, err = os.ReadFile(val)
+		dat, err = os.ReadFile(val) //nolint:gosec // TODO: G703 - val is from ICTEST_CONFIGURED_CHAINS env, trusted in test context
 		if err != nil {
 			return nil, err
 		}

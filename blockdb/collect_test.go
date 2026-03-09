@@ -67,6 +67,7 @@ func TestCollector_Collect(t *testing.T) {
 		defer collector.Stop()
 
 		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
 		var eg errgroup.Group
 
 		eg.Go(func() error {
