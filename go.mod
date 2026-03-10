@@ -27,7 +27,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.54.0-rc.1.0.20260309191750-e5b941276b66
 	github.com/cosmos/evm v1.0.0-rc2.0.20260309185631-5e62ed124cad
 	github.com/cosmos/gogoproto v1.7.2
-	github.com/cosmos/ibc-go/v11 v11.0.0-20260304204640-9f835275a381
+	github.com/cosmos/ibc-go/v11 v11.0.0-20260309200450-ab565c1cbca0
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/docker/go-connections v0.6.0
