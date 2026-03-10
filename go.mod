@@ -1,6 +1,6 @@
 module github.com/cosmos/interchaintest/v11
 
-go 1.25.7
+go 1.25.8
 
 replace (
 	github.com/ChainSafe/go-schnorrkel => github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d
@@ -24,7 +24,7 @@ require (
 	github.com/avast/retry-go/v4 v4.7.0
 	github.com/cometbft/cometbft v0.39.0-beta.2.0.20260227171234-00271936093e
 	github.com/containerd/errdefs v1.0.0
-	github.com/cosmos/cosmos-sdk v0.54.0-rc.1.0.20260309191750-e5b941276b66
+	github.com/cosmos/cosmos-sdk v0.54.0-rc.1.0.20260310180626-72ea9fe77986
 	github.com/cosmos/evm v1.0.0-rc2.0.20260309185631-5e62ed124cad
 	github.com/cosmos/gogoproto v1.7.2
 	github.com/cosmos/ibc-go/v11 v11.0.0-20260309200450-ab565c1cbca0
