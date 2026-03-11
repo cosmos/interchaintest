@@ -5,7 +5,7 @@ go 1.25.8
 replace (
 	github.com/ChainSafe/go-schnorrkel => github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d
 	github.com/ChainSafe/go-schnorrkel/1 => github.com/ChainSafe/go-schnorrkel v1.0.0
-	github.com/CosmWasm/wasmd => ../wasmd
+	github.com/CosmWasm/wasmd => github.com/cosmos/wasmd v0.0.0-20260311182933-4cbc2bc02e67
 	// cometbft API breaking change fix
 	github.com/btcsuite/btcd/btcec/v2 => github.com/btcsuite/btcd/btcec/v2 v2.3.3
 	// use Cosmos geth fork (evm uses trie/utils from this fork)

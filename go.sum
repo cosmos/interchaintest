@@ -286,6 +286,8 @@ github.com/cosmos/ics23/go v0.11.0 h1:jk5skjT0TqX5e5QJbEnwXIS2yI2vnmLOgpQPeM5Rtn
 github.com/cosmos/ics23/go v0.11.0/go.mod h1:A8OjxPE67hHST4Icw94hOxxFEJMBG031xIGF/JHNIY0=
 github.com/cosmos/ledger-cosmos-go v1.0.0 h1:jNKW89nPf0vR0EkjHG8Zz16h6p3zqwYEOxlHArwgYtw=
 github.com/cosmos/ledger-cosmos-go v1.0.0/go.mod h1:mGaw2wDOf+Z6SfRJsMGxU9DIrBa4du0MAiPlpPhLAOE=
+github.com/cosmos/wasmd v0.0.0-20260311182933-4cbc2bc02e67 h1:DG5t2HOieU4HIQw6cQzlOk0GZe1hvs2p/rpp1OraQ8o=
+github.com/cosmos/wasmd v0.0.0-20260311182933-4cbc2bc02e67/go.mod h1:2vX2Ogc0U4SYV+H980gvCPrc4lKeRYwMIS2qMNZ/LFE=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
 github.com/cpuguy83/go-md2man/v2 v2.0.6 h1:XJtiaUW6dEEqVuZiMTn1ldk455QWwEIsMIJlo5vtkx0=
 github.com/cpuguy83/go-md2man/v2 v2.0.6/go.mod h1:oOW0eioCTA6cOiMLiUPZOpcVxMig6NIQQ7OS05n1F4g=
