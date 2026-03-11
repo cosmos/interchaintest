@@ -28,7 +28,7 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/docker/go-connections v0.6.0
-	github.com/ethereum/go-ethereum v1.16.8
+	github.com/ethereum/go-ethereum v1.17.0
 	github.com/gdamore/tcell/v2 v2.13.8
 	github.com/google/go-cmp v0.7.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
@@ -68,7 +68,7 @@ require (
 	filippo.io/edwards25519 v1.2.0 // indirect
 	github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4 // indirect
 	github.com/99designs/keyring v1.2.2 // indirect
-	github.com/CosmWasm/wasmvm/v2 v2.2.1 // indirect
+	github.com/CosmWasm/wasmvm/v2 v2.2.2 // indirect
 	github.com/DataDog/datadog-go v4.8.3+incompatible // indirect
 	github.com/DataDog/zstd v1.5.7 // indirect
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/detectors/gcp v1.30.0 // indirect
@@ -122,7 +122,7 @@ require (
 	github.com/cockroachdb/redact v1.1.6 // indirect
 	github.com/cockroachdb/tokenbucket v0.0.0-20250429170803-42689b6311bb // indirect
 	github.com/cometbft/cometbft-db v0.14.3 // indirect
-	github.com/consensys/gnark-crypto v0.18.0 // indirect
+	github.com/consensys/gnark-crypto v0.18.1 // indirect
 	github.com/containerd/errdefs/pkg v0.3.0 // indirect
 	github.com/containerd/log v0.1.0 // indirect
 	github.com/cosmos/btcutil v1.0.5 // indirect
@@ -135,7 +135,6 @@ require (
 	github.com/cosmos/ics23/go v0.11.0 // indirect
 	github.com/cosmos/ledger-cosmos-go v1.0.0 // indirect
 	github.com/crate-crypto/go-eth-kzg v1.4.0 // indirect
-	github.com/crate-crypto/go-ipa v0.0.0-20240724233137-53bbb0ceb27a // indirect
 	github.com/danieljoos/wincred v1.2.3 // indirect
 	github.com/davidlazar/go-crypto v0.0.0-20200604182044-b73af7476f6c // indirect
 	github.com/deckarep/golang-set/v2 v2.6.0 // indirect
@@ -153,7 +152,6 @@ require (
 	github.com/envoyproxy/go-control-plane/envoy v1.36.0 // indirect
 	github.com/envoyproxy/protoc-gen-validate v1.3.0 // indirect
 	github.com/ethereum/c-kzg-4844/v2 v2.1.5 // indirect
-	github.com/ethereum/go-verkle v0.2.2 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/flynn/noise v1.1.0 // indirect
