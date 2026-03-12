@@ -28,7 +28,7 @@ func init() {
 	// Because we use the test binary, we use this hack to customize the help usage.
 	flag.Usage = func() {
 		out := flag.CommandLine.Output()
-		fmt.Fprintf(out, "Usage of %s:\n", os.Args[0])
+		fmt.Fprintf(out, "Usage of %s:\n", os.Args[0]) //nolint:gosec // TODO: G705 - os.Args[0] is binary name, safe for test usage
 		flag.PrintDefaults()
 		fmt.Fprint(out, `Subcommands:
 
@@ -165,7 +165,7 @@ func configureTestReporter() error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Writing report to %s\n", f.Name())
+	fmt.Fprintf(os.Stderr, "Writing report to %s\n", f.Name()) //nolint:gosec // TODO: G705 - f.Name() is temp file path from test, not user input
 
 	reporter = testreporter.NewReporter(f)
 	return nil

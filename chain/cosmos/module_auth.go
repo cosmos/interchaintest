@@ -72,6 +72,7 @@ func (c *CosmosChain) GetModuleAddress(ctx context.Context, moduleName string) (
 }
 
 // GetGovernanceAddress performs a query to get the address of the chain's x/gov module
+//
 // Deprecated: use AuthQueryModuleAddress(ctx, "gov") instead.
 func (c *CosmosChain) GetGovernanceAddress(ctx context.Context) (string, error) {
 	return c.GetModuleAddress(ctx, "gov")

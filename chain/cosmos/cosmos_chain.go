@@ -24,8 +24,8 @@ import (
 	"github.com/cosmos/evm/crypto/ethsecp256k1"
 	ethhd "github.com/cosmos/evm/crypto/hd"
 	ethkeyring "github.com/cosmos/evm/crypto/keyring"
-	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types" // nolint:staticcheck
-	chanTypes "github.com/cosmos/ibc-go/v10/modules/core/04-channel/types"
+	clienttypes "github.com/cosmos/ibc-go/v11/modules/core/02-client/types" // nolint:staticcheck
+	chanTypes "github.com/cosmos/ibc-go/v11/modules/core/04-channel/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
@@ -995,7 +995,7 @@ func (c *CosmosChain) Start(testName string, ctx context.Context, additionalGene
 			zap.String("chain", exportGenesisChain),
 			zap.String("path", exportGenesis),
 		)
-		_ = os.WriteFile(exportGenesis, genbz, 0o600)
+		_ = os.WriteFile(exportGenesis, genbz, 0o600) //nolint:gosec // TODO: G703 - exportGenesis is from test config, not user input
 	}
 
 	chainNodes := c.Nodes()

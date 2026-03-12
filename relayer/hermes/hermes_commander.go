@@ -7,8 +7,8 @@ import (
 
 	"go.uber.org/zap"
 
-	ibcexported "github.com/cosmos/ibc-go/v10/modules/core/03-connection/types"
-	"github.com/cosmos/ibc-go/v10/modules/core/23-commitment/types"
+	ibcexported "github.com/cosmos/ibc-go/v11/modules/core/03-connection/types"
+	"github.com/cosmos/ibc-go/v11/modules/core/23-commitment/types"
 
 	"github.com/cosmos/interchaintest/v11/ibc"
 	"github.com/cosmos/interchaintest/v11/relayer"
