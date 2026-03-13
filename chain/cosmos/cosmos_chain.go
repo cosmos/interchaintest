@@ -21,13 +21,11 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 
-	"github.com/cosmos/evm/crypto/ethsecp256k1"
-	ethhd "github.com/cosmos/evm/crypto/hd"
-	ethkeyring "github.com/cosmos/evm/crypto/keyring"
 	clienttypes "github.com/cosmos/ibc-go/v11/modules/core/02-client/types" // nolint:staticcheck
 	chanTypes "github.com/cosmos/ibc-go/v11/modules/core/04-channel/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
@@ -110,16 +108,10 @@ func NewCosmosChain(testName string, chainConfig ibc.ChainConfig, numValidators 
 		}
 	}
 
-	registry := chainConfig.EncodingConfig.InterfaceRegistry
+	registry := codectypes.NewInterfaceRegistry()
 	cryptocodec.RegisterInterfaces(registry)
 	cdc := codec.NewProtoCodec(registry)
-
-	var kr keyring.Keyring
-	if chainConfig.SigningAlgorithm == ethsecp256k1.KeyType {
-		kr = keyring.NewInMemory(cdc, ethkeyring.Option())
-	} else {
-		kr = keyring.NewInMemory(cdc)
-	}
+	kr := keyring.NewInMemory(cdc)
 
 	return &CosmosChain{
 		testName:      testName,
@@ -328,20 +320,12 @@ func (c *CosmosChain) BuildRelayerWallet(ctx context.Context, keyName string) (i
 		return nil, fmt.Errorf("invalid coin type: %w", err)
 	}
 
-	var keyAlgo keyring.SignatureAlgo
-
-	if c.cfg.SigningAlgorithm == ethsecp256k1.KeyType {
-		keyAlgo = ethhd.EthSecp256k1
-	} else {
-		keyAlgo = hd.Secp256k1
-	}
-
 	info, mnemonic, err := c.keyring.NewMnemonic(
 		keyName,
 		keyring.English,
 		hd.CreateHDPath(uint32(coinType), 0, 0).String(),
 		"", // Empty passphrase.
-		keyAlgo,
+		hd.Secp256k1,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create mnemonic: %w", err)

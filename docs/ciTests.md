@@ -128,13 +128,13 @@ jobs:
         fail-fast: false
 
     steps:
-      - name: Set up Go 1.23
-        uses: actions/setup-go@v5
+      - name: Set up Go 1.19
+        uses: actions/setup-go@v3
         with:
-          go-version: 1.23
+          go-version: 1.19
 
       - name: checkout chain
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Download Tarball Artifact
         uses: actions/download-artifact@v4
@@ -237,13 +237,13 @@ The example below will spin up 9 runners, one for each test.
         fail-fast: false
 
     steps:
-      - name: Set up Go 1.23
-        uses: actions/setup-go@v5
+      - name: Set up Go 1.19
+        uses: actions/setup-go@v3
         with:
-          go-version: 1.23
+          go-version: 1.19
 
       - name: checkout chain
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Download Tarball Artifact
         uses: actions/download-artifact@v4
