@@ -1,7 +1,7 @@
 package types
 
 import (
-	storetypes "cosmossdk.io/store/types"
+	storetypes "github.com/cosmos/cosmos-sdk/store/v2/types"
 
 	clienttypes "github.com/cosmos/ibc-go/v11/modules/core/02-client/types" // nolint:staticcheck
 	"github.com/cosmos/ibc-go/v11/modules/core/exported"
