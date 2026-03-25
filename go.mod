@@ -26,7 +26,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.54.0-rc.3
 	github.com/cosmos/cosmos-sdk/store/v2 v2.0.0-rc.0
 	github.com/cosmos/gogoproto v1.7.2
-	github.com/cosmos/ibc-go/v11 v11.0.0-20260319183356-4af8aa6a0c08
+	github.com/cosmos/ibc-go/v11 v11.0.0-20260325173357-652e00d1f8f0
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/docker/go-connections v0.6.0
@@ -67,7 +67,6 @@ require (
 	cosmossdk.io/errors v1.1.0 // indirect
 	cosmossdk.io/log/v2 v2.1.0-rc.0 // indirect
 	cosmossdk.io/schema v1.1.0 // indirect
-	cosmossdk.io/store v1.10.0-rc.2.0.20260317184211-2c58078d0561 // indirect
 	filippo.io/edwards25519 v1.2.0 // indirect
 	github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4 // indirect
 	github.com/99designs/keyring v1.2.2 // indirect
