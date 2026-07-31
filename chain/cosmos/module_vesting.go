@@ -15,7 +15,7 @@ import (
 // All vesting accounts created will have their start time set by the committed block's time. The end_time must be provided as a UNIX epoch timestamp.
 func (tn *ChainNode) VestingCreateAccount(ctx context.Context, keyName string, toAddr string, coin string, endTime int64, flags ...string) error {
 	cmd := []string{
-		"vesting", "create-vesting-account", toAddr, coin, fmt.Sprintf("%d", endTime),
+		vestingModule, "create-vesting-account", toAddr, coin, fmt.Sprintf("%d", endTime),
 	}
 
 	if len(flags) > 0 {
@@ -29,7 +29,7 @@ func (tn *ChainNode) VestingCreateAccount(ctx context.Context, keyName string, t
 // VestingCreatePermanentLockedAccount creates a new vesting account funded with an allocation of tokens that are locked indefinitely.
 func (tn *ChainNode) VestingCreatePermanentLockedAccount(ctx context.Context, keyName string, toAddr string, coin string, flags ...string) error {
 	cmd := []string{
-		"vesting", "create-permanent-locked-account", toAddr, coin,
+		vestingModule, "create-permanent-locked-account", toAddr, coin,
 	}
 
 	if len(flags) > 0 {
@@ -56,7 +56,7 @@ func (tn *ChainNode) VestingCreatePeriodicAccount(ctx context.Context, keyName s
 	}
 
 	cmd := []string{
-		"vesting", "create-periodic-vesting-account", toAddr, path.Join(tn.HomeDir(), file),
+		vestingModule, "create-periodic-vesting-account", toAddr, path.Join(tn.HomeDir(), file),
 	}
 
 	if len(flags) > 0 {

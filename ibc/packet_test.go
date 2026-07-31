@@ -5,6 +5,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"go.uber.org/multierr"
+
+	transfertypes "github.com/cosmos/ibc-go/v11/modules/apps/transfer/types"
 )
 
 func validPacket() Packet {
@@ -12,9 +14,9 @@ func validPacket() Packet {
 		Sequence:         1,
 		TimeoutHeight:    "100",
 		TimeoutTimestamp: 0,
-		SourcePort:       "transfer",
+		SourcePort:       transfertypes.PortID,
 		SourceChannel:    "channel-0",
-		DestPort:         "transfer",
+		DestPort:         transfertypes.PortID,
 		DestChannel:      "channel-1",
 		Data:             []byte(`fake data`),
 	}
@@ -56,35 +58,35 @@ func TestPacket_Validate(t *testing.T) {
 				"invalid packet source port:",
 			},
 			{
-				Packet{Sequence: 1, SourcePort: "transfer"},
+				Packet{Sequence: 1, SourcePort: transfertypes.PortID},
 				"invalid packet source channel:",
 			},
 			{
-				Packet{Sequence: 1, SourcePort: "transfer", SourceChannel: "@"},
+				Packet{Sequence: 1, SourcePort: transfertypes.PortID, SourceChannel: "@"},
 				"invalid packet source channel:",
 			},
 			{
-				Packet{Sequence: 1, SourcePort: "transfer", SourceChannel: "channel-0"},
+				Packet{Sequence: 1, SourcePort: transfertypes.PortID, SourceChannel: "channel-0"},
 				"invalid packet destination port:",
 			},
 			{
-				Packet{Sequence: 1, SourcePort: "transfer", SourceChannel: "channel-0", DestPort: "@"},
+				Packet{Sequence: 1, SourcePort: transfertypes.PortID, SourceChannel: "channel-0", DestPort: "@"},
 				"invalid packet destination port:",
 			},
 			{
-				Packet{Sequence: 1, SourcePort: "transfer", SourceChannel: "channel-0", DestPort: "transfer"},
+				Packet{Sequence: 1, SourcePort: transfertypes.PortID, SourceChannel: "channel-0", DestPort: transfertypes.PortID},
 				"invalid packet destination channel:",
 			},
 			{
-				Packet{Sequence: 1, SourcePort: "transfer", SourceChannel: "channel-0", DestPort: "transfer", DestChannel: "@"},
+				Packet{Sequence: 1, SourcePort: transfertypes.PortID, SourceChannel: "channel-0", DestPort: transfertypes.PortID, DestChannel: "@"},
 				"invalid packet destination channel:",
 			},
 			{
-				Packet{Sequence: 1, SourcePort: "transfer", SourceChannel: "channel-0", DestPort: "transfer", DestChannel: "channel-0"},
+				Packet{Sequence: 1, SourcePort: transfertypes.PortID, SourceChannel: "channel-0", DestPort: transfertypes.PortID, DestChannel: "channel-0"},
 				"packet timeout height and packet timeout timestamp cannot both be 0",
 			},
 			{
-				Packet{Sequence: 1, SourcePort: "transfer", SourceChannel: "channel-0", DestPort: "transfer", DestChannel: "channel-0", TimeoutHeight: "100"},
+				Packet{Sequence: 1, SourcePort: transfertypes.PortID, SourceChannel: "channel-0", DestPort: transfertypes.PortID, DestChannel: "channel-0", TimeoutHeight: "100"},
 				"packet data bytes cannot be empty",
 			},
 		} {

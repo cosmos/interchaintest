@@ -19,6 +19,7 @@ import (
 
 const (
 	RlyDefaultUIDGID = "100:1000"
+	rlyCommand       = "rly"
 )
 
 // CosmosRelayer is the ibc.Relayer implementation for github.com/cosmos/relayer.
@@ -128,7 +129,7 @@ type commander struct {
 }
 
 func (commander) Name() string {
-	return "rly"
+	return rlyCommand
 }
 
 func (commander) DockerUser() string {
@@ -137,14 +138,14 @@ func (commander) DockerUser() string {
 
 func (commander) AddChainConfiguration(containerFilePath, homeDir string) []string {
 	return []string{
-		"rly", "chains", "add", "-f", containerFilePath,
+		rlyCommand, "chains", "add", "-f", containerFilePath,
 		"--home", homeDir,
 	}
 }
 
 func (commander) AddKey(chainID, keyName, coinType, signingAlgorithm, homeDir string) []string {
 	return []string{
-		"rly", "keys", "add", chainID, keyName,
+		rlyCommand, "keys", "add", chainID, keyName,
 		"--coin-type", fmt.Sprint(coinType),
 		"--signing-algorithm", signingAlgorithm,
 		"--home", homeDir,
@@ -153,7 +154,7 @@ func (commander) AddKey(chainID, keyName, coinType, signingAlgorithm, homeDir st
 
 func (commander) CreateChannel(pathName string, opts ibc.CreateChannelOptions, homeDir string) []string {
 	cmd := []string{
-		"rly", "tx", "channel", pathName,
+		rlyCommand, "tx", "channel", pathName,
 		"--src-port", opts.SourcePortName,
 		"--dst-port", opts.DestPortName,
 		"--order", opts.Order.String(),
@@ -186,7 +187,7 @@ func createClientOptsHelper(opts ibc.CreateClientOptions) []string {
 }
 
 func (commander) CreateClients(pathName string, opts ibc.CreateClientOptions, homeDir string) []string {
-	cmd := []string{"rly", "tx", "clients", pathName, "--home", homeDir}
+	cmd := []string{rlyCommand, "tx", "clients", pathName, "--home", homeDir}
 
 	clientOptions := createClientOptsHelper(opts)
 	cmd = append(cmd, clientOptions...)
@@ -195,7 +196,7 @@ func (commander) CreateClients(pathName string, opts ibc.CreateClientOptions, ho
 }
 
 func (commander) CreateClient(srcChainID, dstChainID, pathName string, opts ibc.CreateClientOptions, homeDir string) []string {
-	cmd := []string{"rly", "tx", "client", srcChainID, dstChainID, pathName, "--home", homeDir}
+	cmd := []string{rlyCommand, "tx", "client", srcChainID, dstChainID, pathName, "--home", homeDir}
 
 	clientOptions := createClientOptsHelper(opts)
 	cmd = append(cmd, clientOptions...)
@@ -205,13 +206,13 @@ func (commander) CreateClient(srcChainID, dstChainID, pathName string, opts ibc.
 
 func (commander) CreateConnections(pathName string, homeDir string) []string {
 	return []string{
-		"rly", "tx", "connection", pathName,
+		rlyCommand, "tx", "connection", pathName,
 		"--home", homeDir,
 	}
 }
 
 func (commander) Flush(pathName, channelID, homeDir string) []string {
-	cmd := []string{"rly", "tx", "flush"}
+	cmd := []string{rlyCommand, "tx", "flush"}
 	if pathName != "" {
 		cmd = append(cmd, pathName)
 		if channelID != "" {
@@ -224,14 +225,14 @@ func (commander) Flush(pathName, channelID, homeDir string) []string {
 
 func (commander) GeneratePath(srcChainID, dstChainID, pathName, homeDir string) []string {
 	return []string{
-		"rly", "paths", "new", srcChainID, dstChainID, pathName,
+		rlyCommand, "paths", "new", srcChainID, dstChainID, pathName,
 		"--home", homeDir,
 	}
 }
 
 func (commander) UpdatePath(pathName, homeDir string, opts ibc.PathUpdateOptions) []string {
 	command := []string{
-		"rly", "paths", "update", pathName,
+		rlyCommand, "paths", "update", pathName,
 		"--home", homeDir,
 	}
 
@@ -265,28 +266,28 @@ func (commander) UpdatePath(pathName, homeDir string, opts ibc.PathUpdateOptions
 
 func (commander) GetChannels(chainID, homeDir string) []string {
 	return []string{
-		"rly", "q", "channels", chainID,
+		rlyCommand, "q", "channels", chainID,
 		"--home", homeDir,
 	}
 }
 
 func (commander) GetConnections(chainID, homeDir string) []string {
 	return []string{
-		"rly", "q", "connections", chainID,
+		rlyCommand, "q", "connections", chainID,
 		"--home", homeDir,
 	}
 }
 
 func (commander) GetClients(chainID, homeDir string) []string {
 	return []string{
-		"rly", "q", "clients", chainID,
+		rlyCommand, "q", "clients", chainID,
 		"--home", homeDir,
 	}
 }
 
 func (commander) LinkPath(pathName, homeDir string, channelOpts ibc.CreateChannelOptions, clientOpt ibc.CreateClientOptions) []string {
 	cmd := []string{
-		"rly", "tx", "link", pathName,
+		rlyCommand, "tx", "link", pathName,
 		"--src-port", channelOpts.SourcePortName,
 		"--dst-port", channelOpts.DestPortName,
 		"--order", channelOpts.Order.String(),
@@ -303,7 +304,7 @@ func (commander) LinkPath(pathName, homeDir string, channelOpts ibc.CreateChanne
 
 func (commander) RestoreKey(chainID, keyName, coinType, signingAlgorithm, mnemonic, homeDir string) []string {
 	return []string{
-		"rly", "keys", "restore", chainID, keyName, mnemonic,
+		rlyCommand, "keys", "restore", chainID, keyName, mnemonic,
 		"--coin-type", fmt.Sprint(coinType),
 		"--signing-algorithm", signingAlgorithm,
 		"--home", homeDir,
@@ -312,7 +313,7 @@ func (commander) RestoreKey(chainID, keyName, coinType, signingAlgorithm, mnemon
 
 func (c commander) StartRelayer(homeDir string, pathNames ...string) []string {
 	cmd := []string{
-		"rly", "start", "--debug",
+		rlyCommand, "start", "--debug",
 		"--home", homeDir,
 	}
 	cmd = append(cmd, c.extraStartFlags...)
@@ -322,7 +323,7 @@ func (c commander) StartRelayer(homeDir string, pathNames ...string) []string {
 
 func (commander) UpdateClients(pathName, homeDir string) []string {
 	return []string{
-		"rly", "tx", "update-clients", pathName,
+		rlyCommand, "tx", "update-clients", pathName,
 		"--home", homeDir,
 	}
 }
@@ -420,7 +421,7 @@ func (c commander) ParseGetClientsOutput(stdout, stderr string) (ibc.ClientOutpu
 
 func (commander) Init(homeDir string) []string {
 	return []string{
-		"rly", "config", "init",
+		rlyCommand, "config", "init",
 		"--home", homeDir,
 	}
 }

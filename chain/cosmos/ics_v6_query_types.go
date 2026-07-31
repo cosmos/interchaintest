@@ -91,7 +91,7 @@ func (tn *ChainNode) GetConsumerChainSpawnTime(ctx context.Context, chainID stri
 		spawnTime := gjson.GetBytes(consumerChain, "init_params.spawn_time").Time()
 		return spawnTime, nil
 	} else {
-		proposals, _, err := tn.ExecQuery(ctx, "gov", "proposals")
+		proposals, _, err := tn.ExecQuery(ctx, govModule, "proposals")
 		if err != nil {
 			return time.Time{}, fmt.Errorf("failed to query proposed chains: %w", err)
 		}

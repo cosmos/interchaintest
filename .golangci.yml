@@ -16,6 +16,7 @@ linters:
     - errname
     - exhaustive
     - forbidigo
+    - goconst
     - gocritic
     - godot
     - gosec
@@ -37,6 +38,11 @@ linters:
     - wastedassign
     - whitespace
   settings:
+    goconst:
+      ignore-tests: true
+      min-occurrences: 6
+      ignore-string-values:
+        - ^--
     gocritic:
       disabled-checks:
         - appendAssign

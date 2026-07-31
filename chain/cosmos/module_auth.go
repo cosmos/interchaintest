@@ -75,7 +75,7 @@ func (c *CosmosChain) GetModuleAddress(ctx context.Context, moduleName string) (
 //
 // Deprecated: use AuthQueryModuleAddress(ctx, "gov") instead.
 func (c *CosmosChain) GetGovernanceAddress(ctx context.Context) (string, error) {
-	return c.GetModuleAddress(ctx, "gov")
+	return c.GetModuleAddress(ctx, govModule)
 }
 
 func (c *CosmosChain) AuthQueryBech32Prefix(ctx context.Context) (string, error) {

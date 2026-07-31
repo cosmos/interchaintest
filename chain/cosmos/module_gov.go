@@ -17,8 +17,8 @@ import (
 // VoteOnProposal submits a vote for the specified proposal.
 func (tn *ChainNode) VoteOnProposal(ctx context.Context, keyName string, proposalID uint64, vote string) error {
 	_, err := tn.ExecTx(ctx, keyName,
-		"gov", "vote",
-		fmt.Sprintf("%d", proposalID), vote, "--gas", "auto",
+		govModule, "vote",
+		fmt.Sprintf("%d", proposalID), vote, gasFlag, autoGas,
 	)
 	return err
 }
@@ -37,8 +37,8 @@ func (tn *ChainNode) SubmitProposal(ctx context.Context, keyName string, prop Tx
 	}
 
 	command := []string{
-		"gov", "submit-proposal",
-		path.Join(tn.HomeDir(), file), "--gas", "auto",
+		govModule, "submit-proposal",
+		path.Join(tn.HomeDir(), file), gasFlag, autoGas,
 	}
 
 	return tn.ExecTx(ctx, keyName, command...)
@@ -78,7 +78,7 @@ func (tn *ChainNode) UpgradeProposal(ctx context.Context, keyName string, prop S
 		return tn.SubmitProposal(ctx, keyName, proposal)
 	}
 	command := []string{
-		"gov", "submit-proposal",
+		govModule, "submit-proposal",
 		"software-upgrade", prop.Name,
 		"--upgrade-height", strconv.FormatInt(prop.Height, 10),
 		"--title", prop.Title,
@@ -96,7 +96,7 @@ func (tn *ChainNode) UpgradeProposal(ctx context.Context, keyName string, prop S
 // TextProposal submits a text governance proposal to the chain.
 func (tn *ChainNode) TextProposal(ctx context.Context, keyName string, prop TextProposal) (string, error) {
 	command := []string{
-		"gov", "submit-proposal",
+		govModule, "submit-proposal",
 		"--type", "text",
 		"--title", prop.Title,
 		"--description", prop.Description,

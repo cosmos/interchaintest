@@ -28,12 +28,15 @@ import (
 	icatypes "github.com/cosmos/ibc-go/v11/modules/apps/27-interchain-accounts/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
+	clientflags "github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authTx "github.com/cosmos/cosmos-sdk/x/auth/tx"
+	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	tmjson "github.com/cometbft/cometbft/libs/json"
@@ -120,6 +123,11 @@ const (
 	privValPort = "1234/tcp"
 
 	cometMockRawPort = "22331"
+	gasFlag          = "--" + clientflags.FlagGas
+	homeFlag         = "--" + clientflags.FlagHome
+	autoGas          = clientflags.GasFlagAuto
+	govModule        = govtypes.ModuleName
+	vestingModule    = vestingtypes.ModuleName
 )
 
 var sentryPorts = nat.PortMap{
@@ -516,7 +524,7 @@ func (tn *ChainNode) TxCommand(keyName string, command ...string) []string {
 		if command[i] == "--fees" {
 			feesFound = true
 		}
-		if command[i] == "--gas" {
+		if command[i] == gasFlag {
 			gasFound = true
 		}
 	}
@@ -527,7 +535,7 @@ func (tn *ChainNode) TxCommand(keyName string, command ...string) []string {
 		command = append(command, "--gas-adjustment", strconv.FormatFloat(tn.Chain.Config().GasAdjustment, 'f', -1, 64))
 	}
 	if !gasFound && !feesFound && tn.Chain.Config().Gas != "" {
-		command = append(command, "--gas", tn.Chain.Config().Gas)
+		command = append(command, gasFlag, tn.Chain.Config().Gas)
 	}
 	return tn.NodeCommand(append(command,
 		"--from", keyName,
@@ -618,7 +626,7 @@ func (tn *ChainNode) NodeCommand(command ...string) []string {
 func (tn *ChainNode) BinCommand(command ...string) []string {
 	command = append([]string{tn.Chain.Config().Bin}, command...)
 	return append(command,
-		"--home", tn.HomeDir(),
+		homeFlag, tn.HomeDir(),
 	)
 }
 
@@ -814,7 +822,7 @@ func (tn *ChainNode) CollectGentxs(ctx context.Context) error {
 		command = append(command, "genesis")
 	}
 
-	command = append(command, "collect-gentxs", "--home", tn.HomeDir())
+	command = append(command, "collect-gentxs", homeFlag, tn.HomeDir())
 
 	tn.lock.Lock()
 	defer tn.lock.Unlock()
@@ -843,7 +851,7 @@ func (tn *ChainNode) SendIBCTransfer(
 	command := []string{
 		"ibc-transfer", "transfer", port, channelID,
 		amount.Address, fmt.Sprintf("%s%s", amount.Amount.String(), amount.Denom),
-		"--gas", "auto",
+		gasFlag, autoGas,
 	}
 	if options.Timeout != nil {
 		if options.Timeout.NanoSeconds > 0 {
@@ -1023,7 +1031,7 @@ func (tn *ChainNode) ExportState(ctx context.Context, height int64) (string, err
 		doc              = "state_export.json"
 		docPath          = path.Join(tn.HomeDir(), doc)
 		isNewerThanSdk47 = tn.IsAboveSDK47(ctx)
-		command          = []string{"export", "--height", fmt.Sprint(height), "--home", tn.HomeDir()}
+		command          = []string{"export", "--height", fmt.Sprint(height), homeFlag, tn.HomeDir()}
 	)
 
 	if isNewerThanSdk47 {
@@ -1056,7 +1064,7 @@ func (tn *ChainNode) UnsafeResetAll(ctx context.Context) error {
 		command = append(command, "comet")
 	}
 
-	command = append(command, "unsafe-reset-all", "--home", tn.HomeDir())
+	command = append(command, "unsafe-reset-all", homeFlag, tn.HomeDir())
 
 	_, _, err := tn.Exec(ctx, command, tn.Chain.Config().Env)
 	return err
@@ -1073,7 +1081,7 @@ func (tn *ChainNode) CreateNodeContainer(ctx context.Context) error {
 		}
 		cmd = []string{"sh", "-c", startCmd}
 	} else {
-		cmd = []string{chainCfg.Bin, "start", "--home", tn.HomeDir()}
+		cmd = []string{chainCfg.Bin, "start", homeFlag, tn.HomeDir()}
 		if len(chainCfg.AdditionalStartArgs) > 0 {
 			cmd = append(cmd, chainCfg.AdditionalStartArgs...)
 		}
@@ -1309,7 +1317,7 @@ func (tn *ChainNode) NodeID(ctx context.Context) (string, error) {
 func (tn *ChainNode) KeyBech32(ctx context.Context, name string, bech string) (string, error) {
 	command := []string{
 		tn.Chain.Config().Bin, "keys", "show", "--address", name,
-		"--home", tn.HomeDir(),
+		homeFlag, tn.HomeDir(),
 		"--keyring-backend", keyring.BackendTest,
 	}
 
