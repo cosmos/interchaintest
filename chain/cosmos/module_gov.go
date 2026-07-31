@@ -2,16 +2,13 @@ package cosmos
 
 import (
 	"context"
-	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"path"
-	"path/filepath"
 	"strconv"
 
 	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
-	paramsutils "github.com/cosmos/cosmos-sdk/x/params/client/utils"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
 	"github.com/cosmos/interchaintest/v11/dockerutil"
@@ -108,31 +105,6 @@ func (tn *ChainNode) TextProposal(ctx context.Context, keyName string, prop Text
 	if prop.Expedited {
 		command = append(command, "--is-expedited=true")
 	}
-	return tn.ExecTx(ctx, keyName, command...)
-}
-
-// ParamChangeProposal submits a param change proposal to the chain, signed by keyName.
-func (tn *ChainNode) ParamChangeProposal(ctx context.Context, keyName string, prop *paramsutils.ParamChangeProposalJSON) (string, error) {
-	content, err := json.Marshal(prop)
-	if err != nil {
-		return "", err
-	}
-
-	hash := sha256.Sum256(content)
-	proposalFilename := fmt.Sprintf("%x.json", hash)
-	err = tn.WriteFile(ctx, content, proposalFilename)
-	if err != nil {
-		return "", fmt.Errorf("writing param change proposal: %w", err)
-	}
-
-	proposalPath := filepath.Join(tn.HomeDir(), proposalFilename)
-
-	command := []string{
-		"gov", "submit-proposal",
-		"param-change",
-		proposalPath,
-	}
-
 	return tn.ExecTx(ctx, keyName, command...)
 }
 

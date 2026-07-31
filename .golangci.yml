@@ -16,7 +16,6 @@ linters:
     - errname
     - exhaustive
     - forbidigo
-    - goconst
     - gocritic
     - godot
     - gosec

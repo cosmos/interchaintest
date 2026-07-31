@@ -32,7 +32,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	paramsutils "github.com/cosmos/cosmos-sdk/x/params/client/utils"
 
 	"github.com/cosmos/interchaintest/v11/blockdb"
 	wasmtypes "github.com/cosmos/interchaintest/v11/chain/cosmos/08-wasm-types"
@@ -486,16 +485,6 @@ func (c *CosmosChain) TextProposal(ctx context.Context, keyName string, prop Tex
 	if err != nil {
 		return tx, fmt.Errorf("failed to submit upgrade proposal: %w", err)
 	}
-	return c.txProposal(txHash)
-}
-
-// ParamChangeProposal submits a param change proposal to the chain, signed by keyName.
-func (c *CosmosChain) ParamChangeProposal(ctx context.Context, keyName string, prop *paramsutils.ParamChangeProposalJSON) (tx TxProposal, _ error) {
-	txHash, err := c.GetFullNode().ParamChangeProposal(ctx, keyName, prop)
-	if err != nil {
-		return tx, fmt.Errorf("failed to submit param change proposal: %w", err)
-	}
-
 	return c.txProposal(txHash)
 }
 
