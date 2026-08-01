@@ -10,12 +10,12 @@ import (
 	"path"
 	"path/filepath"
 
-	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-
 	"github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/cosmos/interchaintest/v11/testutil"
 )
+
+const wasmCommand = "wasm"
 
 type InstantiateContractAttribute struct {
 	Value string `json:"value"`
@@ -52,7 +52,7 @@ func (tn *ChainNode) StoreContract(ctx context.Context, keyName string, fileName
 		return "", fmt.Errorf("writing contract file to docker volume: %w", err)
 	}
 
-	cmd := []string{wasmtypes.ModuleName, "store", path.Join(tn.HomeDir(), file), gasFlag, autoGas}
+	cmd := []string{wasmCommand, "store", path.Join(tn.HomeDir(), file), gasFlag, autoGas}
 	cmd = append(cmd, extraExecTxArgs...)
 
 	if _, err := tn.ExecTx(ctx, keyName, cmd...); err != nil {
@@ -64,7 +64,7 @@ func (tn *ChainNode) StoreContract(ctx context.Context, keyName string, fileName
 		return "", fmt.Errorf("wait for blocks: %w", err)
 	}
 
-	stdout, _, err := tn.ExecQuery(ctx, wasmtypes.ModuleName, "list-code", "--reverse")
+	stdout, _, err := tn.ExecQuery(ctx, wasmCommand, "list-code", "--reverse")
 	if err != nil {
 		return "", err
 	}
@@ -79,7 +79,7 @@ func (tn *ChainNode) StoreContract(ctx context.Context, keyName string, fileName
 
 // InstantiateContract takes a code id for a smart contract and initialization message and returns the instantiated contract address.
 func (tn *ChainNode) InstantiateContract(ctx context.Context, keyName string, codeID string, initMessage string, needsNoAdminFlag bool, extraExecTxArgs ...string) (string, error) {
-	command := []string{wasmtypes.ModuleName, "instantiate", codeID, initMessage, "--label", "wasm-contract"}
+	command := []string{wasmCommand, "instantiate", codeID, initMessage, "--label", "wasm-contract"}
 	command = append(command, extraExecTxArgs...)
 	if needsNoAdminFlag {
 		command = append(command, "--no-admin")
@@ -97,7 +97,7 @@ func (tn *ChainNode) InstantiateContract(ctx context.Context, keyName string, co
 		return "", fmt.Errorf("error in transaction (code: %d): %s", txResp.Code, txResp.RawLog)
 	}
 
-	stdout, _, err := tn.ExecQuery(ctx, wasmtypes.ModuleName, "list-contract-by-code", codeID)
+	stdout, _, err := tn.ExecQuery(ctx, wasmCommand, "list-contract-by-code", codeID)
 	if err != nil {
 		return "", err
 	}
@@ -113,7 +113,7 @@ func (tn *ChainNode) InstantiateContract(ctx context.Context, keyName string, co
 
 // ExecuteContract executes a contract transaction with a message using it's address.
 func (tn *ChainNode) ExecuteContract(ctx context.Context, keyName string, contractAddress string, message string, extraExecTxArgs ...string) (res *types.TxResponse, err error) {
-	cmd := []string{wasmtypes.ModuleName, "execute", contractAddress, message}
+	cmd := []string{wasmCommand, "execute", contractAddress, message}
 	cmd = append(cmd, extraExecTxArgs...)
 
 	txHash, err := tn.ExecTx(ctx, keyName, cmd...)
@@ -155,7 +155,7 @@ func (tn *ChainNode) QueryContract(ctx context.Context, contractAddress string, 
 		}
 	}
 
-	stdout, _, err := tn.ExecQuery(ctx, wasmtypes.ModuleName, "contract-state", "smart", contractAddress, string(query))
+	stdout, _, err := tn.ExecQuery(ctx, wasmCommand, "contract-state", "smart", contractAddress, string(query))
 	if err != nil {
 		return err
 	}
@@ -165,7 +165,7 @@ func (tn *ChainNode) QueryContract(ctx context.Context, contractAddress string, 
 
 // MigrateContract performs contract migration.
 func (tn *ChainNode) MigrateContract(ctx context.Context, keyName string, contractAddress string, codeID string, message string, extraExecTxArgs ...string) (res *types.TxResponse, err error) {
-	cmd := []string{wasmtypes.ModuleName, "migrate", contractAddress, codeID, message}
+	cmd := []string{wasmCommand, "migrate", contractAddress, codeID, message}
 	cmd = append(cmd, extraExecTxArgs...)
 
 	txHash, err := tn.ExecTx(ctx, keyName, cmd...)
@@ -214,7 +214,7 @@ func (tn *ChainNode) StoreClientContract(ctx context.Context, keyName string, fi
 // DumpContractState dumps the state of a contract at a block height.
 func (tn *ChainNode) DumpContractState(ctx context.Context, contractAddress string, height int64) (*DumpContractStateResponse, error) {
 	stdout, _, err := tn.ExecQuery(ctx,
-		wasmtypes.ModuleName, "contract-state", "all", contractAddress,
+		wasmCommand, "contract-state", "all", contractAddress,
 		"--height", fmt.Sprint(height),
 	)
 	if err != nil {
@@ -231,7 +231,7 @@ func (tn *ChainNode) DumpContractState(ctx context.Context, contractAddress stri
 // QueryContractInfo queries the information about a contract like the admin and code_id.
 func (tn *ChainNode) QueryContractInfo(ctx context.Context, contractAddress string) (*ContractInfoResponse, error) {
 	stdout, _, err := tn.ExecQuery(ctx,
-		wasmtypes.ModuleName, "contract", contractAddress,
+		wasmCommand, "contract", contractAddress,
 	)
 	if err != nil {
 		return nil, err
