@@ -7,6 +7,8 @@ import (
 	"path"
 	"strconv"
 
+	clientflags "github.com/cosmos/cosmos-sdk/client/flags"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
@@ -17,8 +19,8 @@ import (
 // VoteOnProposal submits a vote for the specified proposal.
 func (tn *ChainNode) VoteOnProposal(ctx context.Context, keyName string, proposalID uint64, vote string) error {
 	_, err := tn.ExecTx(ctx, keyName,
-		govModule, "vote",
-		fmt.Sprintf("%d", proposalID), vote, gasFlag, autoGas,
+		govtypes.ModuleName, "vote",
+		fmt.Sprintf("%d", proposalID), vote, "--gas", clientflags.GasFlagAuto,
 	)
 	return err
 }
@@ -37,8 +39,8 @@ func (tn *ChainNode) SubmitProposal(ctx context.Context, keyName string, prop Tx
 	}
 
 	command := []string{
-		govModule, "submit-proposal",
-		path.Join(tn.HomeDir(), file), gasFlag, autoGas,
+		govtypes.ModuleName, "submit-proposal",
+		path.Join(tn.HomeDir(), file), "--gas", clientflags.GasFlagAuto,
 	}
 
 	return tn.ExecTx(ctx, keyName, command...)
@@ -78,7 +80,7 @@ func (tn *ChainNode) UpgradeProposal(ctx context.Context, keyName string, prop S
 		return tn.SubmitProposal(ctx, keyName, proposal)
 	}
 	command := []string{
-		govModule, "submit-proposal",
+		govtypes.ModuleName, "submit-proposal",
 		"software-upgrade", prop.Name,
 		"--upgrade-height", strconv.FormatInt(prop.Height, 10),
 		"--title", prop.Title,
@@ -96,7 +98,7 @@ func (tn *ChainNode) UpgradeProposal(ctx context.Context, keyName string, prop S
 // TextProposal submits a text governance proposal to the chain.
 func (tn *ChainNode) TextProposal(ctx context.Context, keyName string, prop TextProposal) (string, error) {
 	command := []string{
-		govModule, "submit-proposal",
+		govtypes.ModuleName, "submit-proposal",
 		"--type", "text",
 		"--title", prop.Title,
 		"--description", prop.Description,

@@ -43,6 +43,7 @@ linters:
       min-occurrences: 6
       ignore-string-values:
         - ^--
+        - ^rly$
     gocritic:
       disabled-checks:
         - appendAssign

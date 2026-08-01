@@ -8,6 +8,7 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 )
 
 // AuthQueryAccount performs a query to get the account details of the specified address.
@@ -75,7 +76,7 @@ func (c *CosmosChain) GetModuleAddress(ctx context.Context, moduleName string) (
 //
 // Deprecated: use AuthQueryModuleAddress(ctx, "gov") instead.
 func (c *CosmosChain) GetGovernanceAddress(ctx context.Context) (string, error) {
-	return c.GetModuleAddress(ctx, govModule)
+	return c.GetModuleAddress(ctx, govtypes.ModuleName)
 }
 
 func (c *CosmosChain) AuthQueryBech32Prefix(ctx context.Context) (string, error) {

@@ -17,7 +17,7 @@ func (tn *ChainNode) TokenFactoryCreateDenom(ctx context.Context, user ibc.Walle
 	cmd := []string{"tokenfactory", "create-denom", denomName}
 
 	if gas != 0 {
-		cmd = append(cmd, gasFlag, strconv.FormatUint(gas, 10))
+		cmd = append(cmd, "--gas", strconv.FormatUint(gas, 10))
 	}
 
 	txHash, err := tn.ExecTx(ctx, user.KeyName(), cmd...)
