@@ -5,6 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	transfertypes "github.com/cosmos/ibc-go/v11/modules/apps/transfer/types"
 	chantypes "github.com/cosmos/ibc-go/v11/modules/core/04-channel/types"
 )
 
@@ -19,8 +20,8 @@ func TestChannelOptsConfigured(t *testing.T) {
 
 	// Test invalid Order type in channel opts
 	opts = CreateChannelOptions{
-		SourcePortName: "transfer",
-		DestPortName:   "transfer",
+		SourcePortName: transfertypes.PortID,
+		DestPortName:   transfertypes.PortID,
 		Order:          3,
 		Version:        "123",
 	}

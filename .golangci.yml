@@ -38,6 +38,12 @@ linters:
     - wastedassign
     - whitespace
   settings:
+    goconst:
+      ignore-tests: true
+      min-occurrences: 6
+      ignore-string-values:
+        - ^--
+        - ^rly$
     gocritic:
       disabled-checks:
         - appendAssign

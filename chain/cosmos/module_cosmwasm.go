@@ -10,6 +10,7 @@ import (
 	"path"
 	"path/filepath"
 
+	clientflags "github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/cosmos/interchaintest/v11/testutil"
@@ -50,7 +51,7 @@ func (tn *ChainNode) StoreContract(ctx context.Context, keyName string, fileName
 		return "", fmt.Errorf("writing contract file to docker volume: %w", err)
 	}
 
-	cmd := []string{"wasm", "store", path.Join(tn.HomeDir(), file), "--gas", "auto"}
+	cmd := []string{"wasm", "store", path.Join(tn.HomeDir(), file), "--gas", clientflags.GasFlagAuto}
 	cmd = append(cmd, extraExecTxArgs...)
 
 	if _, err := tn.ExecTx(ctx, keyName, cmd...); err != nil {
@@ -195,7 +196,7 @@ func (tn *ChainNode) StoreClientContract(ctx context.Context, keyName string, fi
 		return "", fmt.Errorf("writing contract file to docker volume: %w", err)
 	}
 
-	cmd := []string{"ibc-wasm", "store-code", path.Join(tn.HomeDir(), file), "--gas", "auto"}
+	cmd := []string{"ibc-wasm", "store-code", path.Join(tn.HomeDir(), file), "--gas", clientflags.GasFlagAuto}
 	cmd = append(cmd, extraExecTxArgs...)
 
 	_, err = tn.ExecTx(ctx, keyName, cmd...)

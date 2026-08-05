@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	transfertypes "github.com/cosmos/ibc-go/v11/modules/apps/transfer/types"
 	chantypes "github.com/cosmos/ibc-go/v11/modules/core/04-channel/types"
 	ptypes "github.com/cosmos/ibc-go/v11/modules/core/05-port/types"
 	host "github.com/cosmos/ibc-go/v11/modules/core/24-host"
@@ -176,7 +177,7 @@ func GetTransferChannel(ctx context.Context, r Relayer, rep RelayerExecReporter,
 	for _, channel := range srcChannels {
 		ch := channel
 
-		if len(ch.ConnectionHops) == 1 && ch.ConnectionHops[0] == srcConnectionID && ch.PortID == "transfer" {
+		if len(ch.ConnectionHops) == 1 && ch.ConnectionHops[0] == srcConnectionID && ch.PortID == transfertypes.PortID {
 			if srcChan != nil {
 				return nil, fmt.Errorf("found multiple transfer channels on %s for connection %s", srcChainID, srcConnectionID)
 			}
@@ -228,8 +229,8 @@ type CreateChannelOptions struct {
 // DefaultChannelOpts returns the default settings for creating an ics20 fungible token transfer channel.
 func DefaultChannelOpts() CreateChannelOptions {
 	return CreateChannelOptions{
-		SourcePortName: "transfer",
-		DestPortName:   "transfer",
+		SourcePortName: transfertypes.PortID,
+		DestPortName:   transfertypes.PortID,
 		Order:          Unordered,
 		Version:        "ics20-1",
 	}

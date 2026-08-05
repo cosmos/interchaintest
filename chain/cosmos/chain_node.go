@@ -28,6 +28,7 @@ import (
 	icatypes "github.com/cosmos/ibc-go/v11/modules/apps/27-interchain-accounts/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
+	clientflags "github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
@@ -843,7 +844,7 @@ func (tn *ChainNode) SendIBCTransfer(
 	command := []string{
 		"ibc-transfer", "transfer", port, channelID,
 		amount.Address, fmt.Sprintf("%s%s", amount.Amount.String(), amount.Denom),
-		"--gas", "auto",
+		"--gas", clientflags.GasFlagAuto,
 	}
 	if options.Timeout != nil {
 		if options.Timeout.NanoSeconds > 0 {

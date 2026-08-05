@@ -11,6 +11,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 )
 
 func (tn *ChainNode) GetKeyInConsumerChain(ctx context.Context, consumer *CosmosChain) (string, error) {
@@ -91,7 +92,7 @@ func (tn *ChainNode) GetConsumerChainSpawnTime(ctx context.Context, chainID stri
 		spawnTime := gjson.GetBytes(consumerChain, "init_params.spawn_time").Time()
 		return spawnTime, nil
 	} else {
-		proposals, _, err := tn.ExecQuery(ctx, "gov", "proposals")
+		proposals, _, err := tn.ExecQuery(ctx, govtypes.ModuleName, "proposals")
 		if err != nil {
 			return time.Time{}, fmt.Errorf("failed to query proposed chains: %w", err)
 		}
