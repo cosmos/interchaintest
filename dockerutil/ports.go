@@ -48,9 +48,10 @@ func GetPort(port int) (nat.PortBinding, *net.TCPListener, error) {
 		return nat.PortBinding{}, nil, err
 	}
 
+	tcpAddr := l.Addr().(*net.TCPAddr)
 	return nat.PortBinding{
-		HostIP:   "0.0.0.0",
-		HostPort: fmt.Sprint(l.Addr().(*net.TCPAddr).Port),
+		HostIP:   tcpAddr.IP.String(),
+		HostPort: fmt.Sprint(tcpAddr.Port),
 	}, l, nil
 }
 
