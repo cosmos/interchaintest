@@ -13,7 +13,7 @@ import (
 type Nanoseconds uint64
 
 // Packet is a packet sent over an IBC channel as defined in ICS-4.
-// See: https://github.com/cosmos/ibc/blob/52a9094a5bc8c5275e25c19d0b2d9e6fd80ba31c/spec/core/ics-004-channel-and-packet-semantics/README.md
+// See: https://github.com/lfdt-ibc/ibc/blob/52a9094a5bc8c5275e25c19d0b2d9e6fd80ba31c/spec/core/ics-004-channel-and-packet-semantics/README.md
 // Proto defined at: github.com/cosmos/ibc-go/v3@v3.0.0/proto/ibc/core/channel/v1/tx.proto.
 type Packet struct {
 	Sequence      uint64 // the order of sends and receives, where a packet with an earlier sequence number must be sent and received before a packet with a later sequence number
@@ -62,7 +62,7 @@ func (packet Packet) Equal(other Packet) bool {
 }
 
 // PacketAcknowledgement signals the packet was processed and accepted by the counterparty chain.
-// See: https://github.com/cosmos/ibc/blob/52a9094a5bc8c5275e25c19d0b2d9e6fd80ba31c/spec/core/ics-004-channel-and-packet-semantics/README.md#writing-acknowledgements
+// See: https://github.com/lfdt-ibc/ibc/blob/52a9094a5bc8c5275e25c19d0b2d9e6fd80ba31c/spec/core/ics-004-channel-and-packet-semantics/README.md#writing-acknowledgements
 type PacketAcknowledgement struct {
 	Packet          Packet
 	Acknowledgement []byte // an opaque value defined by the application logic
@@ -80,7 +80,7 @@ func (ack PacketAcknowledgement) Validate() error {
 // PacketTimeout signals a packet was not processed by the counterparty chain.
 // Indicates the sending chain should undo or rollback state.
 // Timeout conditions are block height and timestamp.
-// See: https://github.com/cosmos/ibc/blob/52a9094a5bc8c5275e25c19d0b2d9e6fd80ba31c/spec/core/ics-004-channel-and-packet-semantics/README.md#timeouts
+// See: https://github.com/lfdt-ibc/ibc/blob/52a9094a5bc8c5275e25c19d0b2d9e6fd80ba31c/spec/core/ics-004-channel-and-packet-semantics/README.md#timeouts
 type PacketTimeout struct {
 	Packet Packet
 }
