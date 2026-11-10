@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"reflect"
 
-	"go.uber.org/multierr"
-
 	host "github.com/lfdt-ibc/ibc-go/v11/modules/core/24-host"
+	"go.uber.org/multierr"
 )
 
 type Nanoseconds uint64

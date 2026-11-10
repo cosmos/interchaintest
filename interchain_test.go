@@ -6,14 +6,13 @@ import (
 	"testing"
 	"time"
 
+	transfertypes "github.com/lfdt-ibc/ibc-go/v11/modules/apps/transfer/types"
+	clienttypes "github.com/lfdt-ibc/ibc-go/v11/modules/core/02-client/types" // nolint:staticcheck
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zaptest"
 
 	"cosmossdk.io/math"
-
-	transfertypes "github.com/lfdt-ibc/ibc-go/v11/modules/apps/transfer/types"
-	clienttypes "github.com/lfdt-ibc/ibc-go/v11/modules/core/02-client/types" // nolint:staticcheck
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"

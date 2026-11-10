@@ -3,10 +3,9 @@ package ibc
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
 	transfertypes "github.com/lfdt-ibc/ibc-go/v11/modules/apps/transfer/types"
 	chantypes "github.com/lfdt-ibc/ibc-go/v11/modules/core/04-channel/types"
+	"github.com/stretchr/testify/require"
 )
 
 func TestChannelOptsConfigured(t *testing.T) {

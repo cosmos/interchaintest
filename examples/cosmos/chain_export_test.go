@@ -19,7 +19,7 @@ func TestJunoStateExport(t *testing.T) {
 		t.Skip("skipping in short mode")
 	}
 
-	chains := interchaintest.CreateChainWithConfig(t, numValsOne, numFullNodesZero, "juno", "v19.0.0", ibc.ChainConfig{})
+	chains := interchaintest.CreateChainWithConfig(t, numValsOne, numFullNodesZero, "juno", "v19.0.0-alpha.3", ibc.ChainConfig{})
 	chain := chains[0].(*cosmos.CosmosChain)
 
 	enableBlockDB := false

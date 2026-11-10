@@ -456,7 +456,7 @@ juno:
   gas-adjustment: 2.0
   trusting-period: 672h
   images:
-    - repository: ghcr.io/cosmoscontracts/juno
+    - repository: ghcr.io/strangelove-ventures/heighliner/juno
       uid-gid: 1025:1025
   no-host-mount: false
 
@@ -582,7 +582,7 @@ osmosis:
   gas-adjustment: 2.0
   trusting-period: 336h
   images:
-    - repository: osmolabs/osmosis
+    - repository: ghcr.io/strangelove-ventures/heighliner/osmosis
       uid-gid: 1025:1025
   no-host-mount: false
 

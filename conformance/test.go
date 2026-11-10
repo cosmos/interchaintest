@@ -35,13 +35,12 @@ import (
 	"testing"
 	"time"
 
+	transfertypes "github.com/lfdt-ibc/ibc-go/v11/modules/apps/transfer/types"
 	"github.com/moby/moby/client"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
 
 	"cosmossdk.io/math"
-
-	transfertypes "github.com/lfdt-ibc/ibc-go/v11/modules/apps/transfer/types"
 
 	"github.com/cosmos/interchaintest/v11"
 	"github.com/cosmos/interchaintest/v11/chain/cosmos"

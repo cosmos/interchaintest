@@ -25,7 +25,7 @@ func TestBadInputParams(t *testing.T) {
 		{
 			Name:      "juno",
 			ChainName: "juno",
-			Version:   "v19.0.0",
+			Version:   "v19.0.0-alpha.3",
 			ChainConfig: ibc.ChainConfig{
 				Denom:         "ujuno",
 				Bech32Prefix:  "juno",

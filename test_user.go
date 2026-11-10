@@ -25,9 +25,7 @@ func GetAndFundTestUserWithMnemonic(
 	chain ibc.Chain,
 ) (ibc.Wallet, error) {
 	chainCfg := chain.Config()
-	// 8 random letters keeps key names unique across the many users a single test can create on one chain;
-	// a collision makes `keys add` prompt for overwrite and fail with EOF.
-	keyName := fmt.Sprintf("%s-%s-%s", keyNamePrefix, chainCfg.ChainID, dockerutil.RandLowerCaseLetterString(8))
+	keyName := fmt.Sprintf("%s-%s-%s", keyNamePrefix, chainCfg.ChainID, dockerutil.RandLowerCaseLetterString(3))
 	user, err := chain.BuildWallet(ctx, keyName, mnemonic)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get source user wallet: %w", err)
