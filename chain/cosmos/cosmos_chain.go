@@ -15,14 +15,13 @@ import (
 
 	dockerimagetypes "github.com/docker/docker/api/types/image"
 	volumetypes "github.com/docker/docker/api/types/volume"
+	clienttypes "github.com/lfdt-ibc/ibc-go/v11/modules/core/02-client/types" // nolint:staticcheck
+	chanTypes "github.com/lfdt-ibc/ibc-go/v11/modules/core/04-channel/types"
 	"github.com/moby/moby/client"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
 	sdkmath "cosmossdk.io/math"
-
-	clienttypes "github.com/cosmos/ibc-go/v11/modules/core/02-client/types" // nolint:staticcheck
-	chanTypes "github.com/cosmos/ibc-go/v11/modules/core/04-channel/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"

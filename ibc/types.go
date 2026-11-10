@@ -10,11 +10,10 @@ import (
 	"strings"
 
 	dockerimagetypes "github.com/docker/docker/api/types/image"
+	ibcexported "github.com/lfdt-ibc/ibc-go/v11/modules/core/03-connection/types"
 	"github.com/moby/moby/client"
 
 	"cosmossdk.io/math"
-
-	ibcexported "github.com/cosmos/ibc-go/v11/modules/core/03-connection/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module/testutil"

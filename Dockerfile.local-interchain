@@ -3,16 +3,14 @@
 # docker build . -t local-interchain:local -f Dockerfile.local-interchain
 # docker run -it local-interchain:local
 
-FROM golang:1.26.5 AS builder
+FROM golang:1.26.10 AS builder
 
 # Set destination for COPY
 WORKDIR /app
 
-COPY go.mod go.sum go.work go.work.sum ./
-RUN go mod tidy
-
-COPY ./local-interchain ./local-interchain
-RUN cd local-interchain && go mod tidy
+COPY go.mod go.sum go.work ./
+COPY local-interchain/go.mod local-interchain/go.sum ./local-interchain/
+RUN go mod download
 
 COPY . ./
 

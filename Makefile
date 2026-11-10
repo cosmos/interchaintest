@@ -13,6 +13,15 @@ default: help
 help: ## Print this help message
 	@echo "Available make commands:"; grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+.PHONY: build
+build: ## Compile all packages in both modules (interchaintest and local-interchain)
+	go build ./...
+	cd local-interchain && go build ./...
+
+.PHONY: docker-build
+docker-build: ## Build the local-interchain Docker image (local-interchain:local)
+	$(DOCKER) build . -t local-interchain:local -f Dockerfile.local-interchain
+
 .PHONY: interchaintest
 interchaintest: gen ## Build interchaintest binary into ./bin
 	go test -ldflags "-X github.com/cosmos/interchaintest/v11/interchaintest.GitSha=$(shell git describe --always --dirty)" -c -o ./bin/interchaintest ./cmd/interchaintest
@@ -32,6 +41,9 @@ test-ibc-examples: ## Run e2e ibc example tests
 .PHONY: test-cosmos-examples
 test-cosmos-examples: ## Run e2e cosmos example tests
 	@go test -race -failfast -timeout 30m -v -p 2 ./examples/cosmos
+
+.PHONY: e2e
+e2e: test-conformance test-ibc-examples test-cosmos-examples ## Run all e2e test suites (requires Docker)
 
 .PHONY: docker-reset
 docker-reset: ## Attempt to delete all running containers. Useful if interchaintest does not exit cleanly.

@@ -6,13 +6,12 @@ import (
 	"testing"
 	"time"
 
+	transfertypes "github.com/lfdt-ibc/ibc-go/v11/modules/apps/transfer/types"
+	clienttypes "github.com/lfdt-ibc/ibc-go/v11/modules/core/02-client/types"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap/zaptest"
 
 	"cosmossdk.io/math"
-
-	transfertypes "github.com/cosmos/ibc-go/v11/modules/apps/transfer/types"
-	clienttypes "github.com/cosmos/ibc-go/v11/modules/core/02-client/types"
 
 	"github.com/cosmos/interchaintest/v11"
 	"github.com/cosmos/interchaintest/v11/chain/cosmos"
@@ -45,7 +44,7 @@ func TestLearn(t *testing.T) {
 			GasPrices:     "0.001uatom",
 			ModifyGenesis: cosmos.ModifyGenesis(DefaultGenesis),
 		}},
-		{Name: "osmosis", Version: "v11.0.0"},
+		{Name: "osmosis", Version: "11.0.1-alpine"},
 	})
 
 	chains, err := cf.Chains(t.Name())
