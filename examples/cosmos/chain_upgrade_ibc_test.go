@@ -30,7 +30,7 @@ const (
 )
 
 func TestJunoUpgradeIBC(t *testing.T) {
-	CosmosChainUpgradeIBCTest(t, "juno", "v6.0.0", "ghcr.io/strangelove-ventures/heighliner/juno", "v8.0.0", "multiverse")
+	CosmosChainUpgradeIBCTest(t, "juno", "v6.0.0", "ghcr.io/cosmoscontracts/juno", "v8.0.0", "multiverse")
 }
 
 func TestGaiaUpgradeIBC(t *testing.T) {

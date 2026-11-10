@@ -456,7 +456,7 @@ juno:
   gas-adjustment: 2.0
   trusting-period: 672h
   images:
-    - repository: ghcr.io/strangelove-ventures/heighliner/juno
+    - repository: ghcr.io/cosmoscontracts/juno
       uid-gid: 1025:1025
   no-host-mount: false
 

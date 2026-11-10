@@ -36,7 +36,7 @@ func TestCometMock(t *testing.T) {
 			ChainName: "juno",
 			// NOTE: To use CometMock you must use an SDK version with patch: https://github.com/cosmos/cosmos-sdk/issues/16277.
 			// SDK v0.47.6+
-			Version: "v19.0.0-alpha.3",
+			Version: "v19.0.0",
 			ChainConfig: ibc.ChainConfig{
 				Denom:         "ujuno",
 				Bech32Prefix:  "juno",
