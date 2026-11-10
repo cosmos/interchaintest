@@ -34,7 +34,7 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
 	"github.com/cosmos/interchaintest/v11/blockdb"
-	wasmtypes "github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11/types"
+	wasmtypes "github.com/cosmos/interchaintest/v11/chain/cosmos/08-wasm-types"
 	"github.com/cosmos/interchaintest/v11/chain/internal/tendermint"
 	"github.com/cosmos/interchaintest/v11/dockerutil"
 	"github.com/cosmos/interchaintest/v11/ibc"

@@ -33,11 +33,6 @@ require (
 )
 
 require (
-	github.com/CosmWasm/wasmvm/v3 v3.0.7 // indirect
-	github.com/shamaton/msgpack/v2 v2.4.1 // indirect
-)
-
-require (
 	cel.dev/expr v0.25.2 // indirect
 	cloud.google.com/go v0.123.0 // indirect
 	cloud.google.com/go/auth v0.20.0 // indirect
@@ -205,7 +200,6 @@ require (
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
-	github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11 v11.0.0 // indirect
 	github.com/lfdt-ibc/ibc-go/v11 v11.0.0 // indirect
 	github.com/lib/pq v1.12.3 // indirect
 	github.com/libp2p/go-buffer-pool v0.1.0 // indirect
@@ -383,5 +377,3 @@ require (
 )
 
 replace github.com/lfdt-ibc/ibc-go/v11 => github.com/lfdt-ibc/ibc-go/v11 v11.2.1-rc1.0.20261110125909-dedba2bf40b0
-
-replace github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11 => github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11 v11.0.0-20261110125909-dedba2bf40b0

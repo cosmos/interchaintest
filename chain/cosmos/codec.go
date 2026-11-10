@@ -23,7 +23,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 
-	ibcwasm "github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11"
+	ibcwasm "github.com/cosmos/interchaintest/v11/chain/cosmos/08-wasm-types"
 )
 
 func DefaultEncoding() testutil.TestEncodingConfig {

@@ -24,6 +24,7 @@ require (
 	github.com/cometbft/cometbft v0.40.0
 	github.com/containerd/errdefs v1.0.0
 	github.com/cosmos/cosmos-sdk v0.55.0
+	github.com/cosmos/cosmos-sdk/store/v2 v2.0.0
 	github.com/cosmos/gogoproto v1.7.2
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/docker/docker v28.5.2+incompatible
@@ -31,11 +32,13 @@ require (
 	github.com/ethereum/go-ethereum v1.17.8
 	github.com/gdamore/tcell/v2 v2.13.8
 	github.com/google/go-cmp v0.7.0
+	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/hashicorp/go-version v1.9.0
 	github.com/icza/dyno v0.0.0-20220812133438-f0b6f8a18845
 	github.com/moby/moby v28.5.2+incompatible
 	github.com/pelletier/go-toml/v2 v2.2.4
 	github.com/rivo/tview v0.42.0
+	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.12.1
 	github.com/tidwall/gjson v1.18.0
 	go.uber.org/multierr v1.11.0
@@ -47,12 +50,7 @@ require (
 	modernc.org/sqlite v1.46.1
 )
 
-require (
-	github.com/cosmos/cosmos-sdk/store/v2 v2.0.0 // indirect
-	github.com/cosmos/ibc-go/v11 v11.2.1-rc1.0.20261109160339-a51ccadd4c02 // indirect
-	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
-	github.com/spf13/cobra v1.10.2 // indirect
-)
+require github.com/cosmos/ibc-go/v11 v11.2.1-rc1.0.20261109160339-a51ccadd4c02 // indirect
 
 require (
 	cel.dev/expr v0.25.2 // indirect
@@ -215,7 +213,6 @@ require (
 	github.com/koron/go-ssdp v0.0.6 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
-	github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11 v11.0.0
 	github.com/lfdt-ibc/ibc-go/v11 v11.0.0
 	github.com/lib/pq v1.12.3 // indirect
 	github.com/libp2p/go-buffer-pool v0.1.0 // indirect
@@ -390,5 +387,3 @@ require (
 )
 
 replace github.com/lfdt-ibc/ibc-go/v11 => github.com/lfdt-ibc/ibc-go/v11 v11.2.1-rc1.0.20261110125909-dedba2bf40b0
-
-replace github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11 => github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11 v11.0.0-20261110125909-dedba2bf40b0
