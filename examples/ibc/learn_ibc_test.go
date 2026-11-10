@@ -44,7 +44,7 @@ func TestLearn(t *testing.T) {
 			GasPrices:     "0.001uatom",
 			ModifyGenesis: cosmos.ModifyGenesis(DefaultGenesis),
 		}},
-		{Name: "osmosis", Version: "v11.0.0"},
+		{Name: "osmosis", Version: "11.0.1-alpine"},
 	})
 
 	chains, err := cf.Chains(t.Name())

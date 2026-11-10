@@ -582,7 +582,7 @@ osmosis:
   gas-adjustment: 2.0
   trusting-period: 336h
   images:
-    - repository: ghcr.io/strangelove-ventures/heighliner/osmosis
+    - repository: osmolabs/osmosis
       uid-gid: 1025:1025
   no-host-mount: false
 
