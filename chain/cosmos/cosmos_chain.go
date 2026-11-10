@@ -21,8 +21,8 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 
-	clienttypes "github.com/cosmos/ibc-go/v11/modules/core/02-client/types" // nolint:staticcheck
-	chanTypes "github.com/cosmos/ibc-go/v11/modules/core/04-channel/types"
+	clienttypes "github.com/lfdt-ibc/ibc-go/v11/modules/core/02-client/types" // nolint:staticcheck
+	chanTypes "github.com/lfdt-ibc/ibc-go/v11/modules/core/04-channel/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -34,7 +34,7 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
 	"github.com/cosmos/interchaintest/v11/blockdb"
-	wasmtypes "github.com/cosmos/interchaintest/v11/chain/cosmos/08-wasm-types"
+	wasmtypes "github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11/types"
 	"github.com/cosmos/interchaintest/v11/chain/internal/tendermint"
 	"github.com/cosmos/interchaintest/v11/dockerutil"
 	"github.com/cosmos/interchaintest/v11/ibc"

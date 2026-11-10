@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
 
-	transfertypes "github.com/cosmos/ibc-go/v11/modules/apps/transfer/types"
-	conntypes "github.com/cosmos/ibc-go/v11/modules/core/03-connection/types"
-	"github.com/cosmos/ibc-go/v11/modules/core/exported"
+	transfertypes "github.com/lfdt-ibc/ibc-go/v11/modules/apps/transfer/types"
+	conntypes "github.com/lfdt-ibc/ibc-go/v11/modules/core/03-connection/types"
+	"github.com/lfdt-ibc/ibc-go/v11/modules/core/exported"
 
 	"github.com/cosmos/interchaintest/v11"
 	"github.com/cosmos/interchaintest/v11/ibc"
