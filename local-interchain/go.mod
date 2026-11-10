@@ -382,6 +382,6 @@ require (
 	sigs.k8s.io/yaml v1.6.0 // indirect
 )
 
-replace github.com/lfdt-ibc/ibc-go/v11 => github.com/dianab-cl/ibc-go-lfdt/v11 v11.0.0-20261109184205-09c78fe910d8
+replace github.com/lfdt-ibc/ibc-go/v11 => github.com/lfdt-ibc/ibc-go/v11 v11.2.1-rc1.0.20261110125909-dedba2bf40b0
 
-replace github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11 => github.com/dianab-cl/ibc-go-lfdt/modules/light-clients/08-wasm/v11 v11.0.0-20261109184205-09c78fe910d8
+replace github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11 => github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11 v11.0.0-20261110125909-dedba2bf40b0

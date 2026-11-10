@@ -297,10 +297,6 @@ github.com/dgraph-io/ristretto/v2 v2.4.0/go.mod h1:0KsrXtXvnv0EqnzyowllbVJB8yBon
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/dgryski/go-farm v0.0.0-20240924180020-3414d57e47da h1:aIftn67I1fkbMa512G+w+Pxci9hJPB8oMnkcP3iZF38=
 github.com/dgryski/go-farm v0.0.0-20240924180020-3414d57e47da/go.mod h1:SqUrOPUnsFjfmXRMNPybcSiG0BgUW2AuFH8PAnS2iTw=
-github.com/dianab-cl/ibc-go-lfdt/modules/light-clients/08-wasm/v11 v11.0.0-20261109184205-09c78fe910d8 h1:6BFyKhQ/B5kpyMTrrBUWQoiESCwIROVAlYMVyA4ptmo=
-github.com/dianab-cl/ibc-go-lfdt/modules/light-clients/08-wasm/v11 v11.0.0-20261109184205-09c78fe910d8/go.mod h1:K6U7MRgdTQ/qP+r23k6Z7WR+IlNh6N6S+asMDctZ3d4=
-github.com/dianab-cl/ibc-go-lfdt/v11 v11.0.0-20261109184205-09c78fe910d8 h1:z8gqWZ2ziV3a+sG2zJ0anEemuD0j0LuvOWWe3tbg3xg=
-github.com/dianab-cl/ibc-go-lfdt/v11 v11.0.0-20261109184205-09c78fe910d8/go.mod h1:BflprSyG9cTJj2oIIj9gzKNRJ4p5ROEp/yOxO5oJgqU=
 github.com/distribution/reference v0.6.0 h1:0IXCQ5g4/QMHHkarYzh5l+u8T3t73zM5QvfrDyIgxBk=
 github.com/distribution/reference v0.6.0/go.mod h1:BbU0aIcezP1/5jX/8MP0YiH4SdvB5Y4f/wlDRiLyi3E=
 github.com/docker/docker v28.5.2+incompatible h1:DBX0Y0zAjZbSrm1uzOkdr1onVghKaftjlSWt4AFexzM=
@@ -640,6 +636,10 @@ github.com/leanovate/gopter v0.2.11/go.mod h1:aK3tzZP/C+p1m3SPRE4SYZFGP7jjkuSI4f
 github.com/leodido/go-urn v1.2.0/go.mod h1:+8+nEpDfqqsY+g338gtMEUOtuK+4dEMhiQEgxpxOKII=
 github.com/leodido/go-urn v1.2.1 h1:BqpAaACuzVSgi/VLzGZIobT2z4v53pjosyNd9Yv6n/w=
 github.com/leodido/go-urn v1.2.1/go.mod h1:zt4jvISO2HfUBqxjfIshjdMTYS56ZS/qv49ictyFfxY=
+github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11 v11.0.0-20261110125909-dedba2bf40b0 h1:70q767NQM3FJUA22iS8XZd21oYidTBVCUV/MpPVTROc=
+github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11 v11.0.0-20261110125909-dedba2bf40b0/go.mod h1:K6U7MRgdTQ/qP+r23k6Z7WR+IlNh6N6S+asMDctZ3d4=
+github.com/lfdt-ibc/ibc-go/v11 v11.2.1-rc1.0.20261110125909-dedba2bf40b0 h1:rhcTG7JWa9VfXOTmti1T7+Hsy7gGj+du7r4XRp/mEhk=
+github.com/lfdt-ibc/ibc-go/v11 v11.2.1-rc1.0.20261110125909-dedba2bf40b0/go.mod h1:BflprSyG9cTJj2oIIj9gzKNRJ4p5ROEp/yOxO5oJgqU=
 github.com/lib/pq v1.12.3 h1:tTWxr2YLKwIvK90ZXEw8GP7UFHtcbTtty8zsI+YjrfQ=
 github.com/lib/pq v1.12.3/go.mod h1:/p+8NSbOcwzAEI7wiMXFlgydTwcgTr3OSKMsD2BitpA=
 github.com/libp2p/go-buffer-pool v0.1.0 h1:oK4mSFcQz7cTQIfqbe4MIj9gLW+mnanjyFtc6cdF0Y8=
